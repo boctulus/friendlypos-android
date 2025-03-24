@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/navigation_sales"
+        android:icon="@drawable/ic_sales"
+        android:title="Ventas" />
+    
+    <item
+        android:id="@+id/navigation_products"
+        android:icon="@drawable/ic_products"
+        android:title="Productos" />
+    
+    <item
+        android:id="@+id/navigation_home"
+        android:icon="@drawable/ic_dashboard"
+        android:title="Inicio" />
+    
+    <item
+        android:id="@+id/navigation_payments"
+        android:icon="@drawable/ic_payments"
+        android:title="Pagos" />
+    
+    <item
+        android:id="@+id/navigation_history"
+        android:icon="@drawable/ic_history"
+        android:title="Historial" />
+</menu>
