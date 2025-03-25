@@ -113,37 +113,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/tv_amount">
 
-        <Button
-            android:id="@+id/btnClear"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_rowWeight="1"
-            android:layout_columnWeight="1"
-            android:text="C" />
-
-        <Button
-            android:id="@+id/btnDivide"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_rowWeight="1"
-            android:layout_columnWeight="1"
-            android:text="/" />
-
-        <Button
-            android:id="@+id/btnMultiply"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_rowWeight="1"
-            android:layout_columnWeight="1"
-            android:text="*" />
-
-        <Button
-            android:id="@+id/btnDelete"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_rowWeight="1"
-            android:layout_columnWeight="1"
-            android:text="×" />
 
         <Button
             android:id="@+id/btn7"
@@ -170,12 +139,12 @@
             android:text="9" />
 
         <Button
-            android:id="@+id/btnMinus"
+            android:id="@+id/btnClear"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_rowWeight="1"
             android:layout_columnWeight="1"
-            android:text="-" />
+            android:text="C" />
 
         <Button
             android:id="@+id/btn4"
@@ -202,12 +171,12 @@
             android:text="6" />
 
         <Button
-            android:id="@+id/btnPlus"
+            android:id="@+id/btnMultiply"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_rowWeight="1"
             android:layout_columnWeight="1"
-            android:text="+" />
+            android:text="✕" />
 
         <Button
             android:id="@+id/btn1"
@@ -234,19 +203,26 @@
             android:text="3" />
 
         <Button
-            android:id="@+id/btnEquals"
+            android:id="@+id/btnAdd"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_rowWeight="1"
             android:layout_columnWeight="1"
             android:layout_rowSpan="2"
-            android:text="=" />
+            android:text="＋" />
+
+        <Button
+            android:id="@+id/btnDelete"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_rowWeight="1"
+            android:layout_columnWeight="1"
+            android:text="×" />
 
         <Button
             android:id="@+id/btn0"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_columnSpan="2"
             android:layout_rowWeight="1"
             android:layout_columnWeight="1"
             android:text="0" />
@@ -257,7 +233,7 @@
             android:layout_height="wrap_content"
             android:layout_rowWeight="1"
             android:layout_columnWeight="1"
-            android:text="." />
+            android:text="," />
 
     </GridLayout>
 
