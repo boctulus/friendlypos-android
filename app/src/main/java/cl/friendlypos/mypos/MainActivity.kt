@@ -20,7 +20,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
 
         binding = ActivityMainBinding.inflate(layoutInflater)
-        setContentView(binding.root)
+    setContentView(binding.root)
 
         val navView: BottomNavigationView = binding.navView
 
@@ -29,8 +29,10 @@ class MainActivity : AppCompatActivity() {
         // Asegúrate de actualizar estos IDs para que coincidan con tu bottom_nav_menu.xml
         val appBarConfiguration = AppBarConfiguration(
             setOf(
-                R.id.navigation_sales, R.id.navigation_products, R.id.navigation_home,
-                R.id.navigation_payments, R.id.navigation_history
+                R.id.navigation_home,
+                R.id.navigation_products,
+                R.id.navigation_payments,
+                R.id.navigation_history
             )
         )
         setupActionBarWithNavController(navController, appBarConfiguration)
@@ -83,5 +85,21 @@ class MainActivity : AppCompatActivity() {
             }
             else -> super.onOptionsItemSelected(item)
         }
+    }
+
+    private fun setupNavigation() {
+        val navView: BottomNavigationView = binding.navView
+        val navController = findNavController(R.id.nav_host_fragment_activity_main)
+
+        val appBarConfiguration = AppBarConfiguration(
+            setOf(
+                R.id.navigation_dashboard,
+                R.id.navigation_home,
+                R.id.navigation_notifications
+            )
+        )
+
+        setupActionBarWithNavController(navController, appBarConfiguration)
+        navView.setupWithNavController(navController)
     }
 }
