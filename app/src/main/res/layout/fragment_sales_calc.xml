@@ -14,7 +14,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:padding="16dp"
+        android:padding="32dp"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
@@ -105,7 +105,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="50dp"
+        android:layout_marginTop="60dp"
         android:layout_marginEnd="8dp"
         android:columnCount="4"
         android:rowCount="5"
@@ -113,15 +113,15 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/tv_amount">
 
-
         <Button
             android:id="@+id/btn7"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_rowWeight="1"
             android:layout_columnWeight="1"
-            android:padding="16dp"
-            android:textSize="18sp"
+            android:padding="32dp"
+            android:layout_margin="1dp"
+            android:textSize="22sp"
             android:text="7" />
 
         <Button
@@ -130,7 +130,8 @@
             android:layout_height="wrap_content"
             android:layout_rowWeight="1"
             android:layout_columnWeight="1"
-            android:padding="16dp"
+            android:padding="32dp"
+            android:layout_margin="1dp"
             android:textSize="18sp"
             android:text="8" />
 
@@ -138,11 +139,14 @@
             android:id="@+id/btn9"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_row="0"
             android:layout_rowWeight="1"
+            android:layout_column="2"
             android:layout_columnWeight="1"
-            android:padding="16dp"
-            android:textSize="18sp"
-            android:text="9" />
+            android:padding="32dp"
+            android:layout_margin="1dp"
+            android:text="9"
+            android:textSize="18sp" />
 
         <Button
             android:id="@+id/btnClear"
@@ -150,9 +154,10 @@
             android:layout_height="wrap_content"
             android:layout_rowWeight="1"
             android:layout_columnWeight="1"
-            android:padding="16dp"
+            android:padding="32dp"
+            android:layout_margin="1dp"
             android:textSize="18sp"
-            android:text="C" />
+            android:text="C" /> <!-- posibles "CＣ" -->
 
         <Button
             android:id="@+id/btn4"
@@ -160,7 +165,8 @@
             android:layout_height="wrap_content"
             android:layout_rowWeight="1"
             android:layout_columnWeight="1"
-            android:padding="16dp"
+            android:padding="32dp"
+            android:layout_margin="1dp"
             android:textSize="18sp"
             android:text="4" />
 
@@ -170,7 +176,8 @@
             android:layout_height="wrap_content"
             android:layout_rowWeight="1"
             android:layout_columnWeight="1"
-            android:padding="16dp"
+            android:padding="32dp"
+            android:layout_margin="1dp"
             android:textSize="18sp"
             android:text="5" />
 
@@ -180,7 +187,8 @@
             android:layout_height="wrap_content"
             android:layout_rowWeight="1"
             android:layout_columnWeight="1"
-            android:padding="16dp"
+            android:padding="32dp"
+            android:layout_margin="1dp"
             android:textSize="18sp"
             android:text="6" />
 
@@ -190,7 +198,8 @@
             android:layout_height="wrap_content"
             android:layout_rowWeight="1"
             android:layout_columnWeight="1"
-            android:padding="16dp"
+            android:padding="32dp"
+            android:layout_margin="1dp"
             android:textSize="18sp"
             android:text="✕" />
 
@@ -200,7 +209,8 @@
             android:layout_height="wrap_content"
             android:layout_rowWeight="1"
             android:layout_columnWeight="1"
-            android:padding="16dp"
+            android:padding="32dp"
+            android:layout_margin="1dp"
             android:textSize="18sp"
             android:text="1" />
 
@@ -210,7 +220,8 @@
             android:layout_height="wrap_content"
             android:layout_rowWeight="1"
             android:layout_columnWeight="1"
-            android:padding="16dp"
+            android:padding="32dp"
+            android:layout_margin="1dp"
             android:textSize="18sp"
             android:text="2" />
 
@@ -220,7 +231,8 @@
             android:layout_height="wrap_content"
             android:layout_rowWeight="1"
             android:layout_columnWeight="1"
-            android:padding="16dp"
+            android:padding="32dp"
+            android:layout_margin="1dp"
             android:textSize="18sp"
             android:text="3" />
 
@@ -231,7 +243,8 @@
             android:layout_rowWeight="1"
             android:layout_columnWeight="1"
             android:layout_rowSpan="2"
-            android:padding="16dp"
+            android:padding="32dp"
+            android:layout_margin="1dp"
             android:textSize="18sp"
             android:text="＋" />
 
@@ -241,7 +254,8 @@
             android:layout_height="wrap_content"
             android:layout_rowWeight="1"
             android:layout_columnWeight="1"
-            android:padding="16dp"
+            android:padding="32dp"
+            android:layout_margin="1dp"
             android:textSize="18sp"
             android:text="×" />
 
@@ -251,7 +265,8 @@
             android:layout_height="wrap_content"
             android:layout_rowWeight="1"
             android:layout_columnWeight="1"
-            android:padding="16dp"
+            android:padding="32dp"
+            android:layout_margin="1dp"
             android:textSize="18sp"
             android:text="0" />
 
@@ -261,7 +276,8 @@
             android:layout_height="wrap_content"
             android:layout_rowWeight="1"
             android:layout_columnWeight="1"
-            android:padding="16dp"
+            android:padding="32dp"
+            android:layout_margin="1dp"
             android:textSize="18sp"
             android:text="," />
 
@@ -272,8 +288,8 @@
         android:id="@+id/btn_pay"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginEnd="16dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
         android:layout_marginBottom="24dp"
         android:background="@drawable/rounded_button_bg"
         android:padding="12dp"
@@ -285,17 +301,5 @@
         app:layout_constraintEnd_toEndOf="parent"/>
 
     <!-- Total amount on pay button -->
-    <TextView
-        android:id="@+id/tv_total_amount"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="24dp"
-        android:text="$600"
-        android:textColor="@android:color/white"
-        android:textSize="18sp"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="@+id/btn_pay"
-        app:layout_constraintEnd_toEndOf="@+id/btn_pay"
-        app:layout_constraintTop_toTopOf="@+id/btn_pay" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
