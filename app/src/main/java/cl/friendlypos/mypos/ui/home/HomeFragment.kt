@@ -61,18 +61,23 @@ class HomeFragment : Fragment() {
         }
     }
 
+    // En principio va a la "calculadora"
     private fun navigateToNewSale() {
         // Implementar navegación
     }
 
+    // Listado de productos con foto, nombre, SKU, codigos de barras, precios, inventario
+    // Idealmente organizado por categorias
     private fun navigateToInventory() {
         // Implementar navegación
     }
 
+    // Al registrar una venta tambien se debe poder agregar un cliente
     private fun navigateToCustomers() {
         // Implementar navegación
     }
 
+    // Historial de ventas y el producto mas vendido del periodo
     private fun navigateToReports() {
         // Implementar navegación
     }
