@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center"
+    android:background="@android:color/black">
+
+    <!-- Hora -->
+    <TextView
+        android:id="@+id/tv_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="10:19 AM"
+        android:textSize="48sp"
+        android:textColor="@android:color/white"
+        android:textStyle="bold"/>
+
+    <!-- Fecha -->
+    <TextView
+        android:id="@+id/tv_date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Wednesday 23 March"
+        android:textSize="18sp"
+        android:textColor="@android:color/white"
+        android:layout_marginTop="8dp"/>
+
+    <!-- Espacio para centrar el slider en la parte inferior -->
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"/>
+
+    <!-- Slider de desbloqueo -->
+    <SeekBar
+        android:id="@+id/slider_unlock"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:max="100"
+        android:progress="0"
+        android:thumb="@drawable/ic_lock"
+        android:progressDrawable="@drawable/slider_track"
+        android:layout_margin="16dp"/>
+
+</LinearLayout>

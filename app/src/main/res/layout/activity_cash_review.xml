@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp"
+    android:background="@color/white">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Revisión de cierre de caja"
+        android:textSize="18sp"
+        android:textColor="@color/textColor"/>
+
+    <TextView
+        android:id="@+id/tvSystemAmount"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Monto según sistema: $0.00"
+        android:textSize="16sp"
+        android:textColor="@color/black"/>
+
+    <TextView
+        android:id="@+id/tvEnteredAmount"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Monto ingresado: $0.00"
+        android:textSize="16sp"
+        android:textColor="@color/black"/>
+
+    <TextView
+        android:id="@+id/tvDifference"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Diferencia: $0.00"
+        android:textSize="16sp"
+        android:textColor="@color/errorRed"/>
+
+    <Button
+        android:id="@+id/btnConfirmClosure"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Confirmar Cierre"
+        android:backgroundTint="@color/successGreen"
+        android:textColor="@color/white"
+        android:padding="8dp"
+        android:layout_marginTop="16dp"/>
+</LinearLayout>

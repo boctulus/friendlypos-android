@@ -185,10 +185,15 @@
             style="@style/CalculatorButton"
             android:text="0" />
 
-        <Button
+        <!--Button
             android:id="@+id/btnDot"
             style="@style/CalculatorButton"
-            android:text="," />
+            android:text="," /-->
+
+        <Button
+            android:id="@+id/btn00"
+            style="@style/CalculatorButton"
+            android:text="00" />
 
     </GridLayout>
 
