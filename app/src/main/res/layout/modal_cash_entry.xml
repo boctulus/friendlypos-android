@@ -28,7 +28,7 @@
             android:id="@+id/etCashAmount"
             android:inputType="numberDecimal"
             android:hint="Monto en efectivo"
-            android:style="@style/InputText"
+            style="@style/InputText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="16dp"/>

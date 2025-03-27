@@ -17,7 +17,7 @@
     <style name="ModalTitleStyle" parent="TextAppearance.AppCompat">
         <item name="android:textAllCaps">true</item>
     </style>
-    <style name="InputText" parent="Widget.AppCompat.EditText">
+    <style name="InputText">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:background">@android:color/darker_gray</item>
