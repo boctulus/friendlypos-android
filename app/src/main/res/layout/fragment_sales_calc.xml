@@ -197,22 +197,45 @@
 
     </GridLayout>
 
-    <!-- Pay button -->
-    <Button
-        android:id="@+id/btn_pay"
+    <!-- Pay button container -->
+    <LinearLayout
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="24dp"
-        android:background="@drawable/rounded_button_bg"
-        android:padding="12dp"
-        android:text="PAGAR"
-        android:textColor="@android:color/white"
-        android:textSize="18sp"
+        android:orientation="horizontal"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <!-- Cart Badge Button -->
+        <Button
+            android:id="@+id/btn_cart_badge"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.25"
+            android:background="@drawable/rounded_button_bg"
+            android:gravity="center"
+            android:padding="12dp"
+            android:layout_marginEnd="2dp"
+            android:drawableStart="@drawable/ic_cart"
+            android:drawableTint="@android:color/white"
+            android:textColor="@android:color/white"/>
+
+        <!-- Pay Button -->
+        <Button
+            android:id="@+id/btn_pay"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.75"
+            android:background="@drawable/rounded_button_bg"
+            android:padding="12dp"
+            android:text="PAGAR"
+            android:textColor="@android:color/white"
+            android:textSize="18sp"/>
+
+    </LinearLayout>
 
     <!-- Total amount on pay button -->
 
