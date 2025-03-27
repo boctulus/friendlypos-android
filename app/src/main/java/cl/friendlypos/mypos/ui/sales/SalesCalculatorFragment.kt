@@ -32,6 +32,21 @@ class SalesCalculatorFragment : Fragment() {
         return binding.root
     }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        _binding = FragmentSalesCalcBinding.bind(view)
+
+        // Forzamos el badge a mostrar "17" para probar
+        updateCartBadge(17)
+    }
+
+    private fun updateCartBadge(count: Int) {
+        with(binding.cartBadgeCount) {
+            text = count.toString()
+            visibility = if (count > 0) View.VISIBLE else View.INVISIBLE
+        }
+    }
+
     private fun setupNumericPad() {
         // Set up number buttons
         binding.btn0.setOnClickListener { viewModel.appendDigit("0") }
