@@ -13,3 +13,4 @@
 [2025-03-27 11:47:38]	No se encontró una version válida	Automatic update
 [2025-03-27 12:08:57]	No se encontró una version válida	Completadas ventanas modales
 [2025-03-27 12:21:25]	No se encontró una version válida	Automatic update
+[2025-03-27 12:54:02]	No se encontró una version válida	Badge de Cart en Calc ya casi... falta counter
