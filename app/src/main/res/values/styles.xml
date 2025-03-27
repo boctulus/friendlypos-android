@@ -14,4 +14,16 @@
         <item name="android:windowIsFloating">true</item>
         <item name="android:windowNoTitle">true</item>
     </style>
+    <style name="ModalTitleStyle" parent="TextAppearance.AppCompat">
+        <item name="android:textAllCaps">true</item>
+    </style>
+    <style name="InputText" parent="Widget.AppCompat.EditText">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:background">@android:color/darker_gray</item>
+        <item name="android:textColorHint">@color/neutralGray</item>
+        <item name="android:textColor">@color/black</item>
+        <item name="android:padding">8dp</item>
+        <item name="android:layout_marginBottom">16dp</item>
+    </style>
 </resources>

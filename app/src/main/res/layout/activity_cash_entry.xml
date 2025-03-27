@@ -4,7 +4,6 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:padding="16dp"
     android:background="@drawable/modal_background">
 
     <TextView
@@ -27,14 +26,11 @@
 
         <EditText
             android:id="@+id/etCashAmount"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
             android:inputType="numberDecimal"
             android:hint="Monto en efectivo"
-            android:background="@android:color/darker_gray"
-            android:textColorHint="@color/neutralGray"
-            android:textColor="@color/black"
-            android:padding="8dp"
+            android:style="@style/InputText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:layout_marginBottom="16dp"/>
 
         <Button
