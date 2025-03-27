@@ -5,8 +5,11 @@
     android:layout_height="wrap_content"
     android:orientation="vertical"
     android:padding="16dp"
+    android:elevation="8dp"
+    android:layout_margin="16dp"
     android:background="@drawable/modal_background">
 
+    <!-- Encabezado -->
     <TextView
         android:id="@+id/modalTitle"
         android:layout_width="match_parent"
@@ -16,9 +19,9 @@
         android:textSize="18sp"
         android:gravity="center"
         android:padding="12dp"
-        android:textStyle="bold"
-        android:text="Revisión de cierre de caja"/>
+        android:textStyle="bold"/>
 
+    <!-- Contenido -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -26,37 +29,20 @@
         android:padding="16dp">
 
         <TextView
-            android:id="@+id/tvSystemAmount"
+            android:id="@+id/modalMessage"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Monto según sistema: $0.00"
+            android:textColor="@color/black"
             android:textSize="16sp"
-            android:textColor="@color/black"/>
-
-        <TextView
-            android:id="@+id/tvEnteredAmount"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Monto ingresado: $0.00"
-            android:textSize="16sp"
-            android:textColor="@color/black"/>
-
-        <TextView
-            android:id="@+id/tvDifference"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Diferencia: $0.00"
-            android:textSize="16sp"
-            android:textStyle="bold"
-            android:textColor="@color/errorRed"/>
+            android:text="Mensaje aquí"/>
     </LinearLayout>
 
+    <!-- Botones -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:gravity="end"
-        android:padding="16dp">
+        android:gravity="end">
 
         <Button
             android:id="@+id/btnCancel"
@@ -73,11 +59,11 @@
             android:layout_height="wrap_content"/>
 
         <Button
-            android:id="@+id/btnConfirmClosure"
+            android:id="@+id/btnConfirm"
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="wrap_content"
-            android:text="Confirmar Cierre"
+            android:text="Confirmar"
             android:backgroundTint="@color/successGreen"
             android:textColor="@color/white"
             android:padding="8dp"/>
