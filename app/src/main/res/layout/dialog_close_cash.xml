@@ -42,7 +42,7 @@
             android:layout_weight="1"
             android:layout_height="wrap_content"
             android:text="VOLVER"
-            android:backgroundTint="@color/errorRed"
+            android:backgroundTint="@color/warningOrange"
             android:textColor="@color/white"
             android:padding="8dp"/>
 
@@ -56,7 +56,7 @@
             android:layout_weight="1"
             android:layout_height="wrap_content"
             android:text="CERRAR CAJA"
-            android:backgroundTint="@color/successGreen"
+            android:backgroundTint="@color/errorRed"
             android:textColor="@color/white"
             android:padding="8dp"/>
     </LinearLayout>

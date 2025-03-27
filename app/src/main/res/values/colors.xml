@@ -9,6 +9,10 @@
     <color name="white">#FFFFFFFF</color>
     <color name="gray">#666666</color>
     <color name="lightGray">#BDBDBD</color> <!-- Gris claro para posibles fondos secundarios -->
+    <color name="neutralGray">#616161</color> <!-- Gris oscuro para acciones secundarias -->
+    <color name="infoBlue">#42A5F5</color> <!-- Azul claro para información -->
+    <color name="cancelGray">#757575</color> <!-- Gris oscuro para cancelar -->
+    <color name="warningOrange">#FFA000</color> <!-- Ámbar fuerte para advertencias -->
     <color name="errorRed">#D32F2F</color> <!-- Rojo para advertencias -->
 
     <!-- Dashboard -->

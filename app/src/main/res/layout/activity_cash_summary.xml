@@ -27,7 +27,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Imprimir Reporte"
-        android:backgroundTint="@color/tile_reports"
+        android:backgroundTint="@color/successGreen"
         android:textColor="@color/white"
         android:padding="8dp"
         android:layout_marginTop="16dp"/>
@@ -37,7 +37,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Finalizar"
-        android:backgroundTint="@color/successGreen"
+        android:backgroundTint="@color/warningOrange"
         android:textColor="@color/white"
         android:padding="8dp"
         android:layout_marginTop="8dp"/>
