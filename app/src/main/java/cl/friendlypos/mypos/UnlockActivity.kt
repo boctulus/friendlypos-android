@@ -8,7 +8,7 @@ import androidx.appcompat.app.AppCompatActivity
 class UnlockActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_unlock)
+        setContentView(R.layout.screen_unlock)
 
         val sliderUnlock = findViewById<SeekBar>(R.id.slider_unlock)
 
