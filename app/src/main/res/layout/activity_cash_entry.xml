@@ -2,34 +2,48 @@
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:orientation="vertical"
     android:padding="16dp"
-    android:background="@color/white">
+    android:background="@drawable/modal_background">
 
     <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Ingrese el monto en caja"
-        android:textSize="18sp"
-        android:textColor="@color/textColor"/>
-
-    <EditText
-        android:id="@+id/etCashAmount"
+        android:id="@+id/modalTitle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:inputType="numberDecimal"
-        android:hint="Monto en efectivo"
-        android:background="@color/lightGray"
-        android:padding="8dp"/>
-
-    <Button
-        android:id="@+id/btnNextToReview"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Siguiente"
-        android:backgroundTint="@color/successGreen"
+        android:background="@color/purple_500"
         android:textColor="@color/white"
-        android:padding="8dp"
-        android:layout_marginTop="16dp"/>
+        android:textSize="18sp"
+        android:gravity="center"
+        android:padding="12dp"
+        android:textStyle="bold"
+        android:text="Ingrese el monto en caja"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <EditText
+            android:id="@+id/etCashAmount"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="numberDecimal"
+            android:hint="Monto en efectivo"
+            android:background="@android:color/darker_gray"
+            android:textColorHint="@color/neutralGray"
+            android:textColor="@color/black"
+            android:padding="8dp"
+            android:layout_marginBottom="16dp"/>
+
+        <Button
+            android:id="@+id/btnNextToReview"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Siguiente"
+            android:backgroundTint="@color/successGreen"
+            android:textColor="@color/white"
+            android:padding="8dp"/>
+    </LinearLayout>
 </LinearLayout>
