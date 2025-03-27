@@ -5,7 +5,7 @@
     android:layout_height="wrap_content"
     android:orientation="vertical"
     android:background="@drawable/modal_background">
-    
+
     <TextView
         android:id="@+id/modalTitle"
         android:layout_width="match_parent"
