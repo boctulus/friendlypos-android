@@ -22,4 +22,11 @@
         android:name="cl.friendlypos.mypos.ui.notifications.NotificationsFragment"
         android:label="@string/title_notifications"
         tools:layout="@layout/fragment_notifications" />
+
+    <!-- Nuevo destino para configuración -->
+    <fragment
+        android:id="@+id/navigation_configuracion"
+        android:name="cl.friendlypos.mypos.SetupAccessFragment"
+        android:label="Configuración de acceso"
+        tools:layout="@layout/fragment_access_settings" />
 </navigation>
