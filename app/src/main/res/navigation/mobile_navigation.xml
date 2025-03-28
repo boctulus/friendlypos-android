@@ -28,5 +28,5 @@
         android:id="@+id/navigation_configuracion"
         android:name="cl.friendlypos.mypos.SetupAccessFragment"
         android:label="Configuración de acceso"
-        tools:layout="@layout/fragment_access_settings" />
+        tools:layout="@layout/fragment_setup_access" />
 </navigation>

@@ -6,7 +6,7 @@ import android.os.Bundle
 import android.widget.Button
 import android.widget.EditText
 
-class SetupAccessFragment : androidx.fragment.app.Fragment(R.layout.fragment_access_settings) {
+class SetupAccessFragment : androidx.fragment.app.Fragment(R.layout.fragment_setup_access) {
 
     private lateinit var editTextApiKey: EditText
     private lateinit var buttonSave: Button
@@ -17,7 +17,6 @@ class SetupAccessFragment : androidx.fragment.app.Fragment(R.layout.fragment_acc
         super.onViewCreated(view, savedInstanceState)
         editTextApiKey = view.findViewById(R.id.editTextApiKey)
         buttonSave = view.findViewById(R.id.buttonSave)
-        buttonRetrieve = view.findViewById(R.id.buttonRetrieve)
 
         sharedPreferences = requireContext().getSharedPreferences("AppPrefs", Context.MODE_PRIVATE)
 
