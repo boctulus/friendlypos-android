@@ -13,15 +13,10 @@ import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import cl.friendlypos.mypos.databinding.ActivityMainBinding
 import android.util.Log
-import com.google.android.material.tabs.TabLayout
-import com.google.android.material.tabs.TabLayoutMediator
-import androidx.viewpager2.widget.ViewPager2
 
-class MainActivity : AppCompatActivity() {
-
+class MainActivity : AppCompatActivity()
+{
     private lateinit var binding: ActivityMainBinding
-    private lateinit var viewPager: ViewPager2
-    private lateinit var tabLayout: TabLayout
     private lateinit var sharedPreferences: SharedPreferences
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -62,21 +57,8 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        // Configurar credenciales de acceso
+        // Configurar credenciales de acceso (SharedPreferences)
         sharedPreferences = getSharedPreferences("AppPrefs", Context.MODE_PRIVATE)
-
-        viewPager = findViewById(R.id.viewPager)
-        tabLayout = findViewById(R.id.tabLayout)
-
-        val adapter = ViewPagerAdapter(this)
-        viewPager.adapter = adapter
-
-        TabLayoutMediator(tabLayout, viewPager) { tab, position ->
-            tab.text = when (position) {
-                0 -> "Configurar acceso"
-                else -> "Otra configuración"
-            }
-        }.attach()
     }
     
     override fun onCreateOptionsMenu(menu: Menu): Boolean {

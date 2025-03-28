@@ -2,38 +2,18 @@
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:bind="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@android:color/white">
 
     <!-- Top navigation bar with close button -->
-    <LinearLayout
-    android:id="@+id/top_nav_bar"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="horizontal"
-    android:padding="16dp"
-    app:layout_constraintTop_toTopOf="parent">
-
-    <ImageButton
-        android:id="@+id/btn_close"
-        android:layout_width="wrap_content"
+    <include
+        layout="@layout/base_screen"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="?attr/selectableItemBackgroundBorderless"
-        android:src="@drawable/ic_close"
-        android:contentDescription="Close" />
-
-    <TextView
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:text="Fondo de efectivo"
-        android:textSize="22sp"
-        android:textStyle="bold"
-        android:fontFamily="sans-serif-medium"
-        android:layout_marginStart="16dp"
-        android:textColor="@android:color/black"/>
-</LinearLayout>
+        app:layout_constraintTop_toTopOf="parent"
+        bind:title="@{'Fondo de efectivo'}" />
 
     <!-- Amount display -->
     <TextView
