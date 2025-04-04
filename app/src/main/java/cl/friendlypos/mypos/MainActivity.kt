@@ -32,10 +32,7 @@ class MainActivity : AppCompatActivity()
         // Asegúrate de actualizar estos IDs para que coincidan con tu bottom_nav_menu.xml
         val appBarConfiguration = AppBarConfiguration(
             setOf(
-                R.id.navigation_home,
-                R.id.navigation_products,
-                R.id.navigation_payments,
-                R.id.navigation_history
+                R.id.navigation_home // Solo Home es un destino de nivel superior
             )
         )
         setupActionBarWithNavController(navController, appBarConfiguration)
