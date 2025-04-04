@@ -26,3 +26,4 @@
 [2025-03-28 22:05:05]	No se encontró una version válida	Compila pero aborta (ver inestable)
 [2025-03-29 00:15:33]	No se encontró una version válida	Compila OK
 [2025-04-04 17:13:08]	No se encontró una version válida	Resueltos varios problemas con margenes que afectaban navbars arriba y abajo
+[2025-04-04 18:29:19]	No se encontró una version válida	Queda hablitado boton de retroceso en el ActionBar

@@ -2,6 +2,7 @@
 package cl.friendlypos.mypos.ui.sales
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,8 +11,10 @@ import android.widget.ImageButton
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import cl.friendlypos.mypos.R
 import cl.friendlypos.mypos.databinding.ScreenSalesCalcBinding
+
 
 class SalesCalculatorFragment : Fragment() {
 
@@ -37,13 +40,12 @@ class SalesCalculatorFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         _binding = ScreenSalesCalcBinding.bind(view)
 
-        // Configurar el listener para el botón de regresar (suponiendo que es btn_menu)
-        view.findViewById<ImageButton>(R.id.btn_menu).setOnClickListener {
-            // Opción 1: Simular el botón de retroceso utilizando el nuevo método
-            requireActivity().onBackPressedDispatcher.onBackPressed()
-
-            // Opción 2: Si usas Navigation Component
-            // findNavController().popBackStack()
+        // Configurar el listener para el botón de regresar usando binding
+        binding.btnMenu.setOnClickListener {
+            Log.d("SalesCalculator", "Botón back presionado")
+            if (!findNavController().popBackStack()) {
+                requireActivity().finish() // Cierra la actividad si no hay más fragments en la pila
+            }
         }
 
         // Forzamos el badge a mostrar "17" para probar

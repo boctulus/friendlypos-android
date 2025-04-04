@@ -30,7 +30,11 @@
         android:id="@+id/navigation_sales_calc"
         android:name="cl.friendlypos.mypos.ui.sales.SalesCalculatorFragment"
         android:label="@string/title_sales_calc"
-        tools:layout="@layout/screen_sales_calc" />
+        tools:layout="@layout/screen_sales_calc">
+        <action
+            android:id="@+id/action_sales_calc_to_home"
+            app:destination="@id/navigation_home" />
+    </fragment>
 
     <fragment
         android:id="@+id/navigation_products"

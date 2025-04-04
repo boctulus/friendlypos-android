@@ -40,7 +40,7 @@ class MainActivity : AppCompatActivity()
         )
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
-        
+
         // Configurar acción especial para el botón Home (central)
         navView.setOnItemSelectedListener { item ->
             when (item.itemId) {
@@ -60,7 +60,7 @@ class MainActivity : AppCompatActivity()
         // Configurar credenciales de acceso (SharedPreferences)
         sharedPreferences = getSharedPreferences("AppPrefs", Context.MODE_PRIVATE)
     }
-    
+
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         // Inflar el menú superior (tres puntos)
         menuInflater.inflate(R.menu.top_menu, menu)
@@ -107,5 +107,13 @@ class MainActivity : AppCompatActivity()
 
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
+    }
+
+    /*
+        Habilita boton de retroceso en el ActionBar
+    */
+    override fun onSupportNavigateUp(): Boolean {
+        val navController = findNavController(R.id.nav_host_fragment_activity_main)
+        return navController.navigateUp() || super.onSupportNavigateUp()
     }
 }
