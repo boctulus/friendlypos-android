@@ -1,12 +1,15 @@
 package cl.friendlypos.mypos.ui.home
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.navigation.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
+import cl.friendlypos.mypos.CashFundActivity
 import cl.friendlypos.mypos.R
 import cl.friendlypos.mypos.databinding.FragmentHomeBinding
 import cl.friendlypos.mypos.model.DashboardItem
@@ -32,7 +35,6 @@ class HomeFragment : Fragment() {
     }
 
     private fun setupDashboard() {
-        // Define los elementos del dashboard
         val dashboardItems = listOf(
             DashboardItem(1, "Nueva Venta", R.drawable.ic_new_sale, 
                           ContextCompat.getColor(requireContext(), R.color.tile_sale)),
@@ -41,8 +43,7 @@ class HomeFragment : Fragment() {
             DashboardItem(3, "Clientes", R.drawable.ic_customers,
                           ContextCompat.getColor(requireContext(), R.color.tile_customers)),
             DashboardItem(4, "Reportes", R.drawable.ic_reports,
-                          ContextCompat.getColor(requireContext(), R.color.tile_reports)),
-            // Añade más elementos según necesites
+                          ContextCompat.getColor(requireContext(), R.color.tile_reports))
         )
 
         val adapter = DashboardAdapter(dashboardItems) { item ->
@@ -51,7 +52,6 @@ class HomeFragment : Fragment() {
                 2 -> navigateToInventory()
                 3 -> navigateToCustomers()
                 4 -> navigateToReports()
-                // Maneja más casos según necesites
             }
         }
 
@@ -61,25 +61,24 @@ class HomeFragment : Fragment() {
         }
     }
 
-    // En principio va a la "calculadora"
     private fun navigateToNewSale() {
-        // Implementar navegación
+        view?.findNavController()?.navigate(R.id.action_home_to_sales_calc)
     }
 
-    // Listado de productos con foto, nombre, SKU, codigos de barras, precios, inventario
-    // Idealmente organizado por categorias
     private fun navigateToInventory() {
-        // Implementar navegación
+        view?.findNavController()?.navigate(R.id.action_home_to_inventory)
     }
 
-    // Al registrar una venta tambien se debe poder agregar un cliente
     private fun navigateToCustomers() {
-        // Implementar navegación
+        view?.findNavController()?.navigate(R.id.action_home_to_customers)
     }
 
-    // Historial de ventas y el producto mas vendido del periodo
     private fun navigateToReports() {
-        // Implementar navegación
+        view?.findNavController()?.navigate(R.id.action_home_to_reports)
+    }
+
+    private fun navigateToCashFund() {
+        startActivity(Intent(requireContext(), CashFundActivity::class.java))
     }
 
     override fun onDestroyView() {

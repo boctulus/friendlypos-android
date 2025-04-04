@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.ImageButton
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
@@ -35,6 +36,15 @@ class SalesCalculatorFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         _binding = ScreenSalesCalcBinding.bind(view)
+
+        // Configurar el listener para el botón de regresar (suponiendo que es btn_menu)
+        view.findViewById<ImageButton>(R.id.btn_menu).setOnClickListener {
+            // Opción 1: Simular el botón de retroceso utilizando el nuevo método
+            requireActivity().onBackPressedDispatcher.onBackPressed()
+
+            // Opción 2: Si usas Navigation Component
+            // findNavController().popBackStack()
+        }
 
         // Forzamos el badge a mostrar "17" para probar
         updateCartBadge(17)

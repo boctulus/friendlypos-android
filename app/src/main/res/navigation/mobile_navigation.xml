@@ -5,28 +5,61 @@
     android:id="@+id/mobile_navigation"
     app:startDestination="@+id/navigation_home">
 
+    <!-- HomeFragment como punto de partida con acciones a otros fragments -->
     <fragment
         android:id="@+id/navigation_home"
         android:name="cl.friendlypos.mypos.ui.home.HomeFragment"
         android:label="@string/title_home"
-        tools:layout="@layout/fragment_home" />
+        tools:layout="@layout/fragment_home">
+        <action
+            android:id="@+id/action_home_to_sales_calc"
+            app:destination="@id/navigation_sales_calc" />
+        <action
+            android:id="@+id/action_home_to_inventory"
+            app:destination="@id/navigation_products" />
+        <action
+            android:id="@+id/action_home_to_customers"
+            app:destination="@id/navigation_customers" />
+        <action
+            android:id="@+id/action_home_to_reports"
+            app:destination="@id/navigation_reports" />
+    </fragment>
+
+    <!-- Fragments secundarios accesibles desde HomeFragment -->
+    <fragment
+        android:id="@+id/navigation_sales_calc"
+        android:name="cl.friendlypos.mypos.ui.sales.SalesCalculatorFragment"
+        android:label="@string/title_sales_calc"
+        tools:layout="@layout/screen_sales_calc" />
 
     <fragment
-        android:id="@+id/navigation_dashboard"
-        android:name="cl.friendlypos.mypos.ui.dashboard.DashboardFragment"
-        android:label="@string/title_dashboard"
-        tools:layout="@layout/fragment_dashboard" />
+        android:id="@+id/navigation_products"
+        android:name="cl.friendlypos.mypos.ui.products.ProductsFragment"
+        android:label="@string/title_products"
+        tools:layout="@layout/fragment_products" />
 
     <fragment
-        android:id="@+id/navigation_notifications"
-        android:name="cl.friendlypos.mypos.ui.notifications.NotificationsFragment"
-        android:label="@string/title_notifications"
-        tools:layout="@layout/fragment_notifications" />
+        android:id="@+id/navigation_customers"
+        android:name="cl.friendlypos.mypos.ui.customers.CustomersFragment"
+        android:label="@string/title_customers"
+        tools:layout="@layout/fragment_customers" />
 
-    <!-- Nuevo destino para configuración -->
     <fragment
-        android:id="@+id/navigation_configuracion"
-        android:name="cl.friendlypos.mypos.SetupAccessFragment"
-        android:label="Configuración de acceso"
-        tools:layout="@layout/fragment_setup_access" />
+        android:id="@+id/navigation_reports"
+        android:name="cl.friendlypos.mypos.ui.reports.ReportsFragment"
+        android:label="@string/title_reports"
+        tools:layout="@layout/fragment_reports" />
+
+    <!-- Fragments de nivel superior para el BottomNavigationView -->
+    <fragment
+        android:id="@+id/navigation_payments"
+        android:name="cl.friendlypos.mypos.ui.payments.PaymentsFragment"
+        android:label="@string/title_payments"
+        tools:layout="@layout/fragment_payments" />
+
+    <fragment
+        android:id="@+id/navigation_history"
+        android:name="cl.friendlypos.mypos.ui.history.HistoryFragment"
+        android:label="@string/title_history"
+        tools:layout="@layout/fragment_history" />
 </navigation>
