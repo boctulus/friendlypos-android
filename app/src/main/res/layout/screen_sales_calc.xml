@@ -86,11 +86,13 @@
         app:layout_constraintTop_toBottomOf="@id/tv_amount">
 
         <ImageView
+            android:id="@+id/edit_icon"
             android:layout_width="20dp"
             android:layout_height="20dp"
-            android:src="@drawable/ic_new_sale"
+            android:src="@drawable/ic_edit_sale_item_name"
             android:layout_marginEnd="8dp"
-            android:contentDescription="Edit" />
+            android:contentDescription="Edit"
+            android:visibility="visible"  />
 
         <TextView
             android:id="@+id/tv_item_name"
@@ -120,11 +122,13 @@
         <Button
             android:id="@+id/btn7"
             style="@style/CalculatorButton"
+            android:background="@drawable/calculator_button_bg"
             android:text="7" />
 
         <Button
             android:id="@+id/btn8"
             style="@style/CalculatorButton"
+            android:background="@drawable/calculator_button_bg"
             android:text="8" />
 
         <Button
@@ -187,7 +191,7 @@
             android:padding="0dp"
             android:scaleType="centerInside"
             android:layout_marginTop="6dp"
-            android:layout_marginBottom="6dp" />
+            android:layout_marginBottom="0dp" />
 
         <Button
             android:id="@+id/btn0"
@@ -253,7 +257,7 @@
             android:layout_height="match_parent"
             android:layout_weight="3">
 
-            <!-- Botón PAGAR -->
+            <!-- Botón PAGAR con texto alineado a la izquierda -->
             <Button
                 android:id="@+id/btn_pay"
                 android:layout_width="match_parent"
@@ -261,6 +265,8 @@
                 android:background="@drawable/rounded_button_bg"
                 android:padding="12dp"
                 android:text="PAGAR"
+                android:gravity="start|center_vertical"
+                android:paddingStart="20dp"
                 android:textColor="@android:color/white"
                 android:textSize="18sp" />
 
@@ -270,11 +276,13 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical|end"
-                android:layout_marginEnd="16dp"
+                android:layout_marginEnd="20dp"
                 android:text="$ 240"
                 android:textColor="@android:color/white"
                 android:textSize="18sp"
-                android:visibility="visible"/>
+                android:textStyle="bold"
+                android:visibility="visible"
+                android:elevation="5dp" />
         </FrameLayout>
     </LinearLayout>
 
