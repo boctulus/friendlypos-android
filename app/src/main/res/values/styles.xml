@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <style name="CalculatorButton">
+    <style name="CalculatorButton" parent="Widget.MaterialComponents.Button">
         <item name="android:layout_width">0dp</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_rowWeight">1</item>
@@ -8,8 +8,10 @@
         <item name="android:padding">16dp</item>
         <item name="android:layout_margin">1dp</item>
         <item name="android:textSize">20sp</item>
-        <item name="android:background">@drawable/calculator_button_bg</item>
+        <item name="backgroundTint">#2196f3</item>
+        <item name="android:textColor">@android:color/white</item>
     </style>
+
     <style name="CustomModalStyle" parent="Theme.AppCompat.Light.Dialog">
         <item name="android:windowBackground">@drawable/modal_background</item>
         <item name="android:windowIsFloating">true</item>
