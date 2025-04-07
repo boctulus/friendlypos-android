@@ -26,7 +26,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:background="?attr/selectableItemBackgroundBorderless"
             android:src="@drawable/ic_menu"
             android:contentDescription="Menu" />
 
@@ -35,7 +34,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:background="?attr/selectableItemBackgroundBorderless"
             android:src="@drawable/ic_sales"
             android:contentDescription="Calculator" />
 
@@ -44,7 +42,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:background="?attr/selectableItemBackgroundBorderless"
             android:src="@drawable/ic_dashboard"
             android:contentDescription="Grid" />
 
@@ -53,7 +50,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:background="?attr/selectableItemBackgroundBorderless"
             android:src="@drawable/ic_new_sale"
             android:contentDescription="Add" />
     </LinearLayout>
@@ -122,7 +118,7 @@
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btn7"
             style="@style/CalculatorButton"
-            android:background="@drawable/calculator_button_bg"
+            android:background="@color/blue_500"
             android:text="7" />
 
         <com.google.android.material.button.MaterialButton
@@ -134,6 +130,7 @@
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btn9"
             style="@style/CalculatorButton"
+            android:background="@drawable/calculator_button_bg"
             android:text="9"
             android:textSize="18sp" />
 
@@ -178,10 +175,9 @@
             android:text="3" />
 
         <Button
-            android:id="@+id/btnAdd"
+            android:id="@+id/btnPlus"
             style="@style/CalculatorButton"
             android:layout_rowSpan="2"
-            android:enabled="true"
             android:text="＋" />
 
         <ImageButton

@@ -37,7 +37,7 @@ class SalesCalculatorViewModel : ViewModel() {
 
     // Nueva función para agregar un operador (ej. "x" para multiplicación)
     fun appendOperator(operator: String) {
-        Log.d("SalesCalc", "Operator to be appended: $operator")
+        Log.d("Calc", "Operator to be appended: $operator")
 
         val current = _currentAmount.value ?: "0"
         // Evitar agregar operador al inicio o duplicado
@@ -63,7 +63,7 @@ class SalesCalculatorViewModel : ViewModel() {
         try {
             // Captura la entrada actual y quita posibles símbolos $
             val entry = _currentAmount.value?.replace("$", "") ?: "0"
-            Log.d("SalesCalc", "Processing entry: $entry")
+            Log.d("Calc", "Processing entry: $entry")
 
             var unitPrice = 0.0
             var quantity = 1
@@ -74,23 +74,23 @@ class SalesCalculatorViewModel : ViewModel() {
                 if (parts.size == 2) {
                     unitPrice = parts[0].toDoubleOrNull() ?: 0.0
                     quantity = parts[1].toIntOrNull() ?: 1
-                    Log.d("SalesCalc", "Parsed multiplication: $unitPrice x $quantity")
+                    Log.d("Calc", "Parsed multiplication: $unitPrice x $quantity")
                 }
             } else {
                 unitPrice = entry.toDoubleOrNull() ?: 0.0
-                Log.d("SalesCalc", "Parsed single price: $unitPrice")
+                Log.d("Calc", "Parsed single price: $unitPrice")
             }
 
             // Verifica que el precio no sea cero
             if (unitPrice <= 0) {
-                Log.d("SalesCalc", "Invalid price: $unitPrice, operation cancelled")
+                Log.d("Calc", "Invalid price: $unitPrice, operation cancelled")
                 return
             }
 
             // Calcula el total del ítem
             val totalItem = unitPrice * quantity
             accumulator += totalItem
-            Log.d("SalesCalc", "Item total: $totalItem, Accumulator: $accumulator")
+            Log.d("Calc", "Item total: $totalItem, Accumulator: $accumulator")
 
             // Agrega el ítem a la lista
             val itemName = _currentItemName.value ?: "Item"
@@ -102,13 +102,13 @@ class SalesCalculatorViewModel : ViewModel() {
             // Actualiza el contador del carrito
             val cartCount = (_cartItemCount.value ?: 0) + quantity
             _cartItemCount.value = cartCount
-            Log.d("SalesCalc", "Cart count updated to: $cartCount")
+            Log.d("Calc", "Cart count updated to: $cartCount")
 
             // Reinicia para el siguiente ítem
             _currentAmount.value = "0"
             _currentItemName.value = "Nombre item ${saleItems.size + 1}"
 
-            Log.d("SalesCalc", "Item added successfully")
+            Log.d("Calc", "Item added successfully")
         } catch (e: Exception) {
             Log.e("SalesCalc", "Error adding item: ${e.message}", e)
         }

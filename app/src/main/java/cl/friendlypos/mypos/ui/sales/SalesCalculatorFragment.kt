@@ -31,7 +31,7 @@ class SalesCalculatorFragment : Fragment() {
         _binding = ScreenSalesCalcBinding.inflate(inflater, container, false)
 
         setupNumericPad()
-        setupObservers()
+
 
         return binding.root
     }
@@ -39,41 +39,10 @@ class SalesCalculatorFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // Inicializa el ViewModel explícitamente
-        viewModel = ViewModelProvider(this).get(SalesCalculatorViewModel::class.java)
-
-        // Inicializa observadores
-        viewModel.currentAmount.observe(viewLifecycleOwner) { amount ->
-            binding.tvAmount.text = if (amount.contains("x")) amount else "$$amount"
-            Log.d("SalesCalcFragment", "Display updated: $amount")
-        }
-
-        viewModel.totalAmount.observe(viewLifecycleOwner) { total ->
-            binding.tvTotalAmount.text = "$$total"
-            Log.d("SalesCalcFragment", "Total updated: $total")
-        }
-
-        viewModel.cartItemCount.observe(viewLifecycleOwner) { count ->
-            updateCartBadge(count)
-            Log.d("SalesCalcFragment", "Cart count observed: $count")
-        }
-
-        // Configura el pad numérico
-        setupNumericPad()
+        setupObservers()
     }
 
     private fun setupNumericPad() {
-        // Añade logs para todos los botones críticos
-        binding.btnAdd.setOnClickListener {
-            Log.d("SalesCalcFragment", "Add button clicked")
-            viewModel.addItemToSale()
-        }
-
-        binding.btnMultiply.setOnClickListener {
-            Log.d("SalesCalcFragment", "Multiply button clicked")
-            viewModel.appendOperator("x")
-        }
-
         // Set up number buttons
         binding.btn0.setOnClickListener { viewModel.appendDigit("0") }
         binding.btn1.setOnClickListener { viewModel.appendDigit("1") }
@@ -92,25 +61,35 @@ class SalesCalculatorFragment : Fragment() {
         binding.btnClear.setOnClickListener { viewModel.clearEntry() }
         binding.btnDelete.setOnClickListener { viewModel.deleteLastDigit() }
 
-        // Listener para el botón "+" (ya existente)
-        binding.btnAdd.setOnClickListener { viewModel.addItemToSale() }
+        // Operators
 
-        // Listener para el botón "X" (multiplicación)
-        binding.btnMultiply.setOnClickListener { viewModel.appendOperator("x") }
+        // Añade logs para todos los botones críticos
+        binding.btnPlus.setOnClickListener {
+            Log.d("Calc", "Add button clicked")
+            viewModel.addItemToSale()
+        }
+
+        binding.btnMultiply.setOnClickListener {
+            Log.d("Calc", "Multiply button clicked")
+            viewModel.appendOperator("x")
+        }
 
         // Payment button
         binding.btnPay.setOnClickListener { viewModel.processSale() }
     }
 
     private fun setupObservers() {
+        // Inicializa el ViewModel explícitamente
+        viewModel = ViewModelProvider(this).get(SalesCalculatorViewModel::class.java)
+
         // Asegúrate de que los observadores estén configurados correctamente
         viewModel.currentAmount.observe(viewLifecycleOwner) { amount ->
-            Log.d("SalesCalc", "Display updated: $amount")
-            binding.tvAmount.text = if (amount.contains("x")) amount else "$$amount"
+            Log.d("Calc", "Display updated: $amount")
+            binding.tvAmount.text = "$$amount"
         }
 
         viewModel.totalAmount.observe(viewLifecycleOwner) { total ->
-            Log.d("SalesCalc", "Total updated: $total")
+            Log.d("Calc", "Total updated: $total")
             binding.tvTotalAmount.text = "$$total"
         }
 
@@ -119,18 +98,24 @@ class SalesCalculatorFragment : Fragment() {
         }
 
         viewModel.cartItemCount.observe(viewLifecycleOwner) { count ->
-            Log.d("SalesCalc", "Cart count updated: $count")
+            Log.d("Calc", "Cart count updated: $count")
             updateCartBadge(count)
         }
     }
 
     private fun updateCartBadge(count: Int) {
         with(binding.cartBadgeCount) {
-            text = count.toString()
+            var countToShow = count
+
+            if (countToShow >99){
+                countToShow = 99
+            }
+
+            text = countToShow.toString()
             visibility = if (count > 0) View.VISIBLE else View.INVISIBLE
         }
         // Debug para verificar
-        Log.d("SalesCalc", "Badge updated: $count")
+        Log.d("Calc", "Badge updated: $count")
     }
 
     override fun onDestroyView() {

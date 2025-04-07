@@ -31,7 +31,7 @@ class MainActivity : AppCompatActivity()
         coordinatorLayout = findViewById(R.id.coordinator_layout)
 
         // Para mostrar un Snackbar
-        TopSnackbar.showInfo(coordinatorLayout, "Bienvenido a FriendlyPOS")
+        // TopSnackbar.showInfo(coordinatorLayout, "Bienvenido a FriendlyPOS")
 
         val navView: BottomNavigationView = binding.navView
 
