@@ -49,6 +49,7 @@ dependencies {
     implementation(libs.androidx.lifecycle.viewmodel.ktx)
     implementation(libs.androidx.navigation.fragment.ktx)
     implementation(libs.androidx.navigation.ui.ktx)
+    implementation(libs.material)
 
     // Soporte para librerías .jar en 'libs/'  
     implementation(fileTree(mapOf("dir" to "libs", "include" to listOf("*.jar"))))

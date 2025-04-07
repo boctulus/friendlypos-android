@@ -1,5 +1,6 @@
 package cl.friendlypos.mypos.ui.sales
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -15,16 +16,34 @@ class SalesCalculatorViewModel : ViewModel() {
     private val _currentItemName = MutableLiveData<String>("Nombre item 1")
     val currentItemName: LiveData<String> = _currentItemName
 
-    // Keep track of items in the current sale
-    private val saleItems = mutableListOf<Pair<String, Double>>()
+    // Acumulador para el total de la venta
+    private var accumulator: Double = 0.0
+
+    // Lista para almacenar cada ítem de la venta
+    private val saleItems = mutableListOf<SaleItem>()
+
+    // (Opcional) LiveData para contar la cantidad total de productos (suma de cantidades)
+    private val _cartItemCount = MutableLiveData<Int>(0)
+    val cartItemCount: LiveData<Int> = _cartItemCount
 
     fun appendDigit(digit: String) {
         val current = _currentAmount.value ?: "0"
-        if (current == "0" && digit != "00") {
+        if (current == "0") {
             _currentAmount.value = digit
-        } else if (current != "0") {
+        } else {
             _currentAmount.value = current + digit
         }
+    }
+
+    // Nueva función para agregar un operador (ej. "x" para multiplicación)
+    fun appendOperator(operator: String) {
+        Log.d("SalesCalc", "Operator to be appended: $operator")
+
+        val current = _currentAmount.value ?: "0"
+        // Evitar agregar operador al inicio o duplicado
+        if (current == "0") return
+        if (current.contains(operator)) return
+        _currentAmount.value = current + operator
     }
 
     fun clearEntry() {
@@ -41,36 +60,73 @@ class SalesCalculatorViewModel : ViewModel() {
     }
 
     fun addItemToSale() {
-        val itemAmount = _currentAmount.value?.toDoubleOrNull() ?: 0.0
-        val itemName = _currentItemName.value ?: "Item"
+        try {
+            // Captura la entrada actual y quita posibles símbolos $
+            val entry = _currentAmount.value?.replace("$", "") ?: "0"
+            Log.d("SalesCalc", "Processing entry: $entry")
 
-        if (itemAmount > 0) {
-            saleItems.add(Pair(itemName, itemAmount))
-            updateTotal()
+            var unitPrice = 0.0
+            var quantity = 1
 
-            // Reset for next item
+            // Procesa la multiplicación si existe
+            if (entry.contains("x", ignoreCase = true)) {
+                val parts = entry.split("x", ignoreCase = true)
+                if (parts.size == 2) {
+                    unitPrice = parts[0].toDoubleOrNull() ?: 0.0
+                    quantity = parts[1].toIntOrNull() ?: 1
+                    Log.d("SalesCalc", "Parsed multiplication: $unitPrice x $quantity")
+                }
+            } else {
+                unitPrice = entry.toDoubleOrNull() ?: 0.0
+                Log.d("SalesCalc", "Parsed single price: $unitPrice")
+            }
+
+            // Verifica que el precio no sea cero
+            if (unitPrice <= 0) {
+                Log.d("SalesCalc", "Invalid price: $unitPrice, operation cancelled")
+                return
+            }
+
+            // Calcula el total del ítem
+            val totalItem = unitPrice * quantity
+            accumulator += totalItem
+            Log.d("SalesCalc", "Item total: $totalItem, Accumulator: $accumulator")
+
+            // Agrega el ítem a la lista
+            val itemName = _currentItemName.value ?: "Item"
+            saleItems.add(SaleItem(unitPrice, quantity, itemName))
+
+            // Actualiza LiveData
+            _totalAmount.value = accumulator.toString()
+
+            // Actualiza el contador del carrito
+            val cartCount = (_cartItemCount.value ?: 0) + quantity
+            _cartItemCount.value = cartCount
+            Log.d("SalesCalc", "Cart count updated to: $cartCount")
+
+            // Reinicia para el siguiente ítem
             _currentAmount.value = "0"
             _currentItemName.value = "Nombre item ${saleItems.size + 1}"
+
+            Log.d("SalesCalc", "Item added successfully")
+        } catch (e: Exception) {
+            Log.e("SalesCalc", "Error adding item: ${e.message}", e)
         }
     }
 
-    private fun updateTotal() {
-        val total = saleItems.sumOf { it.second }
-        _totalAmount.value = total.toString()
-    }
-
     fun processSale() {
-        // Add current item if not empty
+        // Si hay un valor pendiente, lo agrega antes de procesar la venta
         val currentValue = _currentAmount.value?.toDoubleOrNull() ?: 0.0
         if (currentValue > 0) {
             addItemToSale()
         }
-
-        // Process payment (in a real app, this would navigate to payment screen)
-        // For now, just reset the sale
+        // Aquí se podría procesar el pago real.
+        // Para el ejemplo, se reinician los valores.
         saleItems.clear()
+        accumulator = 0.0
         _currentAmount.value = "0"
         _totalAmount.value = "0"
         _currentItemName.value = "Nombre item 1"
+        _cartItemCount.value = 0
     }
 }

@@ -11,19 +11,27 @@ import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
+import androidx.coordinatorlayout.widget.CoordinatorLayout
 import cl.friendlypos.mypos.databinding.ActivityMainBinding
 import android.util.Log
+import cl.friendlypos.mypos.utils.TopSnackbar
 
 class MainActivity : AppCompatActivity()
 {
     private lateinit var binding: ActivityMainBinding
     private lateinit var sharedPreferences: SharedPreferences
+    private lateinit var coordinatorLayout: CoordinatorLayout
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        coordinatorLayout = findViewById(R.id.coordinator_layout)
+
+        // Para mostrar un Snackbar
+        TopSnackbar.showInfo(coordinatorLayout, "Bienvenido a FriendlyPOS")
 
         val navView: BottomNavigationView = binding.navView
 

@@ -1,0 +1,232 @@
+#
+# There is insufficient memory for the Java Runtime Environment to continue.
+# Native memory allocation (mmap) failed to map 536870912 bytes. Error detail: G1 virtual space
+# Possible reasons:
+#   The system is out of physical RAM or swap space
+#   This process is running with CompressedOops enabled, and the Java Heap may be blocking the growth of the native heap
+# Possible solutions:
+#   Reduce memory load on the system
+#   Increase physical memory or swap space
+#   Check if swap backing store is full
+#   Decrease Java heap size (-Xmx/-Xms)
+#   Decrease number of Java threads
+#   Decrease Java thread stack sizes (-Xss)
+#   Set larger code cache with -XX:ReservedCodeCacheSize=
+#   JVM is running with Unscaled Compressed Oops mode in which the Java heap is
+#     placed in the first 4GB address space. The Java Heap base address is the
+#     maximum limit for the native heap growth. Please use -XX:HeapBaseMinAddress
+#     to set the Java Heap base and to place the Java Heap above 4GB virtual address.
+# This output file may be truncated or incomplete.
+#
+#  Out of Memory Error (os_windows.cpp:3603), pid=3860, tid=25988
+#
+# JRE version:  (21.0.3+9) (build )
+# Java VM: OpenJDK 64-Bit Server VM (21.0.3+9-LTS, mixed mode, sharing, tiered, compressed oops, compressed class ptrs, g1 gc, windows-amd64)
+# No core dump will be written. Minidumps are not enabled by default on client versions of Windows
+#
+
+---------------  S U M M A R Y ------------
+
+Command Line: -Djava.awt.headless=true -Djava.library.path=C:\Program Files\Microsoft\jdk-21.0.3.9-hotspot\bin;C:\Windows\Sun\Java\bin;C:\Windows\system32;C:\Windows;c:\Users\jayso\AppData\Local\Programs\cursor\resources\app\bin;C:\Python27\;C:\Python27\Scripts;C:\Program Files\Microsoft\jdk-21.0.3.9-hotspot\bin;C:\Python310\Scripts\;C:\Python310\;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem;C:\Windows\System32\WindowsPowerShell\v1.0\;C:\Windows\System32\OpenSSH\;C:\Program Files (x86)\NVIDIA Corporation\PhysX\Common;C:\Program Files\Git\cmd;C:\Program Files (x86)\Paragon Software\LinuxFS for Windows\;C:\HashiCorp\Vagrant\bin;C:\composer;C:\ProgramData\chocolatey\bin;C:\Programs;C:\Program Files (x86)\Gpg4win\..\GnuPG\bin;C:\Program Files\dotnet\;C:\Program Files\PuTTY\;C:\Program Files\Docker\Docker\resources\bin;C:\Program Files\gettext-iconv\bin;C:\Program Files\nodejs\;C:\Program Files (x86)\Windows Kits\10\Windows Performance Toolkit\;C:\Program Files\PowerShell\7\;C:\Python27\python.exe;C:\Users\jayso\AppData\Local\Microsoft\WindowsApps;C:\Users\jayso\bin;C:\HashiCorp\Vagrant\bin;C:\Program Files\PostgreSQL\14\bin;C:\Users\jayso\AppData\Roaming\Composer\v;C:\Program Files\Microsoft VS Code\bin;C:\Program Files\Graphviz\bin;C:\Python27\python.exe;C:\Users\jayso\AppData\Local\Microsoft\WindowsApps;C:\Users\jayso\bin;C:\HashiCorp\Vagrant\bin;C:\Program Files\PostgreSQL\14\bin;C:\Users\jayso\AppData\Roaming\Composer\vendor\bin;C:\Program Files\Sublime Text;C:\Users\jayso\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.10_qbz5n2kfra8p0\LocalCache\local-packages\Python310\Scripts;D:\wamp64\bin\mysql\mysql8.0.27\bin;C:\Programs;D:\laragon\bin\php\php-8.3.15-Win32-vs16-x64;C:\Users\jayso\AppData\Roaming\Python\Python310\Scripts;D:\wamp64\bin\mysql\mysql8.0.31\bin;D:\python\utils;C:\Users\jayso\AppData\Roaming\npm;C:\Program Files\7-Zip;C:\Users\jayso\.dotnet\tools;D:\utils;C:\Users\jayso\AppData\Local\Programs\Windsurf\bin;C:\Users\jayso\AppData\Local\Pandoc\;C:\Users\jayso\AppData\Loc-Dorg.gradle.internal.worker.tmpdir=C:\Users\jayso\AndroidStudioProjects\FriendlyPOS\app\build\tmp\testDebugUnitTest\work --add-opens=java.base/java.io=ALL-UNNAMED -Xmx512m -Dfile.encoding=UTF-8 -Duser.country=AR -Duser.language=es -Duser.variant -ea worker.org.gradle.process.internal.worker.GradleWorkerMain 'Gradle Test Executor 1'
+
+Host: Intel(R) Core(TM) i7-7700HQ CPU @ 2.80GHz, 8 cores, 31G,  Windows 11 , 64 bit Build 22000 (10.0.22000.2538)
+Time: Sun Apr  6 20:29:12 2025 Hora estándar de Taipei elapsed time: 0.023320 seconds (0d 0h 0m 0s)
+
+---------------  T H R E A D  ---------------
+
+Current thread (0x000001ec7d6fcd30):  JavaThread "Unknown thread" [_thread_in_vm, id=25988, stack(0x000000b3f9300000,0x000000b3f9400000) (1024K)]
+
+Stack: [0x000000b3f9300000,0x000000b3f9400000]
+Native frames: (J=compiled Java code, j=interpreted, Vv=VM code, C=native code)
+V  [jvm.dll+0x6d8019]
+V  [jvm.dll+0x8b3993]
+V  [jvm.dll+0x8b5cee]
+V  [jvm.dll+0x8b63d3]
+V  [jvm.dll+0x285436]
+V  [jvm.dll+0x6d47e5]
+V  [jvm.dll+0x6c8f1a]
+V  [jvm.dll+0x35e13b]
+V  [jvm.dll+0x365ce6]
+V  [jvm.dll+0x3b7276]
+V  [jvm.dll+0x3b7548]
+V  [jvm.dll+0x33188c]
+V  [jvm.dll+0x33257b]
+V  [jvm.dll+0x87ba79]
+V  [jvm.dll+0x3c4641]
+V  [jvm.dll+0x864eb8]
+V  [jvm.dll+0x4593de]
+V  [jvm.dll+0x45af51]
+C  [jli.dll+0x52ab]
+C  [ucrtbase.dll+0x26c0c]
+C  [KERNEL32.DLL+0x153e0]
+C  [ntdll.dll+0x485b]
+
+
+---------------  P R O C E S S  ---------------
+
+Threads class SMR info:
+_java_thread_list=0x00007ffd3aa90048, length=0, elements={
+}
+
+Java Threads: ( => current thread )
+Total: 0
+
+Other Threads:
+  0x000001ec7f9e5e60 WorkerThread "GC Thread#0"                     [id=24728, stack(0x000000b3f9400000,0x000000b3f9500000) (1024K)]
+  0x000001ec7f9eae40 ConcurrentGCThread "G1 Main Marker"            [id=548, stack(0x000000b3f9500000,0x000000b3f9600000) (1024K)]
+  0x000001ec7f9ec950 WorkerThread "G1 Conc#0"                       [id=14556, stack(0x000000b3f9600000,0x000000b3f9700000) (1024K)]
+
+[error occurred during error reporting (printing all threads), id 0xc0000005, EXCEPTION_ACCESS_VIOLATION (0xc0000005) at pc=0x00007ffd3a1949e7]
+VM state: not at safepoint (not fully initialized)
+
+VM Mutex/Monitor currently owned by a thread:  ([mutex/lock_event])
+[0x00007ffd3ab042a8] Heap_lock - owner thread: 0x000001ec7d6fcd30
+
+Heap address: 0x00000000e0000000, size: 512 MB, Compressed Oops mode: 32-bit
+
+CDS archive(s) mapped at: [0x0000000000000000-0x0000000000000000-0x0000000000000000), size 0, SharedBaseAddress: 0x0000000800000000, ArchiveRelocationMode: 1.
+Narrow klass base: 0x0000000000000000, Narrow klass shift: 0, Narrow klass range: 0x0
+
+GC Precious Log:
+ CardTable entry size: 512
+ Card Set container configuration: InlinePtr #cards 5 size 8 Array Of Cards #cards 12 size 40 Howl #buckets 4 coarsen threshold 1843 Howl Bitmap #cards 512 size 80 coarsen threshold 460 Card regions per heap region 1 cards per card region 2048
+
+Heap:
+ garbage-first heap   total 0K, used 0K [0x00000000e0000000, 0x0000000100000000)
+  region size 1024K, 0 young (0K), 0 survivors (0K)
+
+[error occurred during error reporting (printing heap information), id 0xc0000005, EXCEPTION_ACCESS_VIOLATION (0xc0000005) at pc=0x00007ffd3a582079]
+GC Heap History (0 events):
+No events
+
+Dll operation events (1 events):
+Event: 0.016 Loaded shared library C:\Program Files\Microsoft\jdk-21.0.3.9-hotspot\bin\java.dll
+
+Deoptimization events (0 events):
+No events
+
+Classes loaded (0 events):
+No events
+
+Classes unloaded (0 events):
+No events
+
+Classes redefined (0 events):
+No events
+
+Internal exceptions (0 events):
+No events
+
+ZGC Phase Switch (0 events):
+No events
+
+VM Operations (0 events):
+No events
+
+Events (0 events):
+No events
+
+
+Dynamic libraries:
+0x00007ff642610000 - 0x00007ff64261e000 	C:\Program Files\Microsoft\jdk-21.0.3.9-hotspot\bin\java.exe
+0x00007ffdd44c0000 - 0x00007ffdd46c9000 	C:\Windows\SYSTEM32\ntdll.dll
+0x00007ffdd4290000 - 0x00007ffdd434d000 	C:\Windows\System32\KERNEL32.DLL
+0x00007ffdd1f50000 - 0x00007ffdd22d4000 	C:\Windows\System32\KERNELBASE.dll
+0x00007ffdd1b80000 - 0x00007ffdd1c91000 	C:\Windows\System32\ucrtbase.dll
+0x00007ffdcd720000 - 0x00007ffdcd738000 	C:\Program Files\Microsoft\jdk-21.0.3.9-hotspot\bin\jli.dll
+0x00007ffdcd7a0000 - 0x00007ffdcd7bb000 	C:\Program Files\Microsoft\jdk-21.0.3.9-hotspot\bin\VCRUNTIME140.dll
+0x00007ffdd3ed0000 - 0x00007ffdd407d000 	C:\Windows\System32\USER32.dll
+0x00007ffdd22e0000 - 0x00007ffdd2306000 	C:\Windows\System32\win32u.dll
+0x00007ffdd4450000 - 0x00007ffdd447a000 	C:\Windows\System32\GDI32.dll
+0x00007ffdd1950000 - 0x00007ffdd1a6e000 	C:\Windows\System32\gdi32full.dll
+0x00007ffdbdde0000 - 0x00007ffdbe085000 	C:\Windows\WinSxS\amd64_microsoft.windows.common-controls_6595b64144ccf1df_6.0.22000.120_none_9d947278b86cc467\COMCTL32.dll
+0x00007ffdd1a70000 - 0x00007ffdd1b0d000 	C:\Windows\System32\msvcp_win.dll
+0x00007ffdd3790000 - 0x00007ffdd3833000 	C:\Windows\System32\msvcrt.dll
+0x00007ffdd3be0000 - 0x00007ffdd3c11000 	C:\Windows\System32\IMM32.DLL
+0x00007ffdc9db0000 - 0x00007ffdc9dbc000 	C:\Program Files\Microsoft\jdk-21.0.3.9-hotspot\bin\vcruntime140_1.dll
+0x00007ffdc9730000 - 0x00007ffdc97bd000 	C:\Program Files\Microsoft\jdk-21.0.3.9-hotspot\bin\msvcp140.dll
+0x00007ffd39e50000 - 0x00007ffd3abe4000 	C:\Program Files\Microsoft\jdk-21.0.3.9-hotspot\bin\server\jvm.dll
+0x00007ffdd29b0000 - 0x00007ffdd2a5e000 	C:\Windows\System32\ADVAPI32.dll
+0x00007ffdd2b10000 - 0x00007ffdd2bae000 	C:\Windows\System32\sechost.dll
+0x00007ffdd23f0000 - 0x00007ffdd2511000 	C:\Windows\System32\RPCRT4.dll
+0x00007ffdd3e60000 - 0x00007ffdd3ecf000 	C:\Windows\System32\WS2_32.dll
+0x00007ffdd02a0000 - 0x00007ffdd02ed000 	C:\Windows\SYSTEM32\POWRPROF.dll
+0x00007ffdc9ab0000 - 0x00007ffdc9ae3000 	C:\Windows\SYSTEM32\WINMM.dll
+0x00007ffdc93f0000 - 0x00007ffdc93fa000 	C:\Windows\SYSTEM32\VERSION.dll
+0x00007ffdd0360000 - 0x00007ffdd0373000 	C:\Windows\SYSTEM32\UMPDC.dll
+0x00007ffdd0a80000 - 0x00007ffdd0a98000 	C:\Windows\SYSTEM32\kernel.appcore.dll
+0x00007ffdc9da0000 - 0x00007ffdc9daa000 	C:\Program Files\Microsoft\jdk-21.0.3.9-hotspot\bin\jimage.dll
+0x00007ffdbe0f0000 - 0x00007ffdbe311000 	C:\Windows\SYSTEM32\DBGHELP.DLL
+0x00007ffdb2f10000 - 0x00007ffdb2f41000 	C:\Windows\SYSTEM32\dbgcore.DLL
+0x00007ffdd1ca0000 - 0x00007ffdd1d1f000 	C:\Windows\System32\bcryptPrimitives.dll
+0x00007ffdc9d80000 - 0x00007ffdc9d9f000 	C:\Program Files\Microsoft\jdk-21.0.3.9-hotspot\bin\java.dll
+
+dbghelp: loaded successfully - version: 4.0.5 - missing functions: none
+symbol engine: initialized successfully - sym options: 0x614 - pdb path: .;C:\Program Files\Microsoft\jdk-21.0.3.9-hotspot\bin;C:\Windows\SYSTEM32;C:\Windows\WinSxS\amd64_microsoft.windows.common-controls_6595b64144ccf1df_6.0.22000.120_none_9d947278b86cc467;C:\Program Files\Microsoft\jdk-21.0.3.9-hotspot\bin\server
+
+VM Arguments:
+jvm_args: -Djava.awt.headless=true -Djava.library.path=C:\Program Files\Microsoft\jdk-21.0.3.9-hotspot\bin;C:\Windows\Sun\Java\bin;C:\Windows\system32;C:\Windows;c:\Users\jayso\AppData\Local\Programs\cursor\resources\app\bin;C:\Python27\;C:\Python27\Scripts;C:\Program Files\Microsoft\jdk-21.0.3.9-hotspot\bin;C:\Python310\Scripts\;C:\Python310\;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem;C:\Windows\System32\WindowsPowerShell\v1.0\;C:\Windows\System32\OpenSSH\;C:\Program Files (x86)\NVIDIA Corporation\PhysX\Common;C:\Program Files\Git\cmd;C:\Program Files (x86)\Paragon Software\LinuxFS for Windows\;C:\HashiCorp\Vagrant\bin;C:\composer;C:\ProgramData\chocolatey\bin;C:\Programs;C:\Program Files (x86)\Gpg4win\..\GnuPG\bin;C:\Program Files\dotnet\;C:\Program Files\PuTTY\;C:\Program Files\Docker\Docker\resources\bin;C:\Program Files\gettext-iconv\bin;C:\Program Files\nodejs\;C:\Program Files (x86)\Windows Kits\10\Windows Performance Toolkit\;C:\Program Files\PowerShell\7\;C:\Python27\python.exe;C:\Users\jayso\AppData\Local\Microsoft\WindowsApps;C:\Users\jayso\bin;C:\HashiCorp\Vagrant\bin;C:\Program Files\PostgreSQL\14\bin;C:\Users\jayso\AppData\Roaming\Composer\v;C:\Program Files\Microsoft VS Code\bin;C:\Program Files\Graphviz\bin;C:\Python27\python.exe;C:\Users\jayso\AppData\Local\Microsoft\WindowsApps;C:\Users\jayso\bin;C:\HashiCorp\Vagrant\bin;C:\Program Files\PostgreSQL\14\bin;C:\Users\jayso\AppData\Roaming\Composer\vendor\bin;C:\Program Files\Sublime Text;C:\Users\jayso\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.10_qbz5n2kfra8p0\LocalCache\local-packages\Python310\Scripts;D:\wamp64\bin\mysql\mysql8.0.27\bin;C:\Programs;D:\laragon\bin\php\php-8.3.15-Win32-vs16-x64;C:\Users\jayso\AppData\Roaming\Python\Python310\Scripts;D:\wamp64\bin\mysql\mysql8.0.31\bin;D:\python\utils;C:\Users\jayso\AppData\Roaming\npm;C:\Program Files\7-Zip;C:\Users\jayso\.dotnet\tools;D:\utils;C:\Users\jayso\AppData\Local\Programs\Windsurf\bin;C:\Users\jayso\AppData\Local\Pandoc\;C:\Users\jayso\AppData\Loc-Dorg.gradle.internal.worker.tmpdir=C:\Users\jayso\AndroidStudioProjects\FriendlyPOS\app\build\tmp\testDebugUnitTest\work --add-opens=java.base/java.io=ALL-UNNAMED -Xmx512m -Dfile.encoding=UTF-8 -Duser.country=AR -Duser.language=es -Duser.variant -ea 
+java_command: worker.org.gradle.process.internal.worker.GradleWorkerMain 'Gradle Test Executor 1'
+java_class_path (initial): C:\\Users\\jayso\\.gradle\\caches\\8.11.1\\workerMain\\gradle-worker.jar;C:\\Users\\jayso\\AndroidStudioProjects\\FriendlyPOS\\app\\build\\tmp\\kotlin-classes\\debugUnitTest;C:\\Users\\jayso\\AndroidStudioProjects\\FriendlyPOS\\app\\build\\intermediates\\java_res\\debugUnitTest\\processDebugUnitTestJavaRes\\out;C:\\Users\\jayso\\AndroidStudioProjects\\FriendlyPOS\\app\\build\\intermediates\\runtime_app_classes_jar\\debug\\bundleDebugClassesToRuntimeJar\\classes.jar;C:\\Users\\jayso\\.gradle\\caches\\modules-2\\files-2.1\\junit\\junit\\4.13.2\\8ac9e16d933b6fb43bc7f576336b8f4d7eb5ba12\\junit-4.13.2.jar;C:\\Users\\jayso\\.gradle\\caches\\8.11.1\\transforms\\b48da2a70e5311b222254a386f647690\\transformed\\databinding-adapters-8.9.0-runtime.jar;C:\\Users\\jayso\\.gradle\\caches\\8.11.1\\transforms\\c60b79e26e5bfc132a0bd778580f6a84\\transformed\\databinding-ktx-8.9.0-runtime.jar;C:\\Users\\jayso\\.gradle\\caches\\8.11.1\\transforms\\6ebffcdcd8f10c35ec5a9de461df676f\\transformed\\databinding-runtime-8.9.0-runtime.jar;C:\\Users\\jayso\\.gradle\\caches\\8.11.1\\transforms\\6fc06d0365da3217ab2b697febc2a6b3\\transformed\\viewbinding-8.9.0-runtime.jar;C:\\Users\\jayso\\.gradle\\caches\\modules-2\\files-2.1\\androidx.databinding\\databinding-common\\8.9.0\\2be3530b78477835e69dce953b17adc1dbc5c6fa\\databinding-common-8.9.0.jar;C:\\Users\\jayso\\.gradle\\caches\\8.11.1\\transforms\\fb17469de2fdee5d98d827400af44e0b\\transformed\\navigation-common-2.6.0-runtime.jar;C:\\Users\\jayso\\.gradle\\caches\\8.11.1\\transforms\\2f42bb9a8f14379d05eb99d7e1f20c1a\\transformed\\navigation-common-ktx-2.6.0-runtime.jar;C:\\Users\\jayso\\.gradle\\caches\\8.11.1\\transforms\\4b475162c134e4eedee715cfea3e21b1\\transformed\\navigation-runtime-2.6.0-runtime.jar;C:\\Users\\jayso\\.gradle\\caches\\8.11.1\\transforms\\6ab28bf176ff4f6a9421ec6becea60ca\\transformed\\navigation-runtime-ktx-2.6.0-runtime.jar;C:\\Users\\jayso\\.gradle\\caches\\8.11.1\\transforms\\a859bc3bf162aa6c2b9b6a55f38f6735\\transformed\\navigation-fragment-2.6.0-runtime.jar;C:\\Users\\jayso\\.gradle\\caches\\8.11.1\\transforms\\7506d887d94405836c3612d7fd3e5fc6\\transformed\\navigation-fragment-ktx-2.6.0-runtime.jar;C:\\Users\\jayso\\.gradle\\caches\\8.11.1\\transforms\\a06817c1f514acad3ba678211b8a0095\\transformed\\navigation-ui-ktx-2.6.0-runtime.jar;C:\\Users\\jayso\\.gradle\\caches\\8.11.1\\transforms\\f9b2b384438a40c774e948178aa4afc2\\transformed\\navigation-ui-2.6.0-runtime.jar;C:\\Users\\jayso\\.gradle\\caches\\8.11.1\\transforms\\8b1d67e1538bbd92f1ac2e5a8b7d88bb\\transformed\\material-1.12.0-runtime.jar;C:\\Users\\jayso\\.gradle\\caches\\8.11.1\\transforms\\63799ce1dc389fbe706d1bf54d9fbcfb\\transformed\\constraintlayout-2.2.1-runtime.jar;C:\\Users\\jayso\\.gradle\\caches\\8.11.1\\transforms\\19b340a59ffd78bc0e26ba3698f1298e\\transformed\\appcompat-resources-1.7.0-runtime.jar;C:\\Users\\jayso\\.gradle\\caches\\8.11.1\\transforms\\189c26619d5613121559252059bf921e\\transformed\\appcompat-1.7.0-runtime.jar;C:\\Users\\jayso\\.gradle\\caches\\8.11.1\\transforms\\bf1d38cc1cf4e6454bd7713b588331e0\\transformed\\viewpager2-1.0.0-runtime.jar;C:\\Users\\jayso\\.gradle\\caches\\8.11.1\\transforms\\fc9bac3327f941c5d299df61f450bdde\\transformed\\fragment-1.6.0-runtime.jar;C:\\Users\\jayso\\.gradle\\caches\\8.11.1\\transforms\\9d2be1608004cf28c53df8baeb0dc99f\\transformed\\fragment-ktx-1.6.0-runtime.jar;C:\\Users\\jayso\\.gradle\\caches\\8.11.1\\transforms\\5fe79a127b95fe90163c9fc0ab80ec52\\transformed\\activity-ktx-1.8.0-runtime.jar;C:\\Users\\jayso\\.gradle\\caches\\8.11.1\\transforms\\04f41413376e0547825c254991996195\\transformed\\activity-1.8.0-runtime.jar;C:\\Users\\jayso\\.gradle\\caches\\8.11.1\\transforms\\7ffff34b1de9f457a05758ea8e6fc1c7\\transformed\\savedstate-ktx-1.2.1-runtime.jar;C:\\Users\\jayso\\.gradle\\caches\\8.11.1\\transforms\\7ac1bca91a462f3fd3101a6892ace21e\\transformed\\savedstate-1.2.1-runtime.jar;C:\\Users\\jayso\\.gradle\\caches\\8.11.1\\transforms\\c6e750c10f92ce9f17b34b849e6f3668\\transformed\\slidingpanelayout-1.2.0-runtime.jar;C:\\Users\\jayso\\.gradle\\caches\\8.11.1\\transforms\\2d165b3b91a99cd586b3eeaaae2a3aad\\transformed\\transition-1.5.0-runtime.jar;C:\\Users\\jayso\\.gradle\\caches\\8.11.1\\transforms\\c8de43c89421c4857fb952c3caf0e01d\\transformed\\dynamicanimation-1.0.0-runtime.jar;C:\\Users\\jayso\\.gradle\\caches\\8.11.1\\transforms\\219b3fdcf0fa7fccb3866631762b2259\\transformed\\legacy-support-core-utils-1.0.0-runtime.jar;C:\\Users\\jayso\\.gradle\\caches\\8.11.1\\transforms\\2d7b9e7e24336d8fb2af4f74666bf5c3\\transformed\\loader-1.0.0-runtime.jar;C:\\Users\\jayso\\.gradle\\caches\\8.11.1\\transforms\\11b1c22fc92aa6667ff030327cb9d458\\transformed\\emoji2-views-helper-1.3.0-runtime.jar;C:\\Users\\jayso\\.gradle\\caches\\8.11.1\\transforms\\d9501d5366777501ec449047f662dc1b\\transformed\\emoji2-1.3.0-runtime.jar;C:\\Users\\jayso\\.gradle\\caches\\8.11.1\\transforms\\795f65354e7fb75be1350f9155522435\\transformed\\lifecycle-viewmodel-ktx-2.6.2-runtime.jar;C:\\Users\\jayso\\.gradle\\caches\\8.11.1\\transforms\\08d44bd8b6b136b7e3214ef28e1a1b9f\\transformed\\lifecycle-viewmodel-2.6.2-runtime.jar;C:\\Users\\jayso\\.gradle\\caches\\8.11.1\\transforms\\71faf90cd2e80dde291766e8130281d5\\transformed\\lifecycle-service-2.6.2-runtime.jar;C:\\Users\\jayso\\.gradle\\caches\\8.11.1\\transforms\\fc4888727d5a8c4a493371689a462812\\transformed\\lifecycle-runtime-ktx-2.6.2-runtime.jar;C:\\Users\\jayso\\.gradle\\caches\\8.11.1\\transforms\\27fc9be46590086f5f2fa243479a4c2f\\transformed\\lifecycle-process-2.6.2-runtime.jar;C:\\Users\\jayso\\.gradle\\caches\\8.11.1\\transforms\\9af7d5c0af11dcd510203e13447d08c8\\transformed\\lifecycle-livedata-core-ktx-2.6.2-runtime.jar;C:\\Users\\jayso\\.gradle\\caches\\8.11.1\\transforms\\4c8fa03829f027c5a76cfa556e2503b5\\transformed\\lifecycle-livedata-core-2.6.2-runtime.jar;C:\\Users\\jayso\\.gradle\\caches\\8.11.1\\transforms\\f4ffb38bee621f4a1de15c613aae1d68\\transformed\\lifecycle-livedata-2.6.2-runtime.jar;C:\\Users\\jayso\\.gradle\\caches\\modules-2\\files-2.1\\androidx.lifecycle\\lifecycle-common\\2.6.2\\10f354fdb64868baecd67128560c5a0d6312c495\\lifecycle-common-2.6.2.jar;C:\\Users\\jayso\\.gradle\\caches\\8.11.1\\transforms\\2df4e7a8f3613efe868b4de88c1ade9e\\transformed\\lifecycle-viewmodel-savedstate-2.6.2-runtime.jar;C:\\Users\\jayso\\.gradle\\caches\\8.11.1\\transforms\\42edfee94b2e98b08cbc2f6d09e4584d\\transformed\\core-ktx-1.13.0-runtime.jar;C:\\Users\\jayso\\.gradle\\caches\\8.11.1\\transforms\\9fb9d92ffbe6f08dc2b65766297a492f\\transformed\\drawerlayout-1.1.1-runtime.jar;C:\\Users\\jayso\\.gradle\\caches\\8.11.1\\transforms\\a8ffa608708e4c4cacc99087fe5d36ec\\transformed\\coordinatorlayout-1.1.0-runtime.jar;C:\\Users\\jayso\\.gradle\\caches\\8.11.1\\transforms\\6b010b6767e27a0611247d8e2486f44a\\transformed\\vectordrawable-animated-1.1.0-runtime.jar;C:\\Users\\jayso\\.gradle\\caches\\8.11.1\\transforms\\9aec763ab9ba1eacbbcdbbb946cd9ac1\\transformed\\vectordrawable-1.1.0-runtime.jar;C:\\Users\\jayso\\.gradle\\caches\\8.11.1\\transforms\\080e7d373c0ba1fa5140bd6d4bb455d2\\transformed\\recyclerview-1.1.0-runtime.jar;C:\\Users\\jayso\\.gradle\\caches\\8.11.1\\transforms\\9bf8bb4ae19d1e73f37cbb991069f30f\\transformed\\viewpager-1.0.0-runtime.jar;C:\\Users\\jayso\\.gradle\\caches\\8.11.1\\transforms\\f4171ad6e20071ec3e72fcd773a50463\\transformed\\customview-1.1.0-runtime.jar;C:\\Users\\jayso\\.gradle\\caches\\8.11.1\\transforms\\d273c180c730e950a60d8251dc00efee\\transformed\\window-1.0.0-runtime.jar;C:\\Users\\jayso\\.gradle\\caches\\8.11.1\\transforms\\2ec96223f8c8b03caff956f41124353f\\transformed\\core-1.13.0-runtime.jar;C:\\Users\\jayso\\.gradle\\caches\\8.11.1\\transforms\\28a84fcb1415141e68d6f33b3cfaba56\\transformed\\lifecycle-runtime-2.6.2-runtime.jar;C:\\Users\\jayso\\.gradle\\caches\\8.11.1\\transforms\\17c595c05d57156132607d639274e37d\\transformed\\lifecycle-livedata-ktx-2.6.2-runtime.jar;C:\\Users\\jayso\\.gradle\\caches\\modules-2\\files-2.1\\org.jetbrains.kotlinx\\kotlinx-coroutines-core-jvm\\1.6.4\\2c997cd1c0ef33f3e751d3831929aeff1390cb30\\kotlinx-coroutines-core-jvm-1.6.4.jar;C:\\Users\\jayso\\.gradle\\caches\\modules-2\\files-2.1\\org.jetbrains.kotlinx\\kotlinx-coroutines-android\\1.6.4\\f955fc8b2ad196e2f4429598440e15f7492eeb2b\\kotlinx-coroutines-android-1.6.4.jar;C:\\Users\\jayso\\.gradle\\caches\\modules-2\\files-2.1\\org.jetbrains.kotlin\\kotlin-stdlib-jdk8\\2.1.0\\c4a51be16c840b969ed706bc25d5836b099d188a\\kotlin-stdlib-jdk8-2.1.0.jar;C:\\Users\\jayso\\.gradle\\caches\\8.11.1\\transforms\\7fbe4a91e3d2125e32c31fa33a7d7d9f\\transformed\\annotation-experimental-1.4.0-runtime.jar;C:\\Users\\jayso\\.gradle\\caches\\modules-2\\files-2.1\\org.jetbrains.kotlin\\kotlin-stdlib-jdk7\\2.1.0\\d77bee6c7bc849e7b9bf4b83e94e8fd1dfc0ea8a\\kotlin-stdlib-jdk7-2.1.0.jar;C:\\Users\\jayso\\.gradle\\caches\\8.11.1\\transforms\\b08926abb7865dd56e3e708cae8528f8\\transformed\\cursoradapter-1.0.0-runtime.jar;C:\\Users\\jayso\\.gradle\\caches\\modules-2\\files-2.1\\androidx.resourceinspection\\resourceinspection-annotation\\1.0.1\\8c21f8ff5d96d5d52c948707f7e4d6ca6773feef\\resourceinspection-annotation-1.0.1.jar;C:\\Users\\jayso\\.gradle\\caches\\8.11.1\\transforms\\5f5b1bd3778709085c9d0aed65ad2f52\\transformed\\cardview-1.0.0-runtime.jar;C:\\Users\\jayso\\.gradle\\caches\\8.11.1\\transforms\\4cdb9fde1e46aae046f00b82eeaf81e3\\transformed\\profileinstaller-1.4.0-runtime.jar;C:\\Users\\jayso\\.gradle\\caches\\modules-2\\files-2.1\\androidx.constraintlayout\\constraintlayout-core\\1.1.1\\f7ab6170b99b9421bd4942846426ff820b552f7d\\constraintlayout-core-1.1.1.jar;C:\\Users\\jayso\\.gradle\\caches\\8.11.1\\transforms\\d025520dda1f0b4353dd3057a639f3f6\\transformed\\startup-runtime-1.1.1-runtime.jar;C:\\Users\\jayso\\.gradle\\caches\\8.11.1\\transforms\\e50f801ca99dbc5f6ddb13a6323493ea\\transformed\\interpolator-1.0.0-runtime.jar;C:\\Users\\jayso\\.gradle\\caches\\8.11.1\\transforms\\643156dacf114be0b330b27659c1936f\\transformed\\versionedparcelable-1.1.1-runtime.jar;C:\\Users\\jayso\\.gradle\\caches\\modules-2\\files-2.1\\androidx.collection\\collection-ktx\\1.1.0\\f807b2f366f7b75142a67d2f3c10031065b5168\\collection-ktx-1.1.0.jar;C:\\Users\\jayso\\.gradle\\caches\\modules-2\\files-2.1\\androidx.collection\\collection\\1.1.0\\1f27220b47669781457de0d600849a5de0e89909\\collection-1.1.0.jar;C:\\Users\\jayso\\.gradle\\caches\\8.11.1\\transforms\\2f695b178e4cdcac9670a40186bf0050\\transformed\\tracing-1.0.0-runtime.jar;C:\\Users\\jayso\\.gradle\\caches\\modules-2\\files-2.1\\androidx.concurrent\\concurrent-futures\\1.1.0\\50b7fb98350d5f42a4e49704b03278542293ba48\\concurrent-futures-1.1.0.jar;C:\\Users\\jayso\\.gradle\\caches\\8.11.1\\transforms\\8623e2916a63f06953efe21f44c80c8d\\transformed\\core-runtime-2.2.0-runtime.jar;C:\\Users\\jayso\\.gradle\\caches\\modules-2\\files-2.1\\androidx.arch.core\\core-common\\2.2.0\\5e1b8b81dfd5f52c56a8d53b18ca759c19a301f3\\core-common-2.2.0.jar;C:\\Users\\jayso\\.gradle\\caches\\8.11.1\\transforms\\ca15cb4efc8462b4cd8631eda0fed0e7\\transformed\\documentfile-1.0.0-runtime.jar;C:\\Users\\jayso\\.gradle\\caches\\8.11.1\\transforms\\e08d3851578c247f3e1eef5d7c4b7e24\\transformed\\localbroadcastmanager-1.0.0-runtime.jar;C:\\Users\\jayso\\.gradle\\caches\\8.11.1\\transforms\\5fd4e966e4e7c16a659432d975efa73b\\transformed\\print-1.0.0-runtime.jar;C:\\Users\\jayso\\.gradle\\caches\\modules-2\\files-2.1\\androidx.annotation\\annotation-jvm\\1.8.1\\b8a16fe526014b7941c1debaccaf9c5153692dbb\\annotation-jvm-1.8.1.jar;C:\\Users\\jayso\\.gradle\\caches\\modules-2\\files-2.1\\org.jetbrains.kotlin\\kotlin-stdlib\\2.1.0\\85f8b81009cda5890e54ba67d64b5e599c645020\\kotlin-stdlib-2.1.0.jar;C:\\Users\\jayso\\.gradle\\caches\\modules-2\\files-2.1\\org.hamcrest\\hamcrest-core\\1.3\\42a25dc3219429f0e5d060061f71acb49bf010a0\\hamcrest-core-1.3.jar;C:\\Users\\jayso\\.gradle\\caches\\modules-2\\files-2.1\\org.jetbrains\\annotations\\13.0\\919f0dfe192fb4e063e7dacadee7f8bb9a2672a9\\annotations-13.0.jar;C:\\Users\\jayso\\.gradle\\caches\\modules-2\\files-2.1\\com.google.errorprone\\error_prone_annotations\\2.15.0\\38c8485a652f808c8c149150da4e5c2b0bd17f9a\\error_prone_annotations-2.15.0.jar;C:\\Users\\jayso\\.gradle\\caches\\modules-2\\files-2.1\\com.google.guava\\listenablefuture\\1.0\\c949a840a6acbc5268d088e47b04177bf90b3cad\\listenablefuture-1.0.jar;C:\\Users\\jayso\\AndroidStudioProjects\\FriendlyPOS\\app\\build\\intermediates\\java_res\\debug\\processDebugJavaRes\\out;C:\\Users\\jayso\\.gradle\\caches\\8.11.1\\transforms\\b97bb295d2bb0ea0bb07b7289cc39ece\\transformed\\databinding-adapters-8.9.0\\jars\\classes.jar;C:\\Users\\jayso\\.gradle\\caches\\8.11.1\\transforms\\6ea91a894ec9c08dd3ccb671e61d1747\\transformed\\databinding-ktx-8.9.0\\jars\\classes.jar;C:\\Users\\jayso\\.gradle\\caches\\8.11.1\\transforms\\bb34f96d053fac76edb73173c5c6ed7f\\transformed\\databinding-runtime-8.9.0\\jars\\classes.jar;C:\\Users\\jayso\\.gradle\\caches\\8.11.1\\transforms\\65c8fbfbf9acd08b7db284960c282d1f\\transformed\\viewbinding-8.9.0\\jars\\classes.jar;C:\\Users\\jayso\\.gradle\\caches\\8.11.1\\transforms\\07a210a9fb3f498f9168a271652d5e9c\\transformed\\navigation-common-2.6.0\\jars\\classes.jar;C:\\Users\\jayso\\.gradle\\caches\\8.11.1\\transforms\\3d5f9f32d3c358de4628b97635a3f00a\\transformed\\navigation-common-ktx-2.6.0\\jars\\classes.jar;C:\\Users\\jayso\\.gradle\\caches\\8.11.1\\transforms\\58102c0ab59c00aeddc264e610d2ff97\\transformed\\navigation-runtime-2.6.0\\jars\\classes.jar;C:\\Users\\jayso\\.gradle\\caches\\8.11.1\\transforms\\3f5e078eebcd632557b607035e387c66\\transformed\\navigation-runtime-ktx-2.6.0\\jars\\classes.jar;C:\\Users\\jayso\\.gradle\\caches\\8.11.1\\transforms\\93eb0a59cbc2c1888eb29568e1c53050\\transformed\\navigation-fragment-2.6.0\\jars\\classes.jar;C:\\Users\\jayso\\.gradle\\caches\\8.11.1\\transforms\\e4a33d6c1431267294d2c386a109ca88\\transformed\\navigation-fragment-ktx-2.6.0\\jars\\classes.jar;C:\\Users\\jayso\\.gradle\\caches\\8.11.1\\transforms\\20b75ac9ffb03f86f4ce69f4e1b43919\\transformed\\navigation-ui-ktx-2.6.0\\jars\\classes.jar;C:\\Users\\jayso\\.gradle\\caches\\8.11.1\\transforms\\254a829e492ced6e082bc95de59d47b7\\transformed\\navigation-ui-2.6.0\\jars\\classes.jar;C:\\Users\\jayso\\.gradle\\caches\\8.11.1\\transforms\\7ad54842414008dee37f26a6bb46128f\\transformed\\material-1.12.0\\jars\\classes.jar;C:\\Users\\jayso\\.gradle\\caches\\8.11.1\\transforms\\0321d16b5cfd2088a3d10f2aead5c88c\\transformed\\constraintlayout-2.2.1\\jars\\classes.jar;C:\\Users\\jayso\\.gradle\\caches\\8.11.1\\transforms\\73ee536ccb8bc4910d2ed0750511006e\\transformed\\appcompat-resources-1.7.0\\jars\\classes.jar;C:\\Users\\jayso\\.gradle\\caches\\8.11.1\\transforms\\47b0cd7f0a8a89432dbb387e43ff279f\\transformed\\appcompat-1.7.0\\jars\\classes.jar;C:\\Users\\jayso\\.gradle\\caches\\8.11.1\\transforms\\fbc0f767d672eb00c6c00ac609196f9e\\transformed\\viewpager2-1.0.0\\jars\\classes.jar;C:\\Users\\jayso\\.gradle\\caches\\8.11.1\\transforms\\8cf5adacc9684740f466294da78b96cb\\transformed\\fragment-1.6.0\\jars\\classes.jar;C:\\Users\\jayso\\.gradle\\caches\\8.11.1\\transforms\\1ed4d61741d133d8522b295ef9f37d29\\transformed\\fragment-ktx-1.6.0\\jars\\classes.jar;C:\\Users\\jayso\\.gradle\\caches\\8.11.1\\transforms\\4bf49dd48a9ad0b914bd5958d18865fe\\transformed\\activity-ktx-1.8.0\\jars\\classes.jar;C:\\Users\\jayso\\.gradle\\caches\\8.11.1\\transforms\\98b6e07ef362698917b814e0a7e35ed1\\transformed\\activity-1.8.0\\jars\\classes.jar;C:\\Users\\jayso\\.gradle\\caches\\8.11.1\\transforms\\1a01c65340542293dfad54e9cfda7a97\\transformed\\savedstate-ktx-1.2.1\\jars\\classes.jar;C:\\Users\\jayso\\.gradle\\caches\\8.11.1\\transforms\\c9462eca5cf82bf1ba88e8c41cc0a430\\transformed\\savedstate-1.2.1\\jars\\classes.jar;C:\\Users\\jayso\\.gradle\\caches\\8.11.1\\transforms\\5987fad3e13057ff4f13044c3b00038f\\transformed\\slidingpanelayout-1.2.0\\jars\\classes.jar;C:\\Users\\jayso\\.gradle\\caches\\8.11.1\\transforms\\3df8f7666ebbf6ab01c9339b4d2e344b\\transformed\\transition-1.5.0\\jars\\classes.jar;C:\\Users\\jayso\\.gradle\\caches\\8.11.1\\transforms\\612818f49b64d0f9df7f30f097126ce7\\transformed\\dynamicanimation-1.0.0\\jars\\classes.jar;C:\\Users\\jayso\\.gradle\\caches\\8.11.1\\transforms\\a305fba0b4624789ce30c03f549a2f5d\\transformed\\legacy-support-core-utils-1.0.0\\jars\\classes.jar;C:\\Users\\jayso\\.gradle\\caches\\8.11.1\\transforms\\e97dc2382a7acce3462dd16cbf2cdc4c\\transformed\\loader-1.0.0\\jars\\classes.jar;C:\\Users\\jayso\\.gradle\\caches\\8.11.1\\transforms\\288c2f84fd27659959cb774fb8d2ad49\\transformed\\emoji2-views-helper-1.3.0\\jars\\classes.jar;C:\\Users\\jayso\\.gradle\\caches\\8.11.1\\transforms\\d81bce2f800234f42a3d5f4dae7823d8\\transformed\\emoji2-1.3.0\\jars\\classes.jar;C:\\Users\\jayso\\.gradle\\caches\\8.11.1\\transforms\\d81bce2f800234f42a3d5f4dae7823d8\\transformed\\emoji2-1.3.0\\jars\\libs\\repackaged.jar;C:\\Users\\jayso\\.gradle\\caches\\8.11.1\\transforms\\5c5689bbb91883eee02e0399bc395e6e\\transformed\\lifecycle-viewmodel-ktx-2.6.2\\jars\\classes.jar;C:\\Users\\jayso\\.gradle\\caches\\8.11.1\\transforms\\f39d9ab1b6d601840c0fd02e96bb1b01\\transformed\\lifecycle-viewmodel-2.6.2\\jars\\classes.jar;C:\\Users\\jayso\\.gradle\\caches\\8.11.1\\transforms\\ca4e44e8ac29ca1152706b5f743d49ef\\transformed\\lifecycle-service-2.6.2\\jars\\classes.jar;C:\\Users\\jayso\\.gradle\\caches\\8.11.1\\transforms\\1ded68855c90f3da1393df8a7d5c5b83\\transformed\\lifecycle-runtime-ktx-2.6.2\\jars\\classes.jar;C:\\Users\\jayso\\.gradle\\caches\\8.11.1\\transforms\\3f520e5237e75312105ec2a229209ff0\\transformed\\lifecycle-process-2.6.2\\jars\\classes.jar;C:\\Users\\jayso\\.gradle\\caches\\8.11.1\\transforms\\ca6dd6384269de784f4975b5ad4720ed\\transformed\\lifecycle-livedata-core-ktx-2.6.2\\jars\\classes.jar;C:\\Users\\jayso\\.gradle\\caches\\8.11.1\\transforms\\db0f4a8f064f656c58d82fdcca1c8c96\\transformed\\lifecycle-livedata-core-2.6.2\\jars\\classes.jar;C:\\Users\\jayso\\.gradle\\caches\\8.11.1\\transforms\\615c351dbcef72c77841dd5298afbe72\\transformed\\lifecycle-livedata-2.6.2\\jars\\classes.jar;C:\\Users\\jayso\\.gradle\\caches\\8.11.1\\transforms\\857f88b84b20069f277410536ccc4d58\\transformed\\lifecycle-viewmodel-savedstate-2.6.2\\jars\\classes.jar;C:\\Users\\jayso\\.gradle\\caches\\8.11.1\\transforms\\a725200ef43a18b1d03e0989467f7f21\\transformed\\core-ktx-1.13.0\\jars\\classes.jar;C:\\Users\\jayso\\.gradle\\caches\\8.11.1\\transforms\\9bb704e53c70256fb797f0ac7f77b75d\\transformed\\drawerlayout-1.1.1\\jars\\classes.jar;C:\\Users\\jayso\\.gradle\\caches\\8.11.1\\transforms\\613b08ae0aa0be7e04e73e6ca60279c6\\transformed\\coordinatorlayout-1.1.0\\jars\\classes.jar;C:\\Users\\jayso\\.gradle\\caches\\8.11.1\\transforms\\f1d4cecda5e56c38cf742f24ff41c6a1\\transformed\\vectordrawable-animated-1.1.0\\jars\\classes.jar;C:\\Users\\jayso\\.gradle\\caches\\8.11.1\\transforms\\22ebb900ec4edfdda91b8f120becfebf\\transformed\\vectordrawable-1.1.0\\jars\\classes.jar;C:\\Users\\jayso\\.gradle\\caches\\8.11.1\\transforms\\adba361bafa4469b4b0932c3bd01a71b\\transformed\\recyclerview-1.1.0\\jars\\classes.jar;C:\\Users\\jayso\\.gradle\\caches\\8.11.1\\transforms\\c5025ad0126473a3e40b991108b78c9b\\transformed\\viewpager-1.0.0\\jars\\classes.jar;C:\\Users\\jayso\\.gradle\\caches\\8.11.1\\transforms\\c97e07343b431f6c81289c4f228602e6\\transformed\\customview-1.1.0\\jars\\classes.jar;C:\\Users\\jayso\\.gradle\\caches\\8.11.1\\transforms\\87aeaaa5a44ee8b2ece35486b9cd2d1d\\transformed\\window-1.0.0\\jars\\classes.jar;C:\\Users\\jayso\\.gradle\\caches\\8.11.1\\transforms\\fe5fdafb0fa85bc167bd5f206f0c498d\\transformed\\core-1.13.0\\jars\\classes.jar;C:\\Users\\jayso\\.gradle\\caches\\8.11.1\\transforms\\675e9f557dca9068878644e22c29a325\\transformed\\lifecycle-runtime-2.6.2\\jars\\classes.jar;C:\\Users\\jayso\\.gradle\\caches\\8.11.1\\transforms\\e598b62b48467c1ac203160e4c7e9a32\\transformed\\lifecycle-livedata-ktx-2.6.2\\jars\\classes.jar;C:\\Users\\jayso\\.gradle\\caches\\8.11.1\\transforms\\d806cb035f2344b8c2b60dced92f9e5d\\transformed\\annotation-experimental-1.4.0\\jars\\classes.jar;C:\\Users\\jayso\\.gradle\\caches\\8.11.1\\transforms\\7b644db4d8dbe5933a9ae98186c4d601\\transformed\\cursoradapter-1.0.0\\jars\\classes.jar;C:\\Users\\jayso\\.gradle\\caches\\8.11.1\\transforms\\463b52e07bdc3eb8997a59a0496a58e5\\transformed\\cardview-1.0.0\\jars\\classes.jar;C:\\Users\\jayso\\.gradle\\caches\\8.11.1\\transforms\\bace38aacbef7986b7fa8a9b6a18a113\\transformed\\profileinstaller-1.4.0\\jars\\classes.jar;C:\\Users\\jayso\\.gradle\\caches\\8.11.1\\transforms\\abbec7b3a2291b80f5a7d189d66021ef\\transformed\\startup-runtime-1.1.1\\jars\\classes.jar;C:\\Users\\jayso\\.gradle\\caches\\8.11.1\\transforms\\a35cfb1cdfc1bae23e175e9362439dae\\transformed\\interpolator-1.0.0\\jars\\classes.jar;C:\\Users\\jayso\\.gradle\\caches\\8.11.1\\transforms\\2ff62938ef1a948b38d77d74fbff1df6\\transformed\\versionedparcelable-1.1.1\\jars\\classes.jar;C:\\Users\\jayso\\.gradle\\caches\\8.11.1\\transforms\\359bd342f2961f5f102d3a1af04060fb\\transformed\\tracing-1.0.0\\jars\\classes.jar;C:\\Users\\jayso\\.gradle\\caches\\8.11.1\\transforms\\95d2d9bbd0986d18595617d0f4a5f564\\transformed\\core-runtime-2.2.0\\jars\\classes.jar;C:\\Users\\jayso\\.gradle\\caches\\8.11.1\\transforms\\0e5099a44a7d5d10d90c78e915e7b0d7\\transformed\\documentfile-1.0.0\\jars\\classes.jar;C:\\Users\\jayso\\.gradle\\caches\\8.11.1\\transforms\\8377b1d491692fd86171a15880c9e292\\transformed\\localbroadcastmanager-1.0.0\\jars\\classes.jar;C:\\Users\\jayso\\.gradle\\caches\\8.11.1\\transforms\\1ed9fd4ef57af120dd124f0d247ea5f0\\transformed\\print-1.0.0\\jars\\classes.jar;C:\\Users\\jayso\\AndroidStudioProjects\\FriendlyPOS\\app\\build\\intermediates\\compile_and_runtime_not_namespaced_r_class_jar\\debug\\processDebugResources\\R.jar;C:\\Users\\jayso\\.gradle\\caches\\8.11.1\\transforms\\099331a62bb601b4ef3e988e81a997e8\\transformed\\android.jar
+Launcher Type: SUN_STANDARD
+
+[Global flags]
+     intx CICompilerCount                          = 4                                         {product} {ergonomic}
+     uint ConcGCThreads                            = 2                                         {product} {ergonomic}
+     uint G1ConcRefinementThreads                  = 8                                         {product} {ergonomic}
+   size_t G1HeapRegionSize                         = 1048576                                   {product} {ergonomic}
+    uintx GCDrainStackTargetSize                   = 64                                        {product} {ergonomic}
+   size_t InitialHeapSize                          = 536870912                                 {product} {ergonomic}
+   size_t MarkStackSize                            = 4194304                                   {product} {ergonomic}
+   size_t MaxHeapSize                              = 536870912                                 {product} {command line}
+   size_t MinHeapDeltaBytes                        = 1048576                                   {product} {ergonomic}
+   size_t MinHeapSize                              = 8388608                                   {product} {ergonomic}
+    uintx NonNMethodCodeHeapSize                   = 5839372                                {pd product} {ergonomic}
+    uintx NonProfiledCodeHeapSize                  = 122909434                              {pd product} {ergonomic}
+    uintx ProfiledCodeHeapSize                     = 122909434                              {pd product} {ergonomic}
+    uintx ReservedCodeCacheSize                    = 251658240                              {pd product} {ergonomic}
+     bool SegmentedCodeCache                       = true                                      {product} {ergonomic}
+   size_t SoftMaxHeapSize                          = 536870912                              {manageable} {ergonomic}
+     bool UseCompressedOops                        = true                           {product lp64_product} {ergonomic}
+     bool UseG1GC                                  = true                                      {product} {ergonomic}
+     bool UseLargePagesIndividualAllocation        = false                                  {pd product} {ergonomic}
+
+Logging:
+Log output configuration:
+ #0: stdout all=warning uptime,level,tags foldmultilines=false
+ #1: stderr all=off uptime,level,tags foldmultilines=false
+
+Environment Variables:
+JAVA_HOME=C:\Program Files\Microsoft\jdk-21.0.3.9-hotspot\
+CLASSPATH=C:\Users\jayso\AndroidStudioProjects\FriendlyPOS\\gradle\wrapper\gradle-wrapper.jar
+PATH=c:\Users\jayso\AppData\Local\Programs\cursor\resources\app\bin;C:\Python27\;C:\Python27\Scripts;C:\Program Files\Microsoft\jdk-21.0.3.9-hotspot\bin;C:\Python310\Scripts\;C:\Python310\;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem;C:\Windows\System32\WindowsPowerShell\v1.0\;C:\Windows\System32\OpenSSH\;C:\Program Files (x86)\NVIDIA Corporation\PhysX\Common;C:\Program Files\Git\cmd;C:\Program Files (x86)\Paragon Software\LinuxFS for Windows\;C:\HashiCorp\Vagrant\bin;C:\composer;C:\ProgramData\chocolatey\bin;C:\Programs;C:\Program Files (x86)\Gpg4win\..\GnuPG\bin;C:\Program Files\dotnet\;C:\Program Files\PuTTY\;C:\Program Files\Docker\Docker\resources\bin;C:\Program Files\gettext-iconv\bin;C:\Program Files\nodejs\;C:\Program Files (x86)\Windows Kits\10\Windows Performance Toolkit\;C:\Program Files\PowerShell\7\;C:\Python27\python.exe;C:\Users\jayso\AppData\Local\Microsoft\WindowsApps;C:\Users\jayso\bin;C:\HashiCorp\Vagrant\bin;C:\Program Files\PostgreSQL\14\bin;C:\Users\jayso\AppData\Roaming\Composer\v;C:\Program Files\Microsoft VS Code\bin;C:\Program Files\Graphviz\bin;C:\Python27\python.exe;C:\Users\jayso\AppData\Local\Microsoft\WindowsApps;C:\Users\jayso\bin;C:\HashiCorp\Vagrant\bin;C:\Program Files\PostgreSQL\14\bin;C:\Users\jayso\AppData\Roaming\Composer\vendor\bin;C:\Program Files\Sublime Text;C:\Users\jayso\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.10_qbz5n2kfra8p0\LocalCache\local-packages\Python310\Scripts;D:\wamp64\bin\mysql\mysql8.0.27\bin;C:\Programs;D:\laragon\bin\php\php-8.3.15-Win32-vs16-x64;C:\Users\jayso\AppData\Roaming\Python\Python310\Scripts;D:\wamp64\bin\mysql\mysql8.0.31\bin;D:\python\utils;C:\Users\jayso\AppData\Roaming\npm;C:\Program Files\7-Zip;C:\Users\jayso\.dotnet\tools;D:\utils;C:\Users\jayso\AppData\Local\Programs\Windsurf\bin;C:\Users\jayso\AppData\Local\Pandoc\;C:\Users\jayso\AppData\Local\Programs\Ollama;C:\tools\dart-sdk\bin;C:\Users\jayso\AppData\Local\Pub\Cache\bin;C:\tools\flutter\bin;
+USERNAME=strix
+OS=Windows_NT
+PROCESSOR_IDENTIFIER=Intel64 Family 6 Model 158 Stepping 9, GenuineIntel
+TMP=C:\Users\jayso\AppData\Local\Temp
+TEMP=C:\Users\jayso\AppData\Local\Temp
+
+
+
+
+Periodic native trim disabled
+
+---------------  S Y S T E M  ---------------
+
+OS:
+ Windows 11 , 64 bit Build 22000 (10.0.22000.2538)
+OS uptime: 1 days 23:22 hours
+Hyper-V role detected
+
+CPU: total 8 (initial active 8) (4 cores per cpu, 2 threads per core) family 6 model 158 stepping 9 microcode 0xde, cx8, cmov, fxsr, ht, mmx, 3dnowpref, sse, sse2, sse3, ssse3, sse4.1, sse4.2, popcnt, lzcnt, tsc, tscinvbit, avx, avx2, aes, erms, clmul, bmi1, bmi2, adx, fma, vzeroupper, clflush, clflushopt, hv, rdtscp, f16c
+Processor Information for all 8 processors :
+  Max Mhz: 2808, Current Mhz: 2808, Mhz Limit: 2808
+
+Memory: 4k page, system-wide physical 32652M (9067M free)
+TotalPageFile size 33676M (AvailPageFile size 280M)
+current process WorkingSet (physical memory assigned to process): 10M, peak: 10M
+current process commit charge ("private bytes"): 59M, peak: 571M
+
+vm_info: OpenJDK 64-Bit Server VM (21.0.3+9-LTS) for windows-amd64 JRE (21.0.3+9-LTS), built on 2024-04-10T01:25:38Z by "MicrosoftCorporation" with MS VC++ 16.10 / 16.11 (VS2019)
+
+END.
