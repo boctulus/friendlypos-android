@@ -1,0 +1,14 @@
+.git/
+.idea/
+.vscode/
+.codegpt/
+.config/
+.gradle/
+.kotlin
+*.zip
+*.rar
+*.tar
+*.bat
+*.ps1
+*.log
+app/build/
