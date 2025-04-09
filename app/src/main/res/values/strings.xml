@@ -9,6 +9,13 @@
     <string name="title_reports">Reportes</string>
     <string name="title_dashboard">Dashboard</string>
     <string name="title_notifications">Notifications</string>
-    <string name="icon_description">Icono de la funcionalidad</string>
+    <string name="icon_description">Ícono de la funcionalidad</string>
     <string name="title_sales">Ventas</string>
+    <string name="back">Atrás</string>
+    <string name="backspace">Retroceso</string>
+    <string name="edit_document">Editar documento</string>
+    <string name="cash">Efectivo</string>
+    <string name="next">Siguiente</string>
+    <string name="credit">Crédito</string>
+    <string name="debit">Débito</string>
 </resources>
