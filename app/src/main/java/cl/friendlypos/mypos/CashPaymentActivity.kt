@@ -1,5 +1,6 @@
 package cl.friendlypos.mypos
 
+import android.app.Activity
 import android.os.Bundle
 import android.view.View
 import android.widget.Button
@@ -115,6 +116,7 @@ class CashPaymentActivity : AppCompatActivity() {
             amountEntered = amountEntered * 10 + digit
             updateAmountDisplay()
             updateChangeAmount()
+            updateSkipButton()
         }
     }
 
@@ -136,6 +138,10 @@ class CashPaymentActivity : AppCompatActivity() {
         }
     }
 
+    private fun updateSkipButton() {
+        btnSkip.text = if (amountEntered > 0) "Aceptar" else "Omitir"
+    }
+
     private fun completeTransaction() {
         // Here you would handle the payment processing and update the sale
         // Create a local service call that would be replaced by API call later
@@ -143,12 +149,12 @@ class CashPaymentActivity : AppCompatActivity() {
         
         if (serviceResult) {
             // Return success
-            setResult(RESULT_OK)
+            setResult(Activity.RESULT_OK)
             finish()
         } else {
             // Handle error (in a real app)
             // For now just return success anyway
-            setResult(RESULT_OK)
+            setResult(Activity.RESULT_CANCELED)
             finish()
         }
     }
@@ -163,7 +169,7 @@ class CashPaymentActivity : AppCompatActivity() {
         val dialog = PaymentCancellationDialog()
         dialog.setOnCancelTransactionListener(object : PaymentCancellationDialog.OnCancelTransactionListener {
             override fun onCancel() {
-                setResult(RESULT_CANCELED)
+                setResult(Activity.RESULT_CANCELED)
                 finish()
             }
         })

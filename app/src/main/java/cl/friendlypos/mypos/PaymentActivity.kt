@@ -11,8 +11,8 @@ import cl.friendlypos.mypos.ui.payments.PaymentCancellationDialog
 import java.text.NumberFormat
 import java.util.Locale
 
-class PaymentActivity : AppCompatActivity() {
-
+class PaymentActivity : AppCompatActivity()
+{
     private lateinit var tvTotal: TextView
     private lateinit var tvDocumentType: TextView
     private lateinit var btnEditDocument: ImageButton
@@ -22,6 +22,11 @@ class PaymentActivity : AppCompatActivity() {
 
     private var totalAmount: Double = 0.0
     private var selectedDocumentType: String = "Documento afecto"
+
+    companion object {
+        private const val BILLING_REQUEST_CODE = 100
+        private const val CASH_PAYMENT_REQUEST_CODE = 101
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -45,13 +50,17 @@ class PaymentActivity : AppCompatActivity() {
         // Set initial document type
         tvDocumentType.text = selectedDocumentType
 
-        // Setup click listeners
+        // Configurar listeners
         btnEditDocument.setOnClickListener {
-            navigateToBillingActivity()
+            val intent = Intent(this, BillingActivity::class.java)
+            intent.putExtra("selectedDocumentType", selectedDocumentType)
+            startActivityForResult(intent, BILLING_REQUEST_CODE)
         }
 
         cardCash.setOnClickListener {
-            navigateToCashPaymentActivity()
+            val intent = Intent(this, CashPaymentActivity::class.java)
+            intent.putExtra("totalAmount", totalAmount)
+            startActivityForResult(intent, CASH_PAYMENT_REQUEST_CODE)
         }
 
         btnCancel.setOnClickListener {
@@ -59,7 +68,7 @@ class PaymentActivity : AppCompatActivity() {
         }
 
         btnBack.setOnClickListener {
-            onBackPressed()
+            finish()
         }
     }
 
@@ -87,19 +96,12 @@ class PaymentActivity : AppCompatActivity() {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        
         if (requestCode == BILLING_REQUEST_CODE && resultCode == RESULT_OK && data != null) {
             selectedDocumentType = data.getStringExtra("selectedDocumentType") ?: selectedDocumentType
             tvDocumentType.text = selectedDocumentType
         } else if (requestCode == CASH_PAYMENT_REQUEST_CODE && resultCode == RESULT_OK) {
-            // Sale completed, return to calculator
             setResult(RESULT_OK)
             finish()
         }
-    }
-
-    companion object {
-        private const val BILLING_REQUEST_CODE = 100
-        private const val CASH_PAYMENT_REQUEST_CODE = 101
     }
 }

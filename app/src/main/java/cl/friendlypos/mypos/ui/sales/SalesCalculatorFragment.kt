@@ -1,6 +1,8 @@
 // SalesCalculatorFragment.kt
 package cl.friendlypos.mypos.ui.sales
 
+import android.app.Activity
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -9,18 +11,23 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ImageButton
 import android.widget.TextView
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
+import cl.friendlypos.mypos.PaymentActivity
 import cl.friendlypos.mypos.R
 import cl.friendlypos.mypos.databinding.ScreenSalesCalcBinding
 
-
-class SalesCalculatorFragment : Fragment() {
-
+class SalesCalculatorFragment : Fragment()
+{
     private var _binding: ScreenSalesCalcBinding? = null
     private val binding get() = _binding!!
     private lateinit var viewModel: SalesCalculatorViewModel
+
+    companion object {
+        private const val PAYMENT_REQUEST_CODE = 1
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -31,7 +38,6 @@ class SalesCalculatorFragment : Fragment() {
         _binding = ScreenSalesCalcBinding.inflate(inflater, container, false)
 
         setupNumericPad()
-
 
         return binding.root
     }
@@ -74,8 +80,18 @@ class SalesCalculatorFragment : Fragment() {
             viewModel.appendOperator("x")
         }
 
-        // Payment button
-        binding.btnPay.setOnClickListener { viewModel.processSale() }
+        // Payment button -- modificación del botón PAGAR
+        binding.btnPay.setOnClickListener {
+            val total = viewModel.totalAmount.value?.toDoubleOrNull() ?: 0.0
+            if (total > 0) {
+                val intent = Intent(requireContext(), PaymentActivity::class.java)
+                intent.putExtra("totalAmount", total)
+                startActivityForResult(intent, PAYMENT_REQUEST_CODE)
+            } else {
+                // Mostrar mensaje de carrito vacío (puedes usar un Toast o Snackbar)
+                Toast.makeText(requireContext(), "No hay productos en el carrito", Toast.LENGTH_SHORT).show()
+            }
+        }
     }
 
     private fun setupObservers() {
@@ -116,6 +132,14 @@ class SalesCalculatorFragment : Fragment() {
         }
         // Debug para verificar
         Log.d("Calc", "Badge updated: $count")
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == PAYMENT_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
+            // Pago completado, reiniciar la calculadora
+            viewModel.processSale()
+        }
     }
 
     override fun onDestroyView() {
