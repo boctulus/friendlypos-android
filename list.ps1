@@ -8,6 +8,7 @@ Set-Location "D:\laragon\www\simplerest"
 if ($args.Count -eq 0) {
     Write-Host "Usage:"
     Write-Host "  --all        Listar todos los archivos (Java, XML, Gradle, etc.)"
+    Write-Host "  --xml        Listar todos los XML"
     Write-Host "  --views      Listar todas las vistas (XMLs en layout)"
     Write-Host "  --drawables  Listar todos los drawables (XMLs en drawable)"
     
@@ -19,23 +20,29 @@ if ($args.Count -eq 0) {
 switch ($args[0]) {
     "--all" {
         $excludePath = Join-Path $CURRENT_DIR 'app\build\*'
-        $command = "php com file list '$CURRENT_DIR' --recursive --pattern='*.java|*.xml|*.gradle|*.properties|*.jar' --exclude='$excludePath'"
+        $command = "php com file list '$CURRENT_DIR' --recursive --pattern='*.kt|*.java|*.xml|*.gradle|*.properties|*.jar' --exclude='$excludePath'"
+        break
+    }
+      "--xml" {
+        $Path = Join-Path $CURRENT_DIR 'app\src\main\res'
+        $command = "php com file list '$Path' --recursive --pattern='*.xml'"
         break
     }
     "--views" {
-        $viewsPath = Join-Path $CURRENT_DIR 'app\src\main\res\layout'
-        $command = "php com file list '$viewsPath' --recursive --pattern='*.xml'"
+        $Path = Join-Path $CURRENT_DIR 'app\src\main\res\layout'
+        $command = "php com file list '$Path' --recursive --pattern='*.xml'"
         break
     }
     "--drawables" {
-        $drawablesPath = Join-Path $CURRENT_DIR 'app\src\main\res\drawable'
-        $command = "php com file list '$drawablesPath' --recursive --pattern='*.xml'"
+        $Path = Join-Path $CURRENT_DIR 'app\src\main\res\drawable'
+        $command = "php com file list '$Path' --recursive --pattern='*.xml'"
         break
     }
     default {
-        Write-Host "Opción inválida. Usa --all, --views o --drawables."
+        Write-Host "Opción inválida. Usa --all, --xml o --views o --drawables."
         Write-Host "Usage:"
         Write-Host "  --all        Listar todos los archivos (Java, XML, Gradle, etc.)"
+        Write-Host "  --xml        Listar todos los XML"
         Write-Host "  --views      Listar todas las vistas (XMLs en layout)"
         Write-Host "  --drawables  Listar todos los drawables (XMLs en drawable)"
         

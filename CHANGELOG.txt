@@ -37,3 +37,4 @@
 [2025-04-08 17:57:18]	No se encontró una version válida	Utilities PS1
 [2025-04-08 17:57:58]	No se encontró una version válida	Automatic update
 [2025-04-09 19:21:19]	No se encontró una version válida	Automatic update
+[2025-04-10 10:57:23]	No se encontró una version válida	list.ps1 parcheado

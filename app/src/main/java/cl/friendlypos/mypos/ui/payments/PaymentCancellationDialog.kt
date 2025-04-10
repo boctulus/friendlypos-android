@@ -1,4 +1,4 @@
-package com.friendlypos
+package cl.friendlypos.mypos.ui.payments
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -7,7 +7,6 @@ import android.view.ViewGroup
 import android.widget.Button
 import androidx.fragment.app.DialogFragment
 import cl.friendlypos.mypos.R
-import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 
 class PaymentCancellationDialog : DialogFragment() {
 

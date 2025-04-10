@@ -36,6 +36,7 @@ android {
     buildFeatures {
         viewBinding = true
         dataBinding = true
+        // compose = true
     }
 }
 
@@ -53,6 +54,8 @@ dependencies {
 
     // Soporte para librerías .jar en 'libs/'  
     implementation(fileTree(mapOf("dir" to "libs", "include" to listOf("*.jar"))))
+    implementation(libs.androidx.foundation.layout.android)
+    implementation(libs.androidx.material3.android)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

@@ -1,6 +1,7 @@
-package cl.friendlypos.mypos
+package cl.friendlypos.mypos.ui.adapters
 
 import androidx.appcompat.app.AppCompatActivity
+import cl.friendlypos.mypos.ui.setup.SetupAccessFragment
 
 class ViewPagerAdapter(activity: AppCompatActivity) : androidx.viewpager2.adapter.FragmentStateAdapter(activity) {
     override fun getItemCount(): Int = 2

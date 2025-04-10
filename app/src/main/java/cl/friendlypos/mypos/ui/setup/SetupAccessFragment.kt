@@ -1,4 +1,4 @@
-package cl.friendlypos.mypos
+package cl.friendlypos.mypos.ui.setup
 
 import android.content.Context
 import android.content.SharedPreferences
@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.widget.Button
 import android.widget.EditText
 import androidx.fragment.app.Fragment
+import cl.friendlypos.mypos.R
 
 class SetupAccessFragment : Fragment(R.layout.fragment_setup_access) {
 
