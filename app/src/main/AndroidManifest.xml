@@ -49,6 +49,12 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <!-- Nuevas actividades para el flujo de pago -->
+        <activity android:name=".PaymentActivity" />
+        <activity android:name=".BillingActivity" />
+        <activity android:name=".CashPaymentActivity" />
+        
         <!-- service android:name=".MyAuthenticationService" /-->
     </application>
 
