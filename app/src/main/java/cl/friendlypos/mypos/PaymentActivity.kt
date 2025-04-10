@@ -10,6 +10,8 @@ import androidx.cardview.widget.CardView
 import cl.friendlypos.mypos.ui.payments.PaymentCancellationDialog
 import java.text.NumberFormat
 import java.util.Locale
+import android.widget.Toast
+import android.util.Log
 
 class PaymentActivity : AppCompatActivity()
 {
@@ -52,15 +54,13 @@ class PaymentActivity : AppCompatActivity()
 
         // Configurar listeners
         btnEditDocument.setOnClickListener {
-            val intent = Intent(this, BillingActivity::class.java)
-            intent.putExtra("selectedDocumentType", selectedDocumentType)
-            startActivityForResult(intent, BILLING_REQUEST_CODE)
+            navigateToBillingActivity()
         }
 
         cardCash.setOnClickListener {
-            val intent = Intent(this, CashPaymentActivity::class.java)
-            intent.putExtra("totalAmount", totalAmount)
-            startActivityForResult(intent, CASH_PAYMENT_REQUEST_CODE)
+            Log.d("PaymentActivity", "Clic en cardCash detectado, iniciando CashPaymentActivity")
+            Toast.makeText(this, "Abriendo ingreso de efectivo", Toast.LENGTH_SHORT).show()
+            navigateToCashPaymentActivity()
         }
 
         btnCancel.setOnClickListener {

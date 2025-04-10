@@ -4,6 +4,7 @@ import android.app.Activity
 import android.os.Bundle
 import android.view.View
 import android.widget.Button
+import android.widget.ImageButton
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import cl.friendlypos.mypos.ui.payments.PaymentCancellationDialog
@@ -16,8 +17,8 @@ class CashPaymentActivity : AppCompatActivity() {
     private lateinit var tvAmountEntered: TextView
     private lateinit var tvChange: TextView
     private lateinit var btnCancel: Button
-    private lateinit var btnSkip: Button
-    
+    private lateinit var btnAccept: Button
+
     // Numeric buttons
     private lateinit var btnOne: Button
     private lateinit var btnTwo: Button
@@ -30,8 +31,8 @@ class CashPaymentActivity : AppCompatActivity() {
     private lateinit var btnNine: Button
     private lateinit var btnZero: Button
     private lateinit var btnZeroZero: Button
-    private lateinit var btnBackspace: Button
-    private lateinit var btnClear: Button
+    private lateinit var btnBackspace: ImageButton
+    // private lateinit var btnClear: Button
 
     private var totalAmount: Double = 0.0
     private var amountEntered: Int = 0
@@ -46,8 +47,8 @@ class CashPaymentActivity : AppCompatActivity() {
         tvAmountEntered = findViewById(R.id.tvAmountEntered)
         tvChange = findViewById(R.id.tvChange)
         btnCancel = findViewById(R.id.btnCancel)
-        btnSkip = findViewById(R.id.btnSkip)
-        
+        btnAccept = findViewById(R.id.btnAccept)
+
         // Initialize numeric buttons
         btnOne = findViewById(R.id.btn1)
         btnTwo = findViewById(R.id.btn2)
@@ -78,7 +79,7 @@ class CashPaymentActivity : AppCompatActivity() {
             showCancellationDialog()
         }
 
-        btnSkip.setOnClickListener {
+        btnAccept.setOnClickListener {
             completeTransaction()
         }
     }
@@ -94,19 +95,17 @@ class CashPaymentActivity : AppCompatActivity() {
         btnEight.setOnClickListener { appendDigit(8) }
         btnNine.setOnClickListener { appendDigit(9) }
         btnZero.setOnClickListener { appendDigit(0) }
-        
+        btnZeroZero.setOnClickListener {
+            appendDigit(0)
+            appendDigit(0)
+        }
+
         btnBackspace.setOnClickListener {
             if (amountEntered > 0) {
                 amountEntered /= 10
                 updateAmountDisplay()
                 updateChangeAmount()
             }
-        }
-        
-        btnClear.setOnClickListener {
-            amountEntered = 0
-            updateAmountDisplay()
-            updateChangeAmount()
         }
     }
 
@@ -129,24 +128,24 @@ class CashPaymentActivity : AppCompatActivity() {
         if (change >= 0) {
             tvChange.visibility = View.VISIBLE
             tvChange.text = "Cambio: ${formatter.format(change)}"
-            
+
             // If amount entered is sufficient, change skip button text to "Finalizar"
-            btnSkip.text = "Finalizar"
+            btnAccept.text = "Finalizar"
         } else {
             tvChange.visibility = View.GONE
-            btnSkip.text = "Omitir"
+            btnAccept.text = "Omitir"
         }
     }
 
     private fun updateSkipButton() {
-        btnSkip.text = if (amountEntered > 0) "Aceptar" else "Omitir"
+        btnAccept.text = if (amountEntered > 0) "Aceptar" else "Omitir"
     }
 
     private fun completeTransaction() {
         // Here you would handle the payment processing and update the sale
         // Create a local service call that would be replaced by API call later
         val serviceResult = processSalePayment(totalAmount, amountEntered)
-        
+
         if (serviceResult) {
             // Return success
             setResult(Activity.RESULT_OK)
