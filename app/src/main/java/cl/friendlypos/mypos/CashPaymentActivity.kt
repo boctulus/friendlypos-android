@@ -32,7 +32,7 @@ class CashPaymentActivity : AppCompatActivity() {
     private lateinit var btnZero: Button
     private lateinit var btnZeroZero: Button
     private lateinit var btnBackspace: ImageButton
-    // private lateinit var btnClear: Button
+    private lateinit var btnBack: ImageButton
 
     private var totalAmount: Double = 0.0
     private var amountEntered: Int = 0
@@ -48,6 +48,7 @@ class CashPaymentActivity : AppCompatActivity() {
         tvChange = findViewById(R.id.tvChange)
         btnCancel = findViewById(R.id.btnClose)
         btnAccept = findViewById(R.id.btnAccept)
+        btnBack = findViewById(R.id.btnBack)
 
         // Initialize numeric buttons
         btnOne = findViewById(R.id.btn1)
@@ -81,6 +82,10 @@ class CashPaymentActivity : AppCompatActivity() {
 
         btnAccept.setOnClickListener {
             completeTransaction()
+        }
+
+        btnBack.setOnClickListener {
+            onBackPressed()
         }
     }
 
@@ -173,5 +178,18 @@ class CashPaymentActivity : AppCompatActivity() {
             }
         })
         dialog.show(supportFragmentManager, "PaymentCancellationDialog")
+    }
+
+    /*
+        Deberia regresar a PaymentActivity
+    */
+    private fun goBack() {
+        setResult(RESULT_OK, intent)
+        finish()
+    }
+
+    override fun onBackPressed() {
+        super.onBackPressed()
+        goBack()
     }
 }
