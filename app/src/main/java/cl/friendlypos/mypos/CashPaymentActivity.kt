@@ -46,7 +46,7 @@ class CashPaymentActivity : AppCompatActivity() {
         tvTotal = findViewById(R.id.tvTotal)
         tvAmountEntered = findViewById(R.id.tvAmountEntered)
         tvChange = findViewById(R.id.tvChange)
-        btnCancel = findViewById(R.id.btnCancel)
+        btnCancel = findViewById(R.id.btnClose)
         btnAccept = findViewById(R.id.btnAccept)
 
         // Initialize numeric buttons
