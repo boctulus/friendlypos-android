@@ -1,4 +1,4 @@
-package cl.friendlypos.mypos.ui.adapters
+package cl.friendlypos.mypos.ui.dashboard
 
 import android.view.LayoutInflater
 import android.view.ViewGroup

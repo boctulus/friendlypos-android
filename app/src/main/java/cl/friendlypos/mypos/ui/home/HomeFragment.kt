@@ -13,7 +13,7 @@ import cl.friendlypos.mypos.CashFundActivity
 import cl.friendlypos.mypos.R
 import cl.friendlypos.mypos.databinding.FragmentHomeBinding
 import cl.friendlypos.mypos.model.DashboardItem
-import cl.friendlypos.mypos.ui.adapters.DashboardAdapter
+import cl.friendlypos.mypos.ui.dashboard.DashboardAdapter
 
 class HomeFragment : Fragment() {
 
