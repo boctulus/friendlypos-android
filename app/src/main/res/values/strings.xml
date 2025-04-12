@@ -18,4 +18,10 @@
     <string name="next">Siguiente</string>
     <string name="credit">Crédito</string>
     <string name="debit">Débito</string>
+    <string name="cart">Canasta</string>
+    <string name="settings">Configuración</string>
+    <string name="more_options">Más opciones</string>
+    <string name="empty_cart">Canasta vacía</string>
+    <string name="search_products">Buscar productos</string>
+    <string name="subtotal">Subtotal</string>
 </resources>
