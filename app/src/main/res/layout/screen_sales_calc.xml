@@ -70,104 +70,26 @@
             android:textSize="16sp" />
     </LinearLayout>
 
-    <!-- Numeric keypad - UPDATED: added constraint to pay_button_container -->
-    <GridLayout
-        android:id="@+id/keypad"
+    <!-- Numeric keypad
+
+     Variants:
+
+     keyboard_calc_variant_clear_00
+     keyboard_calc_variant_clear_dot      el 00 es reemplazado por "."
+     keyboard_calc_variant_clear_comma    el 00 es reemplazado por ","
+    -->
+    <include
+        layout="@layout/keyboard_calc_variant_clear_comma"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="32dp"
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="16dp"
-        android:columnCount="4"
-        android:rowCount="5"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/item_name_container"
-        app:layout_constraintBottom_toTopOf="@id/pay_button_container">
-
-        <Button
-            android:id="@+id/btn7"
-            style="@style/CalculatorButton"
-            android:text="7" />
-
-        <Button
-            android:id="@+id/btn8"
-            style="@style/CalculatorButton"
-            android:text="8" />
-
-        <Button
-            android:id="@+id/btn9"
-            style="@style/CalculatorButton"
-            android:text="9"
-            android:textSize="18sp" />
-
-        <Button
-            android:id="@+id/btnClear"
-            style="@style/CalculatorButton"
-            android:text="C" />
-
-        <Button
-            android:id="@+id/btn4"
-            style="@style/CalculatorButton"
-            android:text="4" />
-
-        <Button
-            android:id="@+id/btn5"
-            style="@style/CalculatorButton"
-            android:text="5" />
-
-        <Button
-            android:id="@+id/btn6"
-            style="@style/CalculatorButton"
-            android:text="6" />
-
-        <Button
-            android:id="@+id/btnMultiply"
-            style="@style/CalculatorButton"
-            android:text="✕" />
-
-        <Button
-            android:id="@+id/btn1"
-            style="@style/CalculatorButton"
-            android:text="1" />
-
-        <Button
-            android:id="@+id/btn2"
-            style="@style/CalculatorButton"
-            android:text="2" />
-
-        <Button
-            android:id="@+id/btn3"
-            style="@style/CalculatorButton"
-            android:text="3" />
-
-        <Button
-            android:id="@+id/btnPlus"
-            style="@style/CalculatorButton"
-            android:layout_rowSpan="2"
-            android:text="＋" />
-
-        <ImageButton
-            android:id="@+id/btnDelete"
-            style="@style/CalculatorButton"
-            android:background="@drawable/border_blue_500"
-            android:src="@drawable/ic_backspace"
-            android:padding="0dp"
-            android:scaleType="centerInside"
-            android:layout_marginTop="6dp"
-            android:layout_marginBottom="6dp" />
-
-        <Button
-            android:id="@+id/btn0"
-            style="@style/CalculatorButton"
-            android:text="0" />
-
-        <Button
-            android:id="@+id/btn00"
-            style="@style/CalculatorButton"
-            android:text="00" />
-    </GridLayout>
+        app:layout_constraintBottom_toTopOf="@id/pay_button_container" />
 
     <!-- Pay button container - UPDATED: added ID and adjusted constraints -->
     <LinearLayout

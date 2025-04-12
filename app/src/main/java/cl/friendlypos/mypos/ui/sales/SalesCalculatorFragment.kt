@@ -65,8 +65,8 @@ class SalesCalculatorFragment : Fragment()
         binding.btn7.setOnClickListener { viewModel.appendDigit("7") }
         binding.btn8.setOnClickListener { viewModel.appendDigit("8") }
         binding.btn9.setOnClickListener { viewModel.appendDigit("9") }
-        binding.btn00.setOnClickListener { viewModel.appendDigit("00") }
-        // binding.btnDot.setOnClickListener { viewModel.appendDigit(",") }
+        // binding.btn00.setOnClickListener { viewModel.appendDigit("00") }
+        binding.btnDecimal.setOnClickListener { viewModel.appendDecimal(".") }
 
         // Function buttons
         binding.btnClear.setOnClickListener { viewModel.clearEntry() }

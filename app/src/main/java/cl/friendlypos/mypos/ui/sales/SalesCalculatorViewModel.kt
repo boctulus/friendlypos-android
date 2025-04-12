@@ -46,6 +46,15 @@ class SalesCalculatorViewModel : ViewModel() {
         _currentAmount.value = current + operator
     }
 
+    fun appendDecimal(symbol: String) {
+        Log.d("Calc", "Decimal symbol to be appended: $symbol")
+
+        val current = _currentAmount.value ?: "0"
+        // Evitar agregar operador al inicio o duplicado
+        if (current.contains(symbol)) return
+        _currentAmount.value = current + symbol
+    }
+
     fun clearEntry() {
         _currentAmount.value = "0"
     }
