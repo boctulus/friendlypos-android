@@ -6,6 +6,7 @@ import android.view.View
 import android.widget.Button
 import android.widget.ImageButton
 import android.widget.TextView
+import androidx.activity.addCallback
 import androidx.appcompat.app.AppCompatActivity
 import cl.friendlypos.mypos.ui.payments.PaymentCancellationDialog
 import java.text.NumberFormat
@@ -46,7 +47,7 @@ class CashPaymentActivity : AppCompatActivity() {
         tvTotal = findViewById(R.id.tvTotal)
         tvAmountEntered = findViewById(R.id.tvAmountEntered)
         tvChange = findViewById(R.id.tvChange)
-        btnCancel = findViewById(R.id.btnClose)
+        btnCancel = findViewById(R.id.btnCancel)
         btnAccept = findViewById(R.id.btnAccept)
         btnBack = findViewById(R.id.btnBack)
 
@@ -65,6 +66,9 @@ class CashPaymentActivity : AppCompatActivity() {
         btnBackspace = findViewById(R.id.btn_delete)
         // btnClear = findViewById(R.id.btnClear)
 
+        val tvTitle = findViewById<TextView>(R.id.tvTitle)
+        tvTitle.text = "Ingreso efectivo"
+
         // Get totalAmount from intent
         totalAmount = intent.getDoubleExtra("totalAmount", 0.0)
 
@@ -76,16 +80,22 @@ class CashPaymentActivity : AppCompatActivity() {
         setupNumericButtonsListeners()
 
         // Setup other click listeners
-        btnCancel.setOnClickListener {
-            showCancellationDialog()
+
+        btnBack.setOnClickListener {
+            goBack()
+        }
+
+        // Configurar OnBackPressedDispatcher
+        onBackPressedDispatcher.addCallback(this) {
+            goBack()
         }
 
         btnAccept.setOnClickListener {
             completeTransaction()
         }
 
-        btnBack.setOnClickListener {
-            onBackPressed()
+        btnCancel.setOnClickListener {
+            showCancellationDialog()
         }
     }
 
@@ -181,15 +191,10 @@ class CashPaymentActivity : AppCompatActivity() {
     }
 
     /*
-        Deberia regresar a PaymentActivity
+      Deberia regresar a PaymentActivity
     */
     private fun goBack() {
         setResult(RESULT_OK, intent)
         finish()
-    }
-
-    override fun onBackPressed() {
-        super.onBackPressed()
-        goBack()
     }
 }

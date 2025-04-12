@@ -42,6 +42,9 @@ class PaymentActivity : AppCompatActivity()
         btnCancel = findViewById(R.id.btnCancel)
         btnBack = findViewById(R.id.btnBack)
 
+        val tvTitle = findViewById<TextView>(R.id.tvTitle)
+        tvTitle.text = "Forma de pago"
+
         // Get totalAmount from intent
         totalAmount = intent.getDoubleExtra("totalAmount", 0.0)
 
@@ -63,12 +66,12 @@ class PaymentActivity : AppCompatActivity()
             navigateToCashPaymentActivity()
         }
 
-        btnCancel.setOnClickListener {
-            showCancellationDialog()
-        }
-
         btnBack.setOnClickListener {
             finish()
+        }
+
+        btnCancel.setOnClickListener {
+            showCancellationDialog()
         }
     }
 

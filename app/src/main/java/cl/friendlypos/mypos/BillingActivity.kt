@@ -6,6 +6,7 @@ import android.widget.Button
 import android.widget.ImageButton
 import android.widget.RadioButton
 import android.widget.RadioGroup
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import cl.friendlypos.mypos.databinding.ScreenCashfundBinding
@@ -20,7 +21,7 @@ class BillingActivity : AppCompatActivity() {
     private lateinit var rbFacturaExenta: RadioButton
     private lateinit var rbSinDocumento: RadioButton
     private lateinit var btnBack: ImageButton
-    private lateinit var btnClose: Button
+    private lateinit var btnCancel: Button
 
     private var selectedDocumentType: String = "Documento afecto"
 
@@ -36,7 +37,10 @@ class BillingActivity : AppCompatActivity() {
         rbFacturaExenta = findViewById(R.id.rbFacturaExenta)
         rbSinDocumento = findViewById(R.id.rbSinDocumento)
         btnBack = findViewById(R.id.btnBack)
-        btnClose = findViewById(R.id.btnClose)
+        btnCancel = findViewById(R.id.btnCancel)
+
+        val tvTitle = findViewById<TextView>(R.id.tvTitle)
+        tvTitle.text = "Documento"
 
         // Get selected document type from intent
         selectedDocumentType = intent.getStringExtra("selectedDocumentType") ?: "Documento afecto"
@@ -67,7 +71,7 @@ class BillingActivity : AppCompatActivity() {
             onBackPressed()
         }
 
-        btnClose.setOnClickListener {
+        btnCancel.setOnClickListener {
             returnSelectedDocumentType()
         }
     }

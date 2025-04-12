@@ -10,6 +10,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ImageButton
+import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
@@ -18,6 +19,7 @@ import androidx.navigation.fragment.findNavController
 import cl.friendlypos.mypos.PaymentActivity
 import cl.friendlypos.mypos.R
 import cl.friendlypos.mypos.databinding.ScreenSalesCalcBinding
+import com.google.android.material.bottomnavigation.BottomNavigationView
 
 class SalesCalculatorFragment : Fragment()
 {
@@ -44,6 +46,9 @@ class SalesCalculatorFragment : Fragment()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        // val topNavBar: LinearLayout = view.findViewById(R.id.top_nav_bar)
+        // ..
 
         setupObservers()
     }

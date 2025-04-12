@@ -11,7 +11,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="16dp">
+        android:padding="30dp">
 
         <ImageView
             android:id="@+id/ivIcon"
@@ -44,7 +44,7 @@
             android:layout_marginTop="8dp"
             android:gravity="center"
             android:text="¿Estás seguro que quieres cancelar la transacción?"
-            android:textColor="@android:color/darker_gray"
+            android:textColor="@color/dark_gray"
             android:textSize="16sp"
             app:layout_constraintTop_toBottomOf="@id/tvTitle" />
 
