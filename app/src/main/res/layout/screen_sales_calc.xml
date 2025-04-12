@@ -10,61 +10,20 @@
     tools:context=".ui.sales.SalesCalculatorFragment">
 
     <!-- Top navigation bar with icons -->
-    <LinearLayout
+    <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/top_nav_bar"
         android:layout_width="match_parent"
         android:layout_height="56dp"
-        android:orientation="horizontal"
         android:background="?attr/colorSurface"
         android:elevation="4dp"
+        app:itemIconSize="24dp"
+        app:itemIconTint="?attr/colorOnSurface"
+        app:itemTextColor="?attr/colorOnSurface"
+        app:labelVisibilityMode="unlabeled"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
-
-        <ImageButton
-            android:id="@+id/btn_menu"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:src="@drawable/ic_menu"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:padding="12dp"
-            app:tint="?attr/colorOnSurface"
-            android:contentDescription="Menu" />
-
-        <ImageButton
-            android:id="@+id/btn_calculator"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:src="@drawable/ic_sales"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:padding="12dp"
-            app:tint="?attr/colorOnSurface"
-            android:contentDescription="Calculator" />
-
-        <ImageButton
-            android:id="@+id/btn_grid"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:src="@drawable/ic_dashboard"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:padding="12dp"
-            app:tint="?attr/colorOnSurface"
-            android:contentDescription="Grid" />
-
-        <ImageButton
-            android:id="@+id/btn_add"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:src="@drawable/ic_new_sale"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:padding="12dp"
-            app:tint="?attr/colorOnSurface"
-            android:contentDescription="Add" />
-    </LinearLayout>
+        app:layout_constraintEnd_toEndOf="parent"
+        app:menu="@menu/top_nav_menu" />
 
     <!-- Amount display -->
     <TextView
