@@ -214,9 +214,9 @@
 
             <ImageView
                 android:id="@+id/emptyCartImage"
-                android:layout_width="200dp"
-                android:layout_height="200dp"
-                android:src="@drawable/ic_empty_cart"
+                android:layout_width="300dp"
+                android:layout_height="300dp"
+                android:src="@drawable/logo_sq_empty"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
