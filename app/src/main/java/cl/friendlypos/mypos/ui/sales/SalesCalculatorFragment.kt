@@ -1,4 +1,3 @@
-// SalesCalculatorFragment.kt
 package cl.friendlypos.mypos.ui.sales
 
 import android.app.Activity
@@ -54,38 +53,37 @@ class SalesCalculatorFragment : Fragment()
     }
 
     private fun setupNumericPad() {
-        // Set up number buttons
-        binding.btn0.setOnClickListener { viewModel.appendDigit("0") }
-        binding.btn1.setOnClickListener { viewModel.appendDigit("1") }
-        binding.btn2.setOnClickListener { viewModel.appendDigit("2") }
-        binding.btn3.setOnClickListener { viewModel.appendDigit("3") }
-        binding.btn4.setOnClickListener { viewModel.appendDigit("4") }
-        binding.btn5.setOnClickListener { viewModel.appendDigit("5") }
-        binding.btn6.setOnClickListener { viewModel.appendDigit("6") }
-        binding.btn7.setOnClickListener { viewModel.appendDigit("7") }
-        binding.btn8.setOnClickListener { viewModel.appendDigit("8") }
-        binding.btn9.setOnClickListener { viewModel.appendDigit("9") }
-        // binding.btn00.setOnClickListener { viewModel.appendDigit("00") }
-        binding.btnDecimal.setOnClickListener { viewModel.appendDecimal(".") }
+        // Obtener referencia al layout incluido
+        val keypad = binding.keypadInclude
 
-        // Function buttons
-        binding.btnClear.setOnClickListener { viewModel.clearEntry() }
-        binding.btnDelete.setOnClickListener { viewModel.deleteLastDigit() }
+        // Configurar botones numéricos
+        binding.root.findViewById<Button>(R.id.btn0).setOnClickListener { viewModel.appendDigit("0") }
+        binding.root.findViewById<Button>(R.id.btn1).setOnClickListener { viewModel.appendDigit("1") }
+        binding.root.findViewById<Button>(R.id.btn2).setOnClickListener { viewModel.appendDigit("2") }
+        binding.root.findViewById<Button>(R.id.btn3).setOnClickListener { viewModel.appendDigit("3") }
+        binding.root.findViewById<Button>(R.id.btn4).setOnClickListener { viewModel.appendDigit("4") }
+        binding.root.findViewById<Button>(R.id.btn5).setOnClickListener { viewModel.appendDigit("5") }
+        binding.root.findViewById<Button>(R.id.btn6).setOnClickListener { viewModel.appendDigit("6") }
+        binding.root.findViewById<Button>(R.id.btn7).setOnClickListener { viewModel.appendDigit("7") }
+        binding.root.findViewById<Button>(R.id.btn8).setOnClickListener { viewModel.appendDigit("8") }
+        binding.root.findViewById<Button>(R.id.btn9).setOnClickListener { viewModel.appendDigit("9") }
+        binding.root.findViewById<Button>(R.id.btnDecimal).setOnClickListener { viewModel.appendDecimal(".") }
 
-        // Operators
+        // Botones de función
+        binding.root.findViewById<Button>(R.id.btnClear).setOnClickListener { viewModel.clearEntry() }
+        binding.root.findViewById<ImageButton>(R.id.btnDelete).setOnClickListener { viewModel.deleteLastDigit() }
 
-        // Añade logs para todos los botones críticos
-        binding.btnPlus.setOnClickListener {
+        // Operadores
+        binding.root.findViewById<Button>(R.id.btnPlus).setOnClickListener {
             Log.d("Calc", "Add button clicked")
             viewModel.addItemToSale()
         }
-
-        binding.btnMultiply.setOnClickListener {
+        binding.root.findViewById<Button>(R.id.btnMultiply).setOnClickListener {
             Log.d("Calc", "Multiply button clicked")
             viewModel.appendOperator("x")
         }
 
-        // Payment button -- modificación del botón PAGAR
+        // Botón de pago (este no está en el include, sigue usando binding directamente)
         binding.btnPay.setOnClickListener {
             val total = viewModel.totalAmount.value?.toDoubleOrNull() ?: 0.0
             if (total > 0) {
@@ -93,7 +91,6 @@ class SalesCalculatorFragment : Fragment()
                 intent.putExtra("totalAmount", total)
                 startActivityForResult(intent, PAYMENT_REQUEST_CODE)
             } else {
-                // Mostrar mensaje de carrito vacío (puedes usar un Toast o Snackbar)
                 Toast.makeText(requireContext(), "No hay productos en el carrito", Toast.LENGTH_SHORT).show()
             }
         }

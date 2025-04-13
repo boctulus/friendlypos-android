@@ -4,9 +4,12 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
+import android.widget.ImageButton
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
+import cl.friendlypos.mypos.R
 import cl.friendlypos.mypos.databinding.FragmentCartBinding
 
 class CartFragment : Fragment() {
@@ -16,6 +19,8 @@ class CartFragment : Fragment() {
 
     private lateinit var viewModel: CartViewModel
     private lateinit var adapter: CartAdapter
+    private lateinit var btnCancel: Button
+    private lateinit var btnBack: ImageButton
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -30,7 +35,7 @@ class CartFragment : Fragment() {
         setupRecyclerView()
         setupObservers()
         setupListeners()
-        
+
         return binding.root
     }
 
@@ -73,12 +78,8 @@ class CartFragment : Fragment() {
         }
     }
     
-    private fun setupListeners() {
-        binding.backButton.setOnClickListener {
-            // Navigate back
-            requireActivity().onBackPressed()
-        }
-        
+    private fun setupListeners()
+    {
         binding.searchProductsEditText.setOnClickListener {
             // Open product search
         }
@@ -86,17 +87,26 @@ class CartFragment : Fragment() {
         binding.barcodeButton.setOnClickListener {
             // Open barcode scanner
         }
-        
-        binding.documentCancelButton.setOnClickListener {
-            // Show confirmation dialog to cancel document
-        }
-        
+
         binding.calculatorButton.setOnClickListener {
             // Open calculator
         }
         
         binding.subtotalCard.setOnClickListener {
             // Proceed to checkout
+        }
+
+        /*
+            Toolbar actions
+         */
+
+        binding.toolbarCustom.btnBack.setOnClickListener {
+            // Navigate back
+            requireActivity().onBackPressed()
+        }
+
+        binding.toolbarCustom.btnCancel.setOnClickListener {
+            // Show confirmation dialog to cancel document
         }
     }
 
