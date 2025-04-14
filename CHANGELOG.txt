@@ -52,3 +52,4 @@
 [2025-04-12 13:53:16]	No se encontró una version válida	Refactoring: CartAdpter movido
 [2025-04-12 14:36:37]	No se encontró una version válida	Algunas variaciones del teclado
 [2025-04-13 20:52:53]	No se encontró una version válida	Solucion a problema en tiempo de ejecucion por error de casting en Calc
+[2025-04-14 19:48:24]	No se encontró una version válida	Compila OK pero no navega al carrito

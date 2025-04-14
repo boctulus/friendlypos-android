@@ -14,7 +14,7 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <include
-            layout="@layout/toolbar_custom"
+            layout="@layout/base_toolbar_custom"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 

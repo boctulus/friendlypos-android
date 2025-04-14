@@ -19,7 +19,7 @@
         <!-- Toolbar personalizado -->
         <include
             android:id="@+id/toolbarCustom"
-            layout="@layout/toolbar_custom"
+            layout="@layout/base_toolbar_custom"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />
@@ -227,7 +227,8 @@
                     android:layout_width="48dp"
                     android:layout_height="48dp"
                     android:padding="12dp"
-                    android:src="@drawable/ic_calculator" />
+                    android:src="@drawable/ic_calculator"
+                    />
             </androidx.cardview.widget.CardView>
 
             <androidx.cardview.widget.CardView

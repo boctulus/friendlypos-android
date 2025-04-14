@@ -73,4 +73,19 @@
         android:name="cl.friendlypos.mypos.ui.notifications.NotificationsFragment"
         android:label="@string/title_notifications"
         tools:layout="@layout/fragment_notifications" />
+
+
+    <fragment
+        android:id="@+id/salesCalculatorFragment"
+        android:name="cl.friendlypos.mypos.ui.sales.SalesCalculatorFragment"
+        android:label="Calculadora de Ventas">
+        <action
+            android:id="@+id/action_salesCalculatorFragment_to_cartFragment"
+            app:destination="@id/cartFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/cartFragment"
+        android:name="cl.friendlypos.mypos.ui.cart.CartFragment"
+        android:label="Carrito" />
 </navigation>

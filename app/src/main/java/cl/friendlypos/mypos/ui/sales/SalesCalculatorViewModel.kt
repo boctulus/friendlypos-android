@@ -20,9 +20,10 @@ class SalesCalculatorViewModel : ViewModel() {
     private var accumulator: Double = 0.0
 
     // Lista para almacenar cada ítem de la venta
-    private val saleItems = mutableListOf<SaleItem>()
+    private val _saleItems = MutableLiveData<List<SaleItem>>(emptyList())
+    val saleItems: LiveData<List<SaleItem>> = _saleItems
 
-    // (Opcional) LiveData para contar la cantidad total de productos (suma de cantidades)
+    // LiveData para contar la cantidad total de productos (suma de cantidades)
     private val _cartItemCount = MutableLiveData<Int>(0)
     val cartItemCount: LiveData<Int> = _cartItemCount
 
@@ -70,53 +71,48 @@ class SalesCalculatorViewModel : ViewModel() {
 
     fun addItemToSale() {
         try {
-            // Captura la entrada actual y quita posibles símbolos $
             val entry = _currentAmount.value?.replace("$", "") ?: "0"
             Log.d("Calc", "Processing entry: $entry")
 
-            var unitPrice = 0.0
+            var unitPrice = 0
             var quantity = 1
 
-            // Procesa la multiplicación si existe
             if (entry.contains("x", ignoreCase = true)) {
                 val parts = entry.split("x", ignoreCase = true)
                 if (parts.size == 2) {
-                    unitPrice = parts[0].toDoubleOrNull() ?: 0.0
-                    quantity = parts[1].toIntOrNull() ?: 1
-                    Log.d("Calc", "Parsed multiplication: $unitPrice x $quantity")
+                    quantity = parts[0].trim().toIntOrNull() ?: 1
+                    val priceStr = parts[1].trim().replace(",", "")
+                    unitPrice = priceStr.toIntOrNull() ?: 0
+                    Log.d("Calc", "Parsed multiplication: $quantity x $unitPrice")
                 }
             } else {
-                unitPrice = entry.toDoubleOrNull() ?: 0.0
+                unitPrice = entry.replace(",", "").toIntOrNull() ?: 0
                 Log.d("Calc", "Parsed single price: $unitPrice")
             }
 
-            // Verifica que el precio no sea cero
             if (unitPrice <= 0) {
                 Log.d("Calc", "Invalid price: $unitPrice, operation cancelled")
                 return
             }
 
-            // Calcula el total del ítem
             val totalItem = unitPrice * quantity
             accumulator += totalItem
             Log.d("Calc", "Item total: $totalItem, Accumulator: $accumulator")
 
-            // Agrega el ítem a la lista
             val itemName = _currentItemName.value ?: "Item"
-            saleItems.add(SaleItem(unitPrice, quantity, itemName))
+            val newItem = SaleItem(unitPrice = unitPrice, quantity = quantity, name = itemName)
+            val currentItems = _saleItems.value?.toMutableList() ?: mutableListOf()
+            currentItems.add(newItem)
+            _saleItems.value = currentItems
 
-            // Actualiza LiveData
-            _totalAmount.value = accumulator.toString()
+            _totalAmount.value = accumulator.toInt().toString()
 
-            // Actualiza el contador del carrito
             val cartCount = (_cartItemCount.value ?: 0) + quantity
             _cartItemCount.value = cartCount
             Log.d("Calc", "Cart count updated to: $cartCount")
 
-            // Reinicia para el siguiente ítem
             _currentAmount.value = "0"
-            _currentItemName.value = "Nombre item ${saleItems.size + 1}"
-
+            _currentItemName.value = "Nombre item ${currentItems.size + 1}"
             Log.d("Calc", "Item added successfully")
         } catch (e: Exception) {
             Log.e("SalesCalc", "Error adding item: ${e.message}", e)
@@ -125,13 +121,15 @@ class SalesCalculatorViewModel : ViewModel() {
 
     fun processSale() {
         // Si hay un valor pendiente, lo agrega antes de procesar la venta
-        val currentValue = _currentAmount.value?.toDoubleOrNull() ?: 0.0
+        val currentValue = _currentAmount.value?.toIntOrNull() ?: 0
         if (currentValue > 0) {
             addItemToSale()
         }
+
         // Aquí se podría procesar el pago real.
-        // Para el ejemplo, se reinician los valores.
-        saleItems.clear()
+        // Se reinician los valores.
+
+        _saleItems.value = emptyList()
         accumulator = 0.0
         _currentAmount.value = "0"
         _totalAmount.value = "0"

@@ -107,6 +107,7 @@
 
         <!-- Contenedor del botón de carrito y badge -->
         <FrameLayout
+            android:id="@+id/cartButtonContainer"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_marginEnd="2dp"

@@ -50,6 +50,11 @@ class SalesCalculatorFragment : Fragment()
         // ..
 
         setupObservers()
+
+        // Configurar clic en el contenedor del carrito
+        binding.cartButtonContainer.setOnClickListener {
+            findNavController().navigate(R.id.action_salesCalculatorFragment_to_cartFragment)
+        }
     }
 
     private fun setupNumericPad() {

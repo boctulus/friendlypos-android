@@ -11,6 +11,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import cl.friendlypos.mypos.R
 import cl.friendlypos.mypos.databinding.FragmentCartBinding
+import cl.friendlypos.mypos.ui.sales.SalesCalculatorViewModel
 
 class CartFragment : Fragment() {
 
@@ -19,8 +20,6 @@ class CartFragment : Fragment() {
 
     private lateinit var viewModel: CartViewModel
     private lateinit var adapter: CartAdapter
-    private lateinit var btnCancel: Button
-    private lateinit var btnBack: ImageButton
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -31,7 +30,7 @@ class CartFragment : Fragment() {
         _binding = FragmentCartBinding.inflate(inflater, container, false)
         binding.cartViewModel = viewModel
         binding.lifecycleOwner = viewLifecycleOwner
-        
+
         setupRecyclerView()
         setupObservers()
         setupListeners()
@@ -41,25 +40,22 @@ class CartFragment : Fragment() {
 
     private fun setupRecyclerView() {
         adapter = CartAdapter(
-            onItemEdit = { item -> 
+            onItemEdit = { item ->
                 // Handle edit item
             },
             onItemDelete = { item ->
-                viewModel.removeItem(item.id) 
+                viewModel.removeItem(item.id)
             }
         )
-        
         binding.cartItemsRecyclerView.apply {
             layoutManager = LinearLayoutManager(context)
             adapter = this@CartFragment.adapter
         }
     }
-    
+
     private fun setupObservers() {
         viewModel.cartItems.observe(viewLifecycleOwner) { items ->
             adapter.submitList(items)
-            
-            // Show empty state or cart items based on list state
             if (items.isEmpty()) {
                 binding.emptyCartContainer.visibility = View.VISIBLE
                 binding.cartItemsRecyclerView.visibility = View.GONE
@@ -68,22 +64,28 @@ class CartFragment : Fragment() {
                 binding.cartItemsRecyclerView.visibility = View.VISIBLE
             }
         }
-        
+
         viewModel.subtotal.observe(viewLifecycleOwner) { subtotal ->
             binding.subtotalAmount.text = viewModel.formatPrice(subtotal)
         }
-        
+
         viewModel.itemCount.observe(viewLifecycleOwner) { count ->
             binding.itemCountBadge.text = count.toString()
         }
+
+        // Sincronizar con SalesCalculatorViewModel
+        val salesViewModel = ViewModelProvider(requireActivity()).get(SalesCalculatorViewModel::class.java)
+        salesViewModel.saleItems.observe(viewLifecycleOwner) { saleItems ->
+            val cartItems = saleItems.map { CartItem(it.id, it.name, it.unitPrice, it.quantity) }
+            viewModel.setCartItems(cartItems)
+        }
     }
-    
-    private fun setupListeners()
-    {
+
+    private fun setupListeners() {
         binding.searchProductsEditText.setOnClickListener {
             // Open product search
         }
-        
+
         binding.barcodeButton.setOnClickListener {
             // Open barcode scanner
         }
@@ -91,17 +93,12 @@ class CartFragment : Fragment() {
         binding.calculatorButton.setOnClickListener {
             // Open calculator
         }
-        
+
         binding.subtotalCard.setOnClickListener {
             // Proceed to checkout
         }
 
-        /*
-            Toolbar actions
-         */
-
         binding.toolbarCustom.btnBack.setOnClickListener {
-            // Navigate back
             requireActivity().onBackPressed()
         }
 
