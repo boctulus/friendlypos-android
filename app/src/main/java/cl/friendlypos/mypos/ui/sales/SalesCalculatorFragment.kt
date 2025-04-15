@@ -52,8 +52,14 @@ class SalesCalculatorFragment : Fragment()
         setupObservers()
 
         // Configurar clic en el contenedor del carrito
-        binding.cartButtonContainer.setOnClickListener {
-            findNavController().navigate(R.id.action_salesCalculatorFragment_to_cartFragment)
+        binding.btnCartBadge.setOnClickListener {
+            try {
+                Log.d("CartNavigation", "Cart button image clicked!")
+                findNavController().navigate(R.id.action_sales_calc_to_cart)
+                Log.d("Navigation", "Navigation action executed")
+            } catch (e: Exception) {
+                Log.e("Navigation", "Navigation failed", e)
+            }
         }
     }
 

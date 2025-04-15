@@ -5,35 +5,45 @@
     android:id="@+id/mobile_navigation"
     app:startDestination="@+id/navigation_home">
 
-    <!-- HomeFragment como punto de partida con acciones a otros fragments -->
+    <!-- Fragmento principal y destino inicial -->
     <fragment
         android:id="@+id/navigation_home"
         android:name="cl.friendlypos.mypos.ui.home.HomeFragment"
         android:label="@string/title_home"
         tools:layout="@layout/fragment_home">
+
         <action
             android:id="@+id/action_home_to_sales_calc"
             app:destination="@id/navigation_sales_calc" />
+
         <action
             android:id="@+id/action_home_to_inventory"
             app:destination="@id/navigation_products" />
+
         <action
             android:id="@+id/action_home_to_customers"
             app:destination="@id/navigation_customers" />
+
         <action
             android:id="@+id/action_home_to_reports"
             app:destination="@id/navigation_reports" />
     </fragment>
 
-    <!-- Fragments secundarios accesibles desde HomeFragment -->
+    <!-- Fragments secundarios -->
     <fragment
         android:id="@+id/navigation_sales_calc"
         android:name="cl.friendlypos.mypos.ui.sales.SalesCalculatorFragment"
         android:label="@string/title_sales_calc"
         tools:layout="@layout/screen_sales_calc">
+
         <action
             android:id="@+id/action_sales_calc_to_home"
             app:destination="@id/navigation_home" />
+
+        <!-- Nueva acción para navegar al carrito -->
+        <action
+            android:id="@+id/action_sales_calc_to_cart"
+            app:destination="@id/cartFragment" />
     </fragment>
 
     <fragment
@@ -54,7 +64,7 @@
         android:label="@string/title_reports"
         tools:layout="@layout/fragment_reports" />
 
-    <!-- Fragments de nivel superior para el BottomNavigationView -->
+    <!-- Fragments de Bottom Navigation -->
     <fragment
         android:id="@+id/navigation_payments"
         android:name="cl.friendlypos.mypos.ui.payments.PaymentsFragment"
@@ -67,25 +77,17 @@
         android:label="@string/title_history"
         tools:layout="@layout/fragment_history" />
 
-    <!-- Para Notificaciones -->
     <fragment
         android:id="@+id/navigation_notifications"
         android:name="cl.friendlypos.mypos.ui.notifications.NotificationsFragment"
         android:label="@string/title_notifications"
         tools:layout="@layout/fragment_notifications" />
 
-
-    <fragment
-        android:id="@+id/salesCalculatorFragment"
-        android:name="cl.friendlypos.mypos.ui.sales.SalesCalculatorFragment"
-        android:label="Calculadora de Ventas">
-        <action
-            android:id="@+id/action_salesCalculatorFragment_to_cartFragment"
-            app:destination="@id/cartFragment" />
-    </fragment>
-
+    <!-- Carrito de compras -->
     <fragment
         android:id="@+id/cartFragment"
         android:name="cl.friendlypos.mypos.ui.cart.CartFragment"
-        android:label="Carrito" />
+        android:label="Carrito"
+        tools:layout="@layout/fragment_cart" />
+
 </navigation>

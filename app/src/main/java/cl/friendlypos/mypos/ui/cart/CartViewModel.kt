@@ -77,4 +77,10 @@ class CartViewModel : ViewModel() {
         _cartItems.value = items
         updateTotals()
     }
+
+    // Método adicional para el CartViewModel para sincronizarse con SalesCalculatorViewModel
+    fun syncWithSalesData(itemCount: Int, subtotalAmount: Int) {
+        _itemCount.value = itemCount
+        _subtotal.value = subtotalAmount
+    }
 }

@@ -6,7 +6,6 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 
 class SalesCalculatorViewModel : ViewModel() {
-
     private val _currentAmount = MutableLiveData<String>("0")
     val currentAmount: LiveData<String> = _currentAmount
 
@@ -26,6 +25,10 @@ class SalesCalculatorViewModel : ViewModel() {
     // LiveData para contar la cantidad total de productos (suma de cantidades)
     private val _cartItemCount = MutableLiveData<Int>(0)
     val cartItemCount: LiveData<Int> = _cartItemCount
+
+    init {
+        Log.d("SalesCalcVM", "ViewModel creado: $this")
+    }
 
     fun appendDigit(digit: String) {
         val current = _currentAmount.value ?: "0"
@@ -103,9 +106,10 @@ class SalesCalculatorViewModel : ViewModel() {
             val newItem = SaleItem(unitPrice = unitPrice, quantity = quantity, name = itemName)
             val currentItems = _saleItems.value?.toMutableList() ?: mutableListOf()
             currentItems.add(newItem)
-            _saleItems.value = currentItems
 
+            _saleItems.value = currentItems
             _totalAmount.value = accumulator.toInt().toString()
+            Log.d("SalesCalcVM", "Item añadido: $newItem, Total items: ${currentItems.size}")
 
             val cartCount = (_cartItemCount.value ?: 0) + quantity
             _cartItemCount.value = cartCount
@@ -135,5 +139,16 @@ class SalesCalculatorViewModel : ViewModel() {
         _totalAmount.value = "0"
         _currentItemName.value = "Nombre item 1"
         _cartItemCount.value = 0
+    }
+
+    fun removeSaleItem(item: SaleItem) {
+        val currentItems = _saleItems.value?.toMutableList() ?: mutableListOf()
+        if (currentItems.remove(item)) {
+            _saleItems.value = currentItems
+            val newTotal = currentItems.sumOf { it.unitPrice * it.quantity }
+            _totalAmount.value = newTotal.toString()
+            val newCount = currentItems.sumOf { it.quantity }
+            _cartItemCount.value = newCount
+        }
     }
 }
