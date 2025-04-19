@@ -1,5 +1,6 @@
 package cl.friendlypos.mypos.ui.cart
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
@@ -7,13 +8,13 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import cl.friendlypos.mypos.databinding.ItemCartProductBinding
 import cl.friendlypos.mypos.ui.sales.SaleItem
-import android.util.Log
 
 class SaleItemAdapter(
     private val onItemDelete: (SaleItem) -> Unit
 ) : ListAdapter<SaleItem, SaleItemAdapter.ViewHolder>(SaleItemDiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
+        Log.d("SaleItemAdapter", "onCreateViewHolder llamado")
         val binding = ItemCartProductBinding.inflate(
             LayoutInflater.from(parent.context),
             parent,
@@ -24,7 +25,7 @@ class SaleItemAdapter(
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = getItem(position)
-        Log.d("SaleItemAdapter", "Mostrando item: $item")
+        Log.d("SaleItemAdapter", "Binding item en posición $position: $item")
         holder.bind(item)
     }
 
@@ -32,18 +33,12 @@ class SaleItemAdapter(
         RecyclerView.ViewHolder(binding.root) {
 
         fun bind(item: SaleItem) {
-            // Mapear los datos de SaleItem a los TextView del layout
-            binding.productName.text = item.name
-            binding.productPrice.text = "$${item.unitPrice}"
-            binding.productQuantity.text = "Cantidad: ${item.quantity}"
-            binding.productTotal.text = "$${item.unitPrice * item.quantity}"
-
-            // Configurar el botón de edición (opcional)
+            Log.d("SaleItemAdapter", "Binding item: ${item.name}, precio: ${item.unitPrice}, cantidad: ${item.quantity}")
+            binding.saleItem = item // Asignar el SaleItem al binding
+            binding.executePendingBindings() // Forzar la actualización inmediata de los datos
             binding.editButton.setOnClickListener {
-                // Aquí puedes agregar lógica de edición si es necesaria
+                // Lógica de edición si es necesaria
             }
-
-            // Long press para eliminar el item
             binding.root.setOnLongClickListener {
                 onItemDelete(item)
                 true

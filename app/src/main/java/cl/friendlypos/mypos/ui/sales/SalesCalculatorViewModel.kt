@@ -15,14 +15,9 @@ class SalesCalculatorViewModel : ViewModel() {
     private val _currentItemName = MutableLiveData<String>("Nombre item 1")
     val currentItemName: LiveData<String> = _currentItemName
 
-    // Acumulador para el total de la venta
-    private var accumulator: Double = 0.0
-
-    // Lista para almacenar cada ítem de la venta
     private val _saleItems = MutableLiveData<List<SaleItem>>(emptyList())
     val saleItems: LiveData<List<SaleItem>> = _saleItems
 
-    // LiveData para contar la cantidad total de productos (suma de cantidades)
     private val _cartItemCount = MutableLiveData<Int>(0)
     val cartItemCount: LiveData<Int> = _cartItemCount
 
@@ -39,22 +34,14 @@ class SalesCalculatorViewModel : ViewModel() {
         }
     }
 
-    // Nueva función para agregar un operador (ej. "x" para multiplicación)
     fun appendOperator(operator: String) {
-        Log.d("Calc", "Operator to be appended: $operator")
-
         val current = _currentAmount.value ?: "0"
-        // Evitar agregar operador al inicio o duplicado
-        if (current == "0") return
-        if (current.contains(operator)) return
+        if (current == "0" || current.contains(operator)) return
         _currentAmount.value = current + operator
     }
 
     fun appendDecimal(symbol: String) {
-        Log.d("Calc", "Decimal symbol to be appended: $symbol")
-
         val current = _currentAmount.value ?: "0"
-        // Evitar agregar operador al inicio o duplicado
         if (current.contains(symbol)) return
         _currentAmount.value = current + symbol
     }
@@ -98,22 +85,19 @@ class SalesCalculatorViewModel : ViewModel() {
                 return
             }
 
-            val totalItem = unitPrice * quantity
-            accumulator += totalItem
-            Log.d("Calc", "Item total: $totalItem, Accumulator: $accumulator")
-
             val itemName = _currentItemName.value ?: "Item"
             val newItem = SaleItem(unitPrice = unitPrice, quantity = quantity, name = itemName)
             val currentItems = _saleItems.value?.toMutableList() ?: mutableListOf()
             currentItems.add(newItem)
 
             _saleItems.value = currentItems
-            _totalAmount.value = accumulator.toInt().toString()
             Log.d("SalesCalcVM", "Item añadido: $newItem, Total items: ${currentItems.size}")
 
-            val cartCount = (_cartItemCount.value ?: 0) + quantity
-            _cartItemCount.value = cartCount
-            Log.d("Calc", "Cart count updated to: $cartCount")
+            val newTotal = currentItems.sumOf { it.unitPrice * it.quantity }
+            _totalAmount.value = newTotal.toString()
+
+            val newCount = currentItems.sumOf { it.quantity }
+            _cartItemCount.value = newCount
 
             _currentAmount.value = "0"
             _currentItemName.value = "Nombre item ${currentItems.size + 1}"
@@ -124,19 +108,14 @@ class SalesCalculatorViewModel : ViewModel() {
     }
 
     fun processSale() {
-        // Si hay un valor pendiente, lo agrega antes de procesar la venta
         val currentValue = _currentAmount.value?.toIntOrNull() ?: 0
         if (currentValue > 0) {
             addItemToSale()
         }
 
-        // Aquí se podría procesar el pago real.
-        // Se reinician los valores.
-
         _saleItems.value = emptyList()
-        accumulator = 0.0
-        _currentAmount.value = "0"
         _totalAmount.value = "0"
+        _currentAmount.value = "0"
         _currentItemName.value = "Nombre item 1"
         _cartItemCount.value = 0
     }

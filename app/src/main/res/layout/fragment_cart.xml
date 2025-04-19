@@ -16,14 +16,6 @@
         android:background="@color/white"
         tools:context=".ui.cart.CartFragment">
 
-        <!-- Toolbar personalizado -->
-        <include
-            android:id="@+id/toolbarCustom"
-            layout="@layout/base_toolbar_custom"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
-
         <!-- Document Info Card -->
         <androidx.cardview.widget.CardView
             android:id="@+id/documentInfoCard"
@@ -192,19 +184,23 @@
                 app:layout_constraintEnd_toEndOf="parent" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-        <!-- RecyclerView for cart items (moved outside emptyCartContainer) -->
+        <!-- RecyclerView for cart items -->
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/cartItemsRecyclerView"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_marginTop="8dp"
-            android:visibility="gone"
+            android:layout_marginHorizontal="16dp"
+            android:clipToPadding="false"
+            android:padding="4dp"
+            android:background="#FAFAFA"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             app:layout_constraintTop_toBottomOf="@+id/searchBarCard"
             app:layout_constraintBottom_toTopOf="@+id/bottomBar"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            tools:listitem="@layout/item_cart_product" />
+            tools:listitem="@layout/item_cart_product"
+            tools:visibility="visible" />
 
         <!-- Bottom Bar with Total and Continue Button -->
         <androidx.constraintlayout.widget.ConstraintLayout

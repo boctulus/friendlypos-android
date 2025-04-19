@@ -27,16 +27,13 @@ class CartFragment : Fragment() {
     ): View {
         _binding = FragmentCartBinding.inflate(inflater, container, false)
 
-        // Obtener instancia compartida del ViewModel (a nivel de actividad)
         viewModel = ViewModelProvider(requireActivity()).get(SalesCalculatorViewModel::class.java)
         Log.d("ViewModelDebug", "CartFragment - ViewModel instance: ${viewModel.hashCode()}")
 
-        // Asignar el viewModel al binding
         binding.viewModel = viewModel
         binding.lifecycleOwner = viewLifecycleOwner
 
         setupRecyclerView()
-        setupToolbar()
         setupListeners()
 
         return binding.root
@@ -45,13 +42,13 @@ class CartFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // Depuración
         val initialItems = viewModel.saleItems.value
         Log.d("CartFragment", "Items iniciales: ${initialItems?.size ?: 0}")
         initialItems?.forEach {
             Log.d("CartFragment", "Item: $it")
         }
 
+        updateCartVisibility(initialItems ?: emptyList())
         setupObservers()
     }
 
@@ -61,28 +58,27 @@ class CartFragment : Fragment() {
                 viewModel.removeSaleItem(item)
             }
         )
+
         binding.cartItemsRecyclerView.apply {
             layoutManager = LinearLayoutManager(context)
             adapter = this@CartFragment.adapter
         }
-    }
 
-    private fun setupToolbar() {
-        binding.toolbarCustom.tvTitle?.text = "Carrito"
-        binding.toolbarCustom.btnBack?.setOnClickListener {
-            requireActivity().onBackPressed()
-        }
+        Log.d("CartFragment", "RecyclerView configurado con adaptador")
     }
 
     private fun setupObservers() {
         viewModel.saleItems.observe(viewLifecycleOwner) { items ->
             Log.d("CartFragment", "Observer activado. Items recibidos: ${items.size}")
+            items.forEach { Log.d("CartFragment", "Item en observer: $it") }
+            adapter.submitList(items.toList()) // Pasar una copia de la lista
             updateCartVisibility(items)
-            adapter.submitList(items)
 
-            // Actualizar el subtotal y contador de items
-            binding.subtotalAmount.text = "$${viewModel.totalAmount.value}"
-            binding.itemCountBadge.text = "${viewModel.cartItemCount.value}"
+            // Calcular el subtotal y la cantidad total directamente desde los ítems
+            val subtotal = items.sumOf { it.unitPrice * it.quantity }
+            val itemCount = items.sumOf { it.quantity }
+            binding.subtotalAmount.text = "$$subtotal"
+            binding.itemCountBadge.text = itemCount.toString()
         }
     }
 
@@ -104,7 +100,7 @@ class CartFragment : Fragment() {
         }
 
         binding.subtotalCard.setOnClickListener {
-            // Aquí iría la lógica para proceder al pago
+            // Lógica para proceder al pago
         }
     }
 

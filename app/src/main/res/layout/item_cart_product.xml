@@ -5,8 +5,8 @@
 
     <data>
         <variable
-            name="cartItem"
-            type="cl.friendlypos.mypos.ui.cart.CartItem" />
+            name="saleItem"
+            type="cl.friendlypos.mypos.ui.sales.SaleItem" />
     </data>
 
     <androidx.cardview.widget.CardView
@@ -26,7 +26,7 @@
                 android:id="@+id/productName"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:text="@{cartItem.name}"
+                android:text="@{saleItem.name}"
                 android:textColor="@color/textPrimary"
                 android:textSize="16sp"
                 android:textStyle="bold"
@@ -40,8 +40,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="4dp"
-                android:text="@{cartItem.formattedPrice}"
-                android:textColor="@color/textSecondary"
+                android:text="@{`$` + saleItem.unitPrice}"
+                android:textColor="@color/dark_gray"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/productName"
                 tools:text="$1,000" />
@@ -51,8 +51,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="4dp"
-                android:text="@{cartItem.quantityText}"
-                android:textColor="@color/textSecondary"
+                android:text="@{`Cantidad: ` + saleItem.quantity}"
+                android:textColor="@color/dark_gray"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/productPrice"
                 tools:text="Cantidad: 1" />
@@ -61,8 +61,8 @@
                 android:id="@+id/productTotal"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@{cartItem.formattedTotal}"
-                android:textColor="@color/textPrimary"
+                android:text="@{`$` + (saleItem.unitPrice * saleItem.quantity)}"
+                android:textColor="@color/dark_gray"
                 android:textSize="16sp"
                 android:textStyle="bold"
                 app:layout_constraintBottom_toBottomOf="parent"
