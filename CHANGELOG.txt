@@ -55,3 +55,4 @@
 [2025-04-14 19:48:24]	No se encontró una version válida	Compila OK pero no navega al carrito
 [2025-04-15 10:40:55]	No se encontró una version válida	Agregados mas Log.d() pero sin probar
 [2025-04-19 18:24:14]	No se encontró una version válida	Eliminado CartViewModel en favor de otro ViewModel
+[2025-04-19 19:03:54]	No se encontró una version válida	Ya pasan cantidad de items y subtotal a CartFragment

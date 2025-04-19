@@ -11,7 +11,6 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import cl.friendlypos.mypos.databinding.FragmentCartBinding
 import cl.friendlypos.mypos.ui.sales.SaleItem
-// import cl.friendlypos.mypos.ui.sales.SaleItemAdapter
 import cl.friendlypos.mypos.ui.sales.SalesCalculatorViewModel
 
 class CartFragment : Fragment() {
@@ -30,6 +29,7 @@ class CartFragment : Fragment() {
 
         // Obtener instancia compartida del ViewModel (a nivel de actividad)
         viewModel = ViewModelProvider(requireActivity()).get(SalesCalculatorViewModel::class.java)
+        Log.d("ViewModelDebug", "CartFragment - ViewModel instance: ${viewModel.hashCode()}")
 
         // Asignar el viewModel al binding
         binding.viewModel = viewModel
@@ -44,11 +44,12 @@ class CartFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        setupObservers()
 
         // Depuración
         val initialItems = viewModel.saleItems.value
         Log.d("CartFragment", "Items iniciales: ${initialItems?.size ?: 0}")
+
+        setupObservers()
     }
 
     private fun setupRecyclerView() {
@@ -75,14 +76,10 @@ class CartFragment : Fragment() {
             Log.d("CartFragment", "Observer activado. Items recibidos: ${items.size}")
             updateCartVisibility(items)
             adapter.submitList(items)
-        }
 
-        viewModel.totalAmount.observe(viewLifecycleOwner) { total ->
-            binding.subtotalAmount.text = "$${total}"
-        }
-
-        viewModel.cartItemCount.observe(viewLifecycleOwner) { count ->
-            binding.itemCountBadge.text = count.toString()
+            // Actualizar el subtotal y contador de items
+            binding.subtotalAmount.text = "$${viewModel.totalAmount.value}"
+            binding.itemCountBadge.text = "${viewModel.cartItemCount.value}"
         }
     }
 

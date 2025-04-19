@@ -55,6 +55,11 @@ class SalesCalculatorFragment : Fragment()
         binding.btnCartBadge.setOnClickListener {
             try {
                 Log.d("CartNavigation", "Cart button image clicked!")
+
+                // Depuración: verificar datos antes de navegar
+                Log.d("CartNavigation", "Items en carrito antes de navegar: ${viewModel.saleItems.value?.size}")
+                Log.d("CartNavigation", "Cart item count: ${viewModel.cartItemCount.value}")
+
                 findNavController().navigate(R.id.action_sales_calc_to_cart)
                 Log.d("Navigation", "Navigation action executed")
             } catch (e: Exception) {
@@ -108,9 +113,6 @@ class SalesCalculatorFragment : Fragment()
     }
 
     private fun setupObservers() {
-        // Inicializa el ViewModel explícitamente
-        viewModel = ViewModelProvider(this).get(SalesCalculatorViewModel::class.java)
-
         // Asegúrate de que los observadores estén configurados correctamente
         viewModel.currentAmount.observe(viewLifecycleOwner) { amount ->
             Log.d("Calc", "Display updated: $amount")

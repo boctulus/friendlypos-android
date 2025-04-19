@@ -161,7 +161,7 @@
             android:id="@+id/emptyCartContainer"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:visibility="visible"
+            android:visibility="gone"
             app:layout_constraintTop_toBottomOf="@+id/searchBarCard"
             app:layout_constraintBottom_toTopOf="@+id/bottomBar"
             app:layout_constraintStart_toStartOf="parent"
@@ -195,9 +195,13 @@
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/cartItemsRecyclerView"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:visibility="gone"
+                android:layout_height="0dp"
+                android:visibility="visible"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                app:layout_constraintTop_toBottomOf="@+id/searchBarCard"
+                app:layout_constraintBottom_toTopOf="@+id/bottomBar"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
                 tools:listitem="@layout/item_cart_product" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
