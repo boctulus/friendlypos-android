@@ -35,7 +35,7 @@ class SalesCalculatorFragment : Fragment()
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        viewModel = ViewModelProvider(this).get(SalesCalculatorViewModel::class.java)
+        viewModel = ViewModelProvider(requireActivity()).get(SalesCalculatorViewModel::class.java)
         _binding = ScreenSalesCalcBinding.inflate(inflater, container, false)
 
         setupNumericPad()

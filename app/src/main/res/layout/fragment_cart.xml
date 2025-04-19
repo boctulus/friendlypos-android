@@ -6,8 +6,8 @@
 
     <data>
         <variable
-            name="cartViewModel"
-            type="cl.friendlypos.mypos.ui.cart.CartViewModel" />
+            name="viewModel"
+            type="cl.friendlypos.mypos.ui.sales.SalesCalculatorViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
