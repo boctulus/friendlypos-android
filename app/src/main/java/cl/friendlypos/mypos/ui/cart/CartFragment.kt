@@ -48,6 +48,9 @@ class CartFragment : Fragment() {
         // Depuración
         val initialItems = viewModel.saleItems.value
         Log.d("CartFragment", "Items iniciales: ${initialItems?.size ?: 0}")
+        initialItems?.forEach {
+            Log.d("CartFragment", "Item: $it")
+        }
 
         setupObservers()
     }
