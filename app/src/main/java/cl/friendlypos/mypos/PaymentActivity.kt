@@ -1,5 +1,6 @@
 package cl.friendlypos.mypos
 
+import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
@@ -12,6 +13,8 @@ import java.text.NumberFormat
 import java.util.Locale
 import android.widget.Toast
 import android.util.Log
+import androidx.lifecycle.ViewModelProvider
+import cl.friendlypos.mypos.ui.sales.SalesCalculatorViewModel
 
 class PaymentActivity : AppCompatActivity()
 {
@@ -91,6 +94,9 @@ class PaymentActivity : AppCompatActivity()
         val dialog = PaymentCancellationDialog()
         dialog.setOnCancelTransactionListener(object : PaymentCancellationDialog.OnCancelTransactionListener {
             override fun onCancel() {
+                val viewModel = ViewModelProvider(this@PaymentActivity).get(SalesCalculatorViewModel::class.java)
+                viewModel.clearCart() // Limpiar el carrito
+                setResult(Activity.RESULT_CANCELED)
                 finish()
             }
         })

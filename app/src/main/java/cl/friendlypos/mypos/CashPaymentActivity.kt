@@ -8,7 +8,9 @@ import android.widget.ImageButton
 import android.widget.TextView
 import androidx.activity.addCallback
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.ViewModelProvider
 import cl.friendlypos.mypos.ui.payments.PaymentCancellationDialog
+import cl.friendlypos.mypos.ui.sales.SalesCalculatorViewModel
 import java.text.NumberFormat
 import java.util.Locale
 
@@ -183,6 +185,9 @@ class CashPaymentActivity : AppCompatActivity() {
         val dialog = PaymentCancellationDialog()
         dialog.setOnCancelTransactionListener(object : PaymentCancellationDialog.OnCancelTransactionListener {
             override fun onCancel() {
+                val viewModel = ViewModelProvider(this@CashPaymentActivity).get(
+                    SalesCalculatorViewModel::class.java)
+                viewModel.clearCart() // Limpiar el carrito
                 setResult(Activity.RESULT_CANCELED)
                 finish()
             }
@@ -194,7 +199,8 @@ class CashPaymentActivity : AppCompatActivity() {
       Deberia regresar a PaymentActivity
     */
     private fun goBack() {
-        setResult(RESULT_OK, intent)
+        // Se esta diciendo que el usuario salió sin confirmar o canceló la acción.
+        setResult(Activity.RESULT_CANCELED)
         finish()
     }
 }
