@@ -8,6 +8,7 @@ Set-Location "D:\laragon\www\simplerest"
 if ($args.Count -eq 0) {
     Write-Host "Usage:"
     Write-Host "  --all        Listar todos los archivos (Java, XML, Gradle, etc.)"
+    Write-Host "  --code       Listar todos los archivos Java y Kt"
     Write-Host "  --xml        Listar todos los XML"
     Write-Host "  --views      Listar todas las vistas (XMLs en layout)"
     Write-Host "  --drawables  Listar todos los drawables (XMLs en drawable)"
@@ -23,7 +24,12 @@ switch ($args[0]) {
         $command = "php com file list '$CURRENT_DIR' --recursive --pattern='*.kt|*.java|*.xml|*.gradle|*.properties|*.jar' --exclude='$excludePath'"
         break
     }
-      "--xml" {
+    "--code" {
+        $excludePath = Join-Path $CURRENT_DIR 'app\build\*'
+        $command = "php com file list '$CURRENT_DIR' --recursive --pattern='*.kt|*.java' --exclude='$excludePath'"
+        break
+    }
+    "--xml" {
         $Path = Join-Path $CURRENT_DIR 'app\src\main\res'
         $command = "php com file list '$Path' --recursive --pattern='*.xml'"
         break
@@ -42,6 +48,7 @@ switch ($args[0]) {
         Write-Host "Opción inválida. Usa --all, --xml o --views o --drawables."
         Write-Host "Usage:"
         Write-Host "  --all        Listar todos los archivos (Java, XML, Gradle, etc.)"
+        Write-Host "  --code       Listar todos los archivos Java y Kt"
         Write-Host "  --xml        Listar todos los XML"
         Write-Host "  --views      Listar todas las vistas (XMLs en layout)"
         Write-Host "  --drawables  Listar todos los drawables (XMLs en drawable)"

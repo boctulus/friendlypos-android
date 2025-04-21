@@ -5,6 +5,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
@@ -97,6 +98,17 @@ class CartFragment : Fragment() {
     private fun setupListeners() {
         binding.calculatorButton.setOnClickListener {
             requireActivity().onBackPressed()
+        }
+
+        binding.clear.setOnClickListener {
+            AlertDialog.Builder(requireContext())
+                .setTitle("Limpiar Carrito")
+                .setMessage("¿Está seguro de que desea limpiar el carrito?")
+                .setPositiveButton("Sí") { _, _ ->
+                    viewModel.clearCart() // Método a agregar en el ViewModel
+                }
+                .setNegativeButton("No", null)
+                .show()
         }
 
         binding.subtotalCard.setOnClickListener {

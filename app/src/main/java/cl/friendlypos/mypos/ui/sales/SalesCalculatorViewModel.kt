@@ -130,4 +130,10 @@ class SalesCalculatorViewModel : ViewModel() {
             _cartItemCount.value = newCount
         }
     }
+
+    fun clearCart() {
+        _saleItems.value = emptyList()
+        _totalAmount.value = "0"
+        _cartItemCount.value = 0
+    }
 }

@@ -83,7 +83,7 @@ class SalesCalculatorFragment : Fragment()
         binding.root.findViewById<Button>(R.id.btn7).setOnClickListener { viewModel.appendDigit("7") }
         binding.root.findViewById<Button>(R.id.btn8).setOnClickListener { viewModel.appendDigit("8") }
         binding.root.findViewById<Button>(R.id.btn9).setOnClickListener { viewModel.appendDigit("9") }
-        binding.root.findViewById<Button>(R.id.btnDecimal).setOnClickListener { viewModel.appendDecimal(".") }
+        binding.root.findViewById<Button>(R.id.btnDecimal).setOnClickListener { viewModel.appendDecimal(",") }
 
         // Botones de función
         binding.root.findViewById<Button>(R.id.btnClear).setOnClickListener { viewModel.clearEntry() }
