@@ -12,6 +12,7 @@ import android.widget.ImageButton
 import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
@@ -99,15 +100,22 @@ class SalesCalculatorFragment : Fragment()
             viewModel.appendOperator("x")
         }
 
-        // Botón de pago (este no está en el include, sigue usando binding directamente)
         binding.btnPay.setOnClickListener {
-            val total = viewModel.totalAmount.value?.toDoubleOrNull() ?: 0.0
-            if (total > 0) {
-                val intent = Intent(requireContext(), PaymentActivity::class.java)
-                intent.putExtra("totalAmount", total)
-                startActivityForResult(intent, PAYMENT_REQUEST_CODE)
+            if (viewModel.currentAmount.value != "0") {
+                AlertDialog.Builder(requireContext())
+                    .setTitle("Operación Pendiente")
+                    .setMessage("Hay una operación pendiente. Por favor, complete la operación antes de pagar.")
+                    .setPositiveButton("Regresar", null)
+                    .show()
             } else {
-                Toast.makeText(requireContext(), "No hay productos en el carrito", Toast.LENGTH_SHORT).show()
+                val total = viewModel.totalAmount.value?.toDoubleOrNull() ?: 0.0
+                if (total > 0) {
+                    val intent = Intent(requireContext(), PaymentActivity::class.java)
+                    intent.putExtra("totalAmount", total)
+                    startActivityForResult(intent, PAYMENT_REQUEST_CODE)
+                } else {
+                    Toast.makeText(requireContext(), "No hay productos en el carrito", Toast.LENGTH_SHORT).show()
+                }
             }
         }
     }
