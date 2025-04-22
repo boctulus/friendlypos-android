@@ -3,6 +3,7 @@ package cl.friendlypos.mypos.ui.sales
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
+import android.text.Editable
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -52,6 +53,18 @@ class SalesCalculatorFragment : Fragment()
 
         setupObservers()
 
+        // Flag to prevent observer/TextWatcher loops
+        var isUpdatingFromViewModel = false
+
+        // Observer for item name updates
+        viewModel.currentItemName.observe(viewLifecycleOwner) { name ->
+            if (binding.etItemName.text.toString() != name) {
+                isUpdatingFromViewModel = true
+                binding.etItemName.setText(name)
+                isUpdatingFromViewModel = false
+            }
+        }
+
         // Configurar clic en el contenedor del carrito
         binding.btnCartBadge.setOnClickListener {
             try {
@@ -67,6 +80,59 @@ class SalesCalculatorFragment : Fragment()
                 Log.e("Navigation", "Navigation failed", e)
             }
         }
+
+        binding.etItemName.apply {
+            // Establecer placeholder en lugar de prefijo
+            hint = "Item"
+
+            // Manejar evento de focus
+            setOnFocusChangeListener { _, hasFocus ->
+                if (hasFocus) {
+                    // Si el texto comienza con "Item " lo eliminamos al recibir el foco
+                    val currentText = text.toString()
+                    if (currentText.startsWith("Item ")) {
+                        setText(currentText.substring(5))
+                    }
+                } else {
+                    // Al perder el foco, si está vacío, usamos el valor por defecto
+                    if (text.toString().isBlank()) {
+                        viewModel.updateItemName(viewModel.getGenericItemName())
+                    }
+                }
+            }
+
+            // TextWatcher for user input
+            addTextChangedListener(object : android.text.TextWatcher {
+                override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+                override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+                override fun afterTextChanged(s: android.text.Editable?) {
+                    // Only update if change wasn't from the ViewModel
+                    if (!isUpdatingFromViewModel && !s.isNullOrBlank()) {
+                        viewModel.updateItemName(s.toString())
+                    }
+                }
+            })
+        }
+
+        binding.etAmount.addTextChangedListener(object : android.text.TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+
+            override fun afterTextChanged(s: Editable?) {
+                // Remover el observer temporalmente para evitar recursión infinita
+                viewModel.currentAmount.removeObservers(viewLifecycleOwner)
+
+                // Actualizar el valor en el ViewModel sin el símbolo $
+                val amountText = s.toString().replace("$", "")
+                if (amountText != viewModel.currentAmount.value) {
+                    viewModel.setAmount(amountText)
+                }
+
+                // Volver a observar
+                observeCurrentAmount()
+            }
+        })
     }
 
     private fun setupNumericPad() {
@@ -95,6 +161,7 @@ class SalesCalculatorFragment : Fragment()
             Log.d("Calc", "Add button clicked")
             viewModel.addItemToSale()
             viewModel.updateItemName(viewModel.getGenericItemName())
+            binding.etAmount.requestFocus()
         }
 
         binding.root.findViewById<Button>(R.id.btnMultiply).setOnClickListener {
@@ -122,11 +189,23 @@ class SalesCalculatorFragment : Fragment()
         }
     }
 
+    // Función para observar el monto actual
+    private fun observeCurrentAmount() {
+        viewModel.currentAmount.observe(viewLifecycleOwner) { amount ->
+            val currentText = binding.etAmount.text.toString().replace("$", "")
+            if (currentText != amount) {
+                binding.etAmount.setText("$${amount}")
+                // Opcional: posicionar el cursor al final
+                binding.etAmount.setSelection(binding.etAmount.text.length)
+            }
+        }
+    }
+
     private fun setupObservers() {
         // Asegúrate de que los observadores estén configurados correctamente
         viewModel.currentAmount.observe(viewLifecycleOwner) { amount ->
             Log.d("Calc", "Display updated: $amount")
-            binding.tvAmount.text = "$$amount"
+            binding.etAmount.setText("$$amount")
         }
 
         viewModel.totalAmount.observe(viewLifecycleOwner) { total ->
@@ -139,47 +218,6 @@ class SalesCalculatorFragment : Fragment()
             if (amount == "0") {
                 binding.etItemName.setText(viewModel.getGenericItemName())
             }
-        }
-
-        binding.etItemName.apply {
-            // Establecer placeholder en lugar de prefijo
-            hint = "Item"
-
-            // Manejar evento de focus
-            setOnFocusChangeListener { _, hasFocus ->
-                if (hasFocus) {
-                    // Si el texto comienza con "Item " lo eliminamos al recibir el foco
-                    val currentText = text.toString()
-                    if (currentText.startsWith("Item ")) {
-                        setText(currentText.substring(5))
-                    }
-                } else {
-                    // Al perder el foco, si está vacío, usamos el valor por defecto
-                    if (text.toString().isBlank()) {
-                        viewModel.updateItemName(viewModel.getGenericItemName())
-                    }
-                }
-            }
-
-            // Asegurarnos que los cambios se propagan al ViewModel
-            addTextChangedListener(object : android.text.TextWatcher {
-                override fun beforeTextChanged(
-                    s: CharSequence?,
-                    start: Int,
-                    count: Int,
-                    after: Int
-                ) {
-                }
-
-                override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
-
-                override fun afterTextChanged(s: android.text.Editable?) {
-                    // Solo actualizamos el ViewModel si el contenido no está vacío
-                    if (!s.isNullOrBlank()) {
-                        viewModel.updateItemName(s.toString())
-                    }
-                }
-            })
         }
 
         viewModel.cartItemCount.observe(viewLifecycleOwner) { count ->

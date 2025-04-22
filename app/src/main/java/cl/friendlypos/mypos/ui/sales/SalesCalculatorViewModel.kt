@@ -36,6 +36,8 @@ class SalesCalculatorViewModel : ViewModel() {
 
     fun appendOperator(operator: String) {
         val current = _currentAmount.value ?: "0"
+
+        Log.d("Calc", "Current amount: $current")
         if (current == "0" || current.contains(operator)) return
         _currentAmount.value = current + operator
     }
@@ -145,6 +147,10 @@ class SalesCalculatorViewModel : ViewModel() {
 
         _currentItemName.value = capitalized
         Log.d("SalesCalcVM", "Nombre actualizado: $capitalized")
+    }
+
+    fun setAmount(amount: String) {
+        _currentAmount.value = amount
     }
 
     fun clearCart() {
