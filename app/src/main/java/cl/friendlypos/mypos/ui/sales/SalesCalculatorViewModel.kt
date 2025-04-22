@@ -85,7 +85,7 @@ class SalesCalculatorViewModel : ViewModel() {
                 return
             }
 
-            val itemName = _currentItemName.value ?: "Item"
+            val itemName = _currentItemName.value ?: getGenericItemName()
             val newItem = SaleItem(unitPrice = unitPrice, quantity = quantity, name = itemName)
             val currentItems = _saleItems.value?.toMutableList() ?: mutableListOf()
             currentItems.add(newItem)
@@ -100,7 +100,8 @@ class SalesCalculatorViewModel : ViewModel() {
             _cartItemCount.value = newCount
 
             _currentAmount.value = "0"
-            _currentItemName.value = "Nombre item ${currentItems.size + 1}"
+            _currentItemName.value = itemName
+
             Log.d("Calc", "Item added successfully")
         } catch (e: Exception) {
             Log.e("SalesCalc", "Error adding item: ${e.message}", e)
@@ -129,6 +130,21 @@ class SalesCalculatorViewModel : ViewModel() {
             val newCount = currentItems.sumOf { it.quantity }
             _cartItemCount.value = newCount
         }
+    }
+
+    fun getGenericItemName(): String {
+        val currentItems = _saleItems.value?.toMutableList() ?: mutableListOf()
+        return "Nombre item ${currentItems.size + 1}"
+    }
+
+    // Actualizar el nombre del item
+    fun updateItemName(name: String) {
+        // Si el nombre está vacío, asignar "Item" por defecto
+        val updatedName = if (name.isBlank()) getGenericItemName() else name
+        val capitalized = updatedName.replaceFirstChar { it.uppercase() }
+
+        _currentItemName.value = capitalized
+        Log.d("SalesCalcVM", "Nombre actualizado: $capitalized")
     }
 
     fun clearCart() {

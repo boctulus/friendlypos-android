@@ -94,7 +94,9 @@ class SalesCalculatorFragment : Fragment()
         binding.root.findViewById<Button>(R.id.btnPlus).setOnClickListener {
             Log.d("Calc", "Add button clicked")
             viewModel.addItemToSale()
+            viewModel.updateItemName(viewModel.getGenericItemName())
         }
+
         binding.root.findViewById<Button>(R.id.btnMultiply).setOnClickListener {
             Log.d("Calc", "Multiply button clicked")
             viewModel.appendOperator("x")
@@ -132,8 +134,52 @@ class SalesCalculatorFragment : Fragment()
             binding.tvTotalAmount.text = "$$total"
         }
 
-        viewModel.currentItemName.observe(viewLifecycleOwner) { name ->
-            binding.tvItemName.text = name
+        // Actualizar el nombre del item al valor defecto para cada ronda
+        viewModel.currentAmount.observe(viewLifecycleOwner) { amount ->
+            if (amount == "0") {
+                binding.etItemName.setText(viewModel.getGenericItemName())
+            }
+        }
+
+        binding.etItemName.apply {
+            // Establecer placeholder en lugar de prefijo
+            hint = "Item"
+
+            // Manejar evento de focus
+            setOnFocusChangeListener { _, hasFocus ->
+                if (hasFocus) {
+                    // Si el texto comienza con "Item " lo eliminamos al recibir el foco
+                    val currentText = text.toString()
+                    if (currentText.startsWith("Item ")) {
+                        setText(currentText.substring(5))
+                    }
+                } else {
+                    // Al perder el foco, si está vacío, usamos el valor por defecto
+                    if (text.toString().isBlank()) {
+                        viewModel.updateItemName(viewModel.getGenericItemName())
+                    }
+                }
+            }
+
+            // Asegurarnos que los cambios se propagan al ViewModel
+            addTextChangedListener(object : android.text.TextWatcher {
+                override fun beforeTextChanged(
+                    s: CharSequence?,
+                    start: Int,
+                    count: Int,
+                    after: Int
+                ) {
+                }
+
+                override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+
+                override fun afterTextChanged(s: android.text.Editable?) {
+                    // Solo actualizamos el ViewModel si el contenido no está vacío
+                    if (!s.isNullOrBlank()) {
+                        viewModel.updateItemName(s.toString())
+                    }
+                }
+            })
         }
 
         viewModel.cartItemCount.observe(viewLifecycleOwner) { count ->
