@@ -1,0 +1,10 @@
+<fragment
+    android:id="@+id/navigation_customers"
+    android:name="cl.friendlypos.mypos.ui.customers.CustomersFragment"
+    android:label="Clientes" >
+</fragment>
+
+<!-- Desde HomeFragment -->
+<action
+    android:id="@+id/action_home_to_customers"
+    app:destination="@id/navigation_customers" />
