@@ -96,7 +96,6 @@
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-        <!-- Texto "Guardar cambios?" en itálica como solicitaste -->
         <TextView
             android:id="@+id/tvMessage"
             android:layout_width="match_parent"

@@ -30,4 +30,4 @@ class PaymentsFragment : Fragment() {
         super.onDestroyView()
         _binding = null
     }
-}
+}   
