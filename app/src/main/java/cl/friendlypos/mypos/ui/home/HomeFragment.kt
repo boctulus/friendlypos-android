@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import cl.friendlypos.mypos.CashFundActivity
@@ -14,6 +15,7 @@ import cl.friendlypos.mypos.R
 import cl.friendlypos.mypos.databinding.FragmentHomeBinding
 import cl.friendlypos.mypos.model.DashboardItem
 import cl.friendlypos.mypos.ui.dashboard.DashboardAdapter
+
 
 class HomeFragment : Fragment() {
 
@@ -66,15 +68,15 @@ class HomeFragment : Fragment() {
     }
 
     private fun navigateToInventory() {
-        view?.findNavController()?.navigate(R.id.action_home_to_inventory)
+        findNavController().navigate(R.id.action_home_to_inventory)
     }
 
     private fun navigateToCustomers() {
-        view?.findNavController()?.navigate(R.id.action_home_to_customers)
+        findNavController().navigate(R.id.action_home_to_customers)
     }
 
     private fun navigateToReports() {
-        view?.findNavController()?.navigate(R.id.action_home_to_reports)
+        findNavController().navigate(R.id.action_home_to_reports)
     }
 
     private fun navigateToCashFund() {

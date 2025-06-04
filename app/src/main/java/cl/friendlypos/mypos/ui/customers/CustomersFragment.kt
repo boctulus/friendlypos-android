@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.compose.ui.platform.ComposeView
 import androidx.fragment.app.Fragment
+import cl.friendlypos.mypos.compose.screen.CustomersScreen
 
 class CustomersFragment : Fragment() {
     override fun onCreateView(

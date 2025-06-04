@@ -1,4 +1,4 @@
-package cl.friendlypos.mypos.ui.products
+package cl.friendlypos.mypos.ui.inventory
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -6,9 +6,9 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.compose.ui.platform.ComposeView
 import androidx.fragment.app.Fragment
-import cl.friendlypos.mypos.compose.screen.ProductsScreen
+import cl.friendlypos.mypos.compose.screen.InventoryScreen
 
-class ProductsFragment : Fragment() {
+class InventoryFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -16,7 +16,7 @@ class ProductsFragment : Fragment() {
     ): View {
         return ComposeView(requireContext()).apply {
             setContent {
-                ProductsScreen()
+                InventoryScreen()
             }
         }
     }
