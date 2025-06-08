@@ -1,0 +1,1 @@
+./gradlew clean ; ./gradlew --stop ; ./gradlew --no-daemon "-Dorg.gradle.kotlin.dsl.accessors.force=true" assembleDebug
