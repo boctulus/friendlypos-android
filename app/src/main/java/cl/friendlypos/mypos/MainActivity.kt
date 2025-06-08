@@ -14,7 +14,14 @@ import androidx.navigation.ui.setupWithNavController
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import cl.friendlypos.mypos.databinding.ActivityMainBinding
 import android.util.Log
+import java.util.Arrays
+import android.os.Build
+import android.content.pm.PackageManager;
 import cl.friendlypos.mypos.utils.TopSnackbar
+
+import com.zcs.sdk.DriverManager;
+import com.zcs.sdk.SdkResult;
+import com.zcs.sdk.Sys;
 
 class MainActivity : AppCompatActivity()
 {
@@ -22,10 +29,15 @@ class MainActivity : AppCompatActivity()
     private lateinit var sharedPreferences: SharedPreferences
     private lateinit var coordinatorLayout: CoordinatorLayout
 
+    private lateinit var mDriverManager: DriverManager
+    private lateinit var mSys: Sys
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-
+        mDriverManager = DriverManager.getInstance();
+        mSys = mDriverManager.getBaseSysDevice();
+        initSdk();
 
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
@@ -66,6 +78,26 @@ class MainActivity : AppCompatActivity()
 
         // Configurar credenciales de acceso (SharedPreferences)
         sharedPreferences = getSharedPreferences("AppPrefs", Context.MODE_PRIVATE)
+    }
+
+    private fun initSdk() {
+        Log.d("POS_ARCH", Arrays.toString(Build.SUPPORTED_ABIS));
+
+        val status = mSys.sdkInit();
+
+//        if(status != SdkResult.SDK_OK) {
+//            mSys.sysPowerOn();
+//            try {
+//                Thread.sleep(1000);
+//            } catch (InterruptedException e) {
+//                e.printStackTrace();
+//            }
+//            status = mSys.sdkInit();
+//        }
+//        if(status != SdkResult.SDK_OK) {
+//            //init failed.
+//        }
+//        mSys.showDetailLog(true);
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
