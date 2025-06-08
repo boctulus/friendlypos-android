@@ -12,15 +12,14 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import androidx.coordinatorlayout.widget.CoordinatorLayout
-import cl.friendlypos.mypos.databinding.ActivityMainBinding
 import android.util.Log
 import java.util.Arrays
 import android.os.Build
-import android.content.pm.PackageManager;
+
+import cl.friendlypos.mypos.databinding.ActivityMainBinding
 import cl.friendlypos.mypos.utils.TopSnackbar
 
 import com.zcs.sdk.DriverManager;
-import com.zcs.sdk.SdkResult;
 import com.zcs.sdk.Sys;
 
 class MainActivity : AppCompatActivity()
