@@ -73,7 +73,13 @@ android {
 }
 
 dependencies {
-    // CRÍTICO: Compose BOM debe ser la primera dependencia de Compose
+    // Critico: sino importar los .jar no podria acceder al hardware
+    implementation(fileTree(mapOf("dir" to "libs", "include" to listOf("*.jar"))))
+
+    // Usado en las vistas del SDK
+    implementation("androidx.constraintlayout:constraintlayout:1.1.3")
+
+    // Critico: Compose BOM debe ser la primera dependencia de Compose
     implementation(platform(libs.androidx.compose.bom))
 
     // Desugaring para compatibilidad con librerías legacy Java 6/7
