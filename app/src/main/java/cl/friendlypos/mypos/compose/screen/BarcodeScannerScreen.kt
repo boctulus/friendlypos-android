@@ -14,7 +14,14 @@ import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.*
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.ContentCopy
+import androidx.compose.material.icons.filled.DeleteOutline
+import androidx.compose.material.icons.filled.Pause
+import androidx.compose.material.icons.filled.PlayArrow
+import androidx.compose.material.icons.filled.QrCodeScanner
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -46,7 +53,7 @@ fun BarcodeScannerScreen(
                 title = { Text("Códigos de Barra") },
                 navigationIcon = {
                     IconButton(onClick = onBackPressed) {
-                        Icon(Icons.Default.ArrowBack, contentDescription = "Volver")
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Volver")
                     }
                 },
                 actions = {
@@ -54,7 +61,7 @@ fun BarcodeScannerScreen(
                         onClick = { viewModel.toggleScanning() }
                     ) {
                         Icon(
-                            imageVector = if (isScanning) Icons.Default.Pause else Icons.Default.PlayArrow,
+                            imageVector = if (isScanning) Icons.Filled.Pause else Icons.Default.PlayArrow,
                             contentDescription = if (isScanning) "Pausar escaneo" else "Reanudar escaneo"
                         )
                     }
@@ -164,7 +171,7 @@ fun BarcodeScannerScreen(
                             verticalArrangement = Arrangement.Center
                         ) {
                             Icon(
-                                imageVector = Icons.Default.QrCodeScanner,
+                                imageVector = Icons.Filled.QrCodeScanner,
                                 contentDescription = null,
                                 modifier = Modifier.size(64.dp),
                                 tint = Color.Gray
@@ -235,7 +242,7 @@ fun BarcodeScannerScreen(
                                         onClick = { viewModel.removeBarcode(index) }
                                     ) {
                                         Icon(
-                                            imageVector = Icons.Default.DeleteOutline,
+                                            imageVector = Icons.Filled.DeleteOutline,
                                             contentDescription = "Eliminar código"
                                         )
                                     }
@@ -273,7 +280,7 @@ fun BarcodeScannerScreen(
                             .height(50.dp)
                     ) {
                         Icon(
-                            imageVector = Icons.Default.ContentCopy,
+                            imageVector = Icons.Filled.ContentCopy,
                             contentDescription = null,
                             modifier = Modifier.size(18.dp)
                         )
