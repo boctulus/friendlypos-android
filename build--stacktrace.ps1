@@ -1,1 +1,2 @@
 ./gradlew compileDebugKotlin --stacktrace --info
+	

@@ -2,6 +2,7 @@
     <string name="app_name">Friendly POS</string>
     <string name="title_home">Inicio</string>
     <string name="title_products">Productos</string>
+    <string name="title_inventory">Inventorio</string>
     <string name="title_payments">Pagos</string>
     <string name="title_history">Historial</string>
     <string name="title_sales_calc">Nueva Venta</string>

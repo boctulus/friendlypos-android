@@ -18,7 +18,7 @@
 
         <action
             android:id="@+id/action_home_to_inventory"
-            app:destination="@id/navigation_products" />
+            app:destination="@id/navigation_inventory" />
 
         <action
             android:id="@+id/action_home_to_customers"
@@ -51,6 +51,12 @@
         android:name="cl.friendlypos.mypos.ui.products.ProductsFragment"
         android:label="@string/title_products"
         tools:layout="@layout/fragment_products" />
+
+    <fragment
+        android:id="@+id/navigation_inventory"
+        android:name="cl.friendlypos.mypos.ui.inventory.InventoryFragment"
+        android:label="@string/title_inventory"
+        />
 
     <fragment
         android:id="@+id/navigation_customers"
