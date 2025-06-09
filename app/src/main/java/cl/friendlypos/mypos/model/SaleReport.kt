@@ -1,12 +1,16 @@
 package cl.friendlypos.mypos.model
 
+import java.time.LocalDate
+
 data class SaleReport(
     val id: String,
-    val date: String,
     val customerName: String,
-    val products: List<ProductSale>,
     val total: Double,
-    val paymentMethod: String
+    val paymentMethod: String,
+    val date: LocalDate,
+    val items: List<ProductSale> = emptyList(), // <-- FIX: Changed type from List<String> to List<ProductSale>
+    val status: String = "Completed"
+    // val totalAmount: List<ProductSale> = total, // <-- FIX: Removed this incorrect line
 )
 
 data class ProductSale(
