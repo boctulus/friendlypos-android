@@ -5,22 +5,25 @@ import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
-import com.google.android.material.bottomnavigation.BottomNavigationView
+import android.os.Build
+import android.content.Intent
+import android.util.Log
+
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import androidx.coordinatorlayout.widget.CoordinatorLayout
-import android.util.Log
-import java.util.Arrays
-import android.os.Build
+
+import com.google.android.material.bottomnavigation.BottomNavigationView
 
 import cl.friendlypos.mypos.databinding.ActivityMainBinding
+import cl.friendlypos.mypos.utils.SystemUtils
 import cl.friendlypos.mypos.utils.TopSnackbar
 
-import com.zcs.sdk.DriverManager;
-import com.zcs.sdk.Sys;
+//import com.zcs.sdk.DriverManager;
+//import com.zcs.sdk.Sys;
 
 class MainActivity : AppCompatActivity()
 {
@@ -28,15 +31,18 @@ class MainActivity : AppCompatActivity()
     private lateinit var sharedPreferences: SharedPreferences
     private lateinit var coordinatorLayout: CoordinatorLayout
 
-    private lateinit var mDriverManager: DriverManager
-    private lateinit var mSys: Sys
+//    private lateinit var mDriverManager: DriverManager
+//    private lateinit var mSys: Sys
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        mDriverManager = DriverManager.getInstance();
-        mSys = mDriverManager.getBaseSysDevice();
-        initSdk();
+        Log.d("DeviceCheck", if (SystemUtils.isEmulator()) "Emulador" else "Real Android")
+
+
+//        mDriverManager = DriverManager.getInstance();
+//        mSys = mDriverManager.getBaseSysDevice();
+//        initSdk();
 
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
@@ -80,9 +86,7 @@ class MainActivity : AppCompatActivity()
     }
 
     private fun initSdk() {
-        Log.d("POS_ARCH", Arrays.toString(Build.SUPPORTED_ABIS));
-
-        val status = mSys.sdkInit();
+//        val status = mSys.sdkInit();
 
 //        if(status != SdkResult.SDK_OK) {
 //            mSys.sysPowerOn();
@@ -122,9 +126,11 @@ class MainActivity : AppCompatActivity()
                 // Implementar acción para gestión de usuario
                 true
             }
-            R.id.action_sync -> {
-                Log.d("POS", "Sincronización seleccionada")
-                // Implementar acción para sincronizar datos
+            R.id.action_scanner_testing -> {
+                Log.d("POS", "Iniciando prueba de escáner...")
+                // Crea un Intent para iniciar ScannerActivity
+                val intent = Intent(this, ScannerActivity::class.java)
+                startActivity(intent)
                 true
             }
             else -> super.onOptionsItemSelected(item)

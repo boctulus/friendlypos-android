@@ -50,10 +50,13 @@
             </intent-filter>
         </activity>
 
-        <!-- Nuevas actividades para el flujo de pago -->
+        <!-- Actividades para el flujo de pago -->
         <activity android:name=".PaymentActivity" />
         <activity android:name=".BillingActivity" />
         <activity android:name=".CashPaymentActivity" />
+
+        <!-- Actividad para el escáner -->
+        <activity android:name=".ScannerActivity" android:theme="@style/Theme.FriendlyPOS"/>
         
         <!-- service android:name=".MyAuthenticationService" /-->
     </application>
