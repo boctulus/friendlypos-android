@@ -5,30 +5,35 @@ import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
-import cl.friendlypos.mypos.compose.screen.BarcodeScannerScreen
-import cl.friendlypos.mypos.compose.viewmodel.BarcodeScannerViewModel
+
 import com.zcs.sdk.DriverManager
 import com.zcs.sdk.SdkResult
 import com.zcs.sdk.Sys
 //import com.zcs.sdk.barcode.BarcodeManager
 //import com.zcs.sdk.barcode.BarcodeManager.OnBarCodeResultListener
 
+import cl.friendlypos.mypos.utils.SystemUtils
+// import cl.friendlypos.mypos.compose.screen.BarcodeScannerScreen
+import cl.friendlypos.mypos.compose.screen.BarcodeScannerDemoScreen
+import cl.friendlypos.mypos.compose.viewmodel.BarcodeScannerViewModel
+
 class ScannerActivity : ComponentActivity() {
-
-    private val viewModel: BarcodeScannerViewModel by viewModels()
-
     private lateinit var mDriverManager: DriverManager
     private lateinit var mSys: Sys
+
+    private val viewModel: BarcodeScannerViewModel by viewModels()
 //    private lateinit var mBarcodeManager: BarcodeManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        // Inicializa el SDK
-        initSdk()
+        if (!SystemUtils.isEmulator()){
+            // Inicializa el SDK
+            initSdk()
+        }
 
         setContent {
-            BarcodeScannerScreen(
+            BarcodeScannerDemoScreen(
                 onBackPressed = { finish() }, // Cierra esta actividad al presionar "atrás"
                 viewModel = viewModel
             )
