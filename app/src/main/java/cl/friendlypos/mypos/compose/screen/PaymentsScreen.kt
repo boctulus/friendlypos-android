@@ -14,10 +14,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+
+import java.time.format.DateTimeFormatter
+
 import cl.friendlypos.mypos.compose.viewmodel.PaymentsViewModel
 import cl.friendlypos.mypos.model.SaleReport
-import java.time.LocalDate
-import java.time.format.DateTimeFormatter
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -253,34 +255,3 @@ fun PaymentItemCard(payment: SaleReport) {
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun DatePickerDialog(
-    onDateSelected: (LocalDate) -> Unit,
-    onDismiss: () -> Unit
-) {
-    val datePickerState = rememberDatePickerState()
-
-    DatePickerDialog(
-        onDismissRequest = onDismiss,
-        confirmButton = {
-            TextButton(
-                onClick = {
-                    datePickerState.selectedDateMillis?.let { millis ->
-                        val date = LocalDate.ofEpochDay(millis / (24 * 60 * 60 * 1000))
-                        onDateSelected(date)
-                    }
-                }
-            ) {
-                Text("Confirmar")
-            }
-        },
-        dismissButton = {
-            TextButton(onClick = onDismiss) {
-                Text("Cancelar")
-            }
-        }
-    ) {
-        DatePicker(state = datePickerState)
-    }
-}

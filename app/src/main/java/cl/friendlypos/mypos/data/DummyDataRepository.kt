@@ -92,15 +92,26 @@ object DummyDataRepository {
     }
 
     fun getReportSummary(fromDate: String, toDate: String): Flow<ReportSummary> = flow {
-        // FIX: Use .first() to suspend and get the single emitted list from the flow.
         val salesReportsList = getSalesReports().first()
         val totalSales = salesReportsList.sumOf { it.total }
+
+        // Crear datos del gráfico
+        val chartData = salesReportsList.groupBy { it.date }
+            .map { (date, sales) ->
+                ChartData(
+                    date = date,
+                    amount = sales.sumOf { it.total }
+                )
+            }
+            .sortedBy { it.date }
+
         emit(
             ReportSummary(
                 totalCustomers = customers.size,
                 totalProducts = products.size,
                 totalSales = totalSales,
-                dateRange = "$fromDate - $toDate"
+                dateRange = "$fromDate - $toDate",
+                chartData = chartData
             )
         )
     }
