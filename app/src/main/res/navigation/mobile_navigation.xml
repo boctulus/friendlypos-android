@@ -74,8 +74,7 @@
     <fragment
         android:id="@+id/navigation_payments"
         android:name="cl.friendlypos.mypos.ui.payments.PaymentsFragment"
-        android:label="@string/title_payments"
-        tools:layout="@layout/fragment_payments" />
+        android:label="@string/title_payments" />
 
     <fragment
         android:id="@+id/navigation_history"
