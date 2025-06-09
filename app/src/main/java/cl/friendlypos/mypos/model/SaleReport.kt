@@ -8,9 +8,8 @@ data class SaleReport(
     val total: Double,
     val paymentMethod: String,
     val date: LocalDate,
-    val items: List<ProductSale> = emptyList(), // <-- FIX: Changed type from List<String> to List<ProductSale>
+    val items: List<ProductSale> = emptyList(),
     val status: String = "Completed"
-    // val totalAmount: List<ProductSale> = total, // <-- FIX: Removed this incorrect line
 )
 
 data class ProductSale(
@@ -20,9 +19,15 @@ data class ProductSale(
     val total: Double
 )
 
+data class ChartData(
+    val date: LocalDate,
+    val amount: Double
+)
+
 data class ReportSummary(
     val totalCustomers: Int,
     val totalProducts: Int,
     val totalSales: Double,
-    val dateRange: String
+    val dateRange: String,
+    val chartData: List<ChartData> = emptyList()
 )
