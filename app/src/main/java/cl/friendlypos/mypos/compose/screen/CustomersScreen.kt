@@ -4,8 +4,10 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Phone
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -21,9 +23,10 @@ import cl.friendlypos.mypos.model.Customer
 fun CustomersScreen(
     viewModel: CustomersViewModel = viewModel()
 ) {
-    val customers by viewModel.customers.collectAsState()
+    val customers by viewModel.filteredCustomers.collectAsState()
     val isLoading by viewModel.isLoading.collectAsState()
-    
+    val searchQuery by viewModel.searchQuery.collectAsState()
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -35,7 +38,40 @@ fun CustomersScreen(
             fontWeight = FontWeight.Bold,
             modifier = Modifier.padding(bottom = 16.dp)
         )
-        
+
+        // Buscador
+        OutlinedTextField(
+            value = searchQuery,
+            onValueChange = { viewModel.updateSearchQuery(it) },
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(bottom = 16.dp),
+            placeholder = { Text("Buscar clientes...") },
+            leadingIcon = {
+                Icon(
+                    imageVector = Icons.Default.Search,
+                    contentDescription = "Buscar",
+                    tint = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+            },
+            trailingIcon = {
+                if (searchQuery.isNotEmpty()) {
+                    IconButton(onClick = { viewModel.clearSearch() }) {
+                        Icon(
+                            imageVector = Icons.Default.Clear,
+                            contentDescription = "Limpiar búsqueda",
+                            tint = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                    }
+                }
+            },
+            singleLine = true,
+            colors = OutlinedTextFieldDefaults.colors(
+                focusedBorderColor = MaterialTheme.colorScheme.primary,
+                unfocusedBorderColor = MaterialTheme.colorScheme.outline
+            )
+        )
+
         if (isLoading) {
             Box(
                 modifier = Modifier.fillMaxSize(),
@@ -78,7 +114,7 @@ fun CustomerItemCard(customer: Customer) {
                         style = MaterialTheme.typography.titleMedium,
                         fontWeight = FontWeight.Bold
                     )
-                    
+
                     Row(
                         verticalAlignment = Alignment.CenterVertically,
                         modifier = Modifier.padding(top = 4.dp)
@@ -96,7 +132,7 @@ fun CustomerItemCard(customer: Customer) {
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
                     }
-                    
+
                     Row(
                         verticalAlignment = Alignment.CenterVertically,
                         modifier = Modifier.padding(top = 2.dp)
@@ -115,7 +151,7 @@ fun CustomerItemCard(customer: Customer) {
                         )
                     }
                 }
-                
+
                 Column(
                     horizontalAlignment = Alignment.End
                 ) {
@@ -132,15 +168,15 @@ fun CustomerItemCard(customer: Customer) {
                     )
                 }
             }
-            
+
             Spacer(modifier = Modifier.height(8.dp))
-            
+
             Text(
                 text = "Dirección: ${customer.address}",
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
-            
+
             Text(
                 text = "Última compra: ${customer.lastPurchaseDate}",
                 style = MaterialTheme.typography.bodySmall,

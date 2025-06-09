@@ -4,12 +4,13 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Clear
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -21,8 +22,9 @@ import cl.friendlypos.mypos.model.Product
 fun InventoryScreen(
     viewModel: InventoryViewModel = viewModel()
 ) {
-    val products by viewModel.products.collectAsState()
+    val products by viewModel.filteredProducts.collectAsState()
     val isLoading by viewModel.isLoading.collectAsState()
+    val searchQuery by viewModel.searchQuery.collectAsState()
 
     Column(
         modifier = Modifier
@@ -34,6 +36,39 @@ fun InventoryScreen(
             style = MaterialTheme.typography.headlineMedium,
             fontWeight = FontWeight.Bold,
             modifier = Modifier.padding(bottom = 16.dp)
+        )
+
+        // Buscador
+        OutlinedTextField(
+            value = searchQuery,
+            onValueChange = { viewModel.updateSearchQuery(it) },
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(bottom = 16.dp),
+            placeholder = { Text("Buscar productos...") },
+            leadingIcon = {
+                Icon(
+                    imageVector = Icons.Default.Search,
+                    contentDescription = "Buscar",
+                    tint = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+            },
+            trailingIcon = {
+                if (searchQuery.isNotEmpty()) {
+                    IconButton(onClick = { viewModel.clearSearch() }) {
+                        Icon(
+                            imageVector = Icons.Default.Clear,
+                            contentDescription = "Limpiar búsqueda",
+                            tint = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                    }
+                }
+            },
+            singleLine = true,
+            colors = OutlinedTextFieldDefaults.colors(
+                focusedBorderColor = MaterialTheme.colorScheme.primary,
+                unfocusedBorderColor = MaterialTheme.colorScheme.outline
+            )
         )
 
         if (isLoading) {
@@ -99,7 +134,7 @@ fun InventoryItemCard(product: Product) {
                         Icon(
                             imageVector = Icons.Default.Warning,
                             contentDescription = "Stock bajo",
-                            tint = Color.Red,
+                            tint = MaterialTheme.colorScheme.error,
                             modifier = Modifier.size(16.dp)
                         )
                         Spacer(modifier = Modifier.width(4.dp))
@@ -108,7 +143,7 @@ fun InventoryItemCard(product: Product) {
                         text = "Stock: ${product.stock}",
                         style = MaterialTheme.typography.titleMedium,
                         fontWeight = FontWeight.Bold,
-                        color = if (product.stock <= 10) Color.Red else MaterialTheme.colorScheme.onSurface
+                        color = if (product.stock <= 10) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.onSurface
                     )
                 }
             }

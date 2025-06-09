@@ -3,6 +3,9 @@ package cl.friendlypos.mypos.compose.screen
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Clear
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -18,9 +21,10 @@ import cl.friendlypos.mypos.model.Product
 fun ProductsScreen(
     viewModel: ProductsViewModel = viewModel()
 ) {
-    val products by viewModel.products.collectAsState()
+    val products by viewModel.filteredProducts.collectAsState()
     val isLoading by viewModel.isLoading.collectAsState()
-    
+    val searchQuery by viewModel.searchQuery.collectAsState()
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -32,7 +36,40 @@ fun ProductsScreen(
             fontWeight = FontWeight.Bold,
             modifier = Modifier.padding(bottom = 16.dp)
         )
-        
+
+        // Buscador
+        OutlinedTextField(
+            value = searchQuery,
+            onValueChange = { viewModel.updateSearchQuery(it) },
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(bottom = 16.dp),
+            placeholder = { Text("Buscar productos...") },
+            leadingIcon = {
+                Icon(
+                    imageVector = Icons.Default.Search,
+                    contentDescription = "Buscar",
+                    tint = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+            },
+            trailingIcon = {
+                if (searchQuery.isNotEmpty()) {
+                    IconButton(onClick = { viewModel.clearSearch() }) {
+                        Icon(
+                            imageVector = Icons.Default.Clear,
+                            contentDescription = "Limpiar búsqueda",
+                            tint = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                    }
+                }
+            },
+            singleLine = true,
+            colors = OutlinedTextFieldDefaults.colors(
+                focusedBorderColor = MaterialTheme.colorScheme.primary,
+                unfocusedBorderColor = MaterialTheme.colorScheme.outline
+            )
+        )
+
         if (isLoading) {
             Box(
                 modifier = Modifier.fillMaxSize(),
