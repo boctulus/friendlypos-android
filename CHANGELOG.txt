@@ -87,3 +87,4 @@
 [2025-06-09 20:11:09]	No se encontró una version válida	Previo trabajar en Reports
 [2025-06-09 20:39:28]	No se encontró una version válida	Reportes incluidos
 [2025-06-29 13:13:52]	No se encontró una version válida	Historial de transacciones
+[2025-06-29 13:35:11]	No se encontró una version válida	Notificaciones

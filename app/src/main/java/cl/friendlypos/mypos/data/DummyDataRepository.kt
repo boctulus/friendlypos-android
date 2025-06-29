@@ -6,6 +6,7 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOf
 import java.time.LocalDate
+import java.time.LocalDateTime
 
 object DummyDataRepository {
 
@@ -115,4 +116,75 @@ object DummyDataRepository {
             )
         )
     }
+
+    fun getNotifications(): Flow<List<Notification>> = flow {
+        val notifications = listOf(
+            Notification(
+                id = "NOT-001",
+                title = "Sistema actualizado",
+                message = "El sistema se ha actualizado a la versión 2.1.0 con nuevas funcionalidades y mejoras de seguridad.",
+                type = NotificationType.SUCCESS,
+                timestamp = LocalDateTime.now().minusHours(1),
+                isRead = false
+            ),
+            Notification(
+                id = "NOT-002",
+                title = "Stock bajo",
+                message = "El producto 'Coca Cola 350ml' tiene stock bajo (5 unidades restantes).",
+                type = NotificationType.WARNING,
+                timestamp = LocalDateTime.now().minusHours(3),
+                isRead = false
+            ),
+            Notification(
+                id = "NOT-003",
+                title = "Error en conexión",
+                message = "No se pudo conectar con el servidor de pagos. Verifique su conexión a internet.",
+                type = NotificationType.ERROR,
+                timestamp = LocalDateTime.now().minusHours(5),
+                isRead = true
+            ),
+            Notification(
+                id = "NOT-004",
+                title = "Nuevo cliente registrado",
+                message = "Se ha registrado un nuevo cliente: Roberto Silva",
+                type = NotificationType.INFO,
+                timestamp = LocalDateTime.now().minusDays(1),
+                isRead = true
+            ),
+            Notification(
+                id = "NOT-005",
+                title = "Backup completado",
+                message = "El respaldo automático de datos se completó exitosamente.",
+                type = NotificationType.SUCCESS,
+                timestamp = LocalDateTime.now().minusDays(1).minusHours(6),
+                isRead = false
+            ),
+            Notification(
+                id = "NOT-006",
+                title = "Mantenimiento programado",
+                message = "El sistema entrará en mantenimiento el próximo domingo de 2:00 AM a 4:00 AM.",
+                type = NotificationType.INFO,
+                timestamp = LocalDateTime.now().minusDays(2),
+                isRead = true
+            ),
+            Notification(
+                id = "NOT-007",
+                title = "Producto vencido",
+                message = "El producto 'Leche Entera 1L' está próximo a vencer (vence en 2 días).",
+                type = NotificationType.WARNING,
+                timestamp = LocalDateTime.now().minusDays(3),
+                isRead = false
+            ),
+            Notification(
+                id = "NOT-008",
+                title = "Configuración actualizada",
+                message = "Las configuraciones de impresora han sido actualizadas correctamente.",
+                type = NotificationType.SUCCESS,
+                timestamp = LocalDateTime.now().minusDays(4),
+                isRead = true
+            )
+        )
+        emit(notifications)
+    }
+
 }
