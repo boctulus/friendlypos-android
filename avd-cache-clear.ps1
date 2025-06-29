@@ -1,0 +1,1 @@
+rm C:\Users\jayso\.android\avd\Medium_Phone.avd\*.lockd

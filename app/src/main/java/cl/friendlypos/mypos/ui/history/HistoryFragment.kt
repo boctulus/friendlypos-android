@@ -2,32 +2,19 @@ package cl.friendlypos.mypos.ui.history
 
 import android.os.Bundle
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
+import androidx.compose.ui.platform.ComposeView
 import androidx.fragment.app.Fragment
-import cl.friendlypos.mypos.databinding.FragmentHistoryBinding
+import cl.friendlypos.mypos.compose.screen.HistoryScreen
 
 class HistoryFragment : Fragment() {
-
-    private var _binding: FragmentHistoryBinding? = null
-    private val binding get() = _binding!!
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View {
-        _binding = FragmentHistoryBinding.inflate(inflater, container, false)
-        return binding.root
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        binding.textHistory.text = "History Fragment"
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
+    ) = ComposeView(requireContext()).apply {
+        setContent {
+            HistoryScreen()
+        }
     }
 }
