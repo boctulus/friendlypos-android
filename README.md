@@ -20,16 +20,15 @@ Esta app es un POS Android para una tienda de la app multi-tienda, backend de es
 - **MinSDK 23** - Android 6.0+
 - **TargetSDK 34** - Android 14
 
-### Backend
+---
+
+### Backend of API REST
 
 El backend es una app en NodeJS que provee una API REST.
 
-URL Base de la API REST se lee de constante BASE_URL_BACKEND del .env
+URL Base de la API REST se leera de `ApiConfig.kt`. Valor que por ejemplo contendra: "http://localhost:3001"
 
-Ej:
-```
-BASE_URL_BACKEND=http://localhost:3001
-```
+---
 
 ### Database
 
@@ -41,14 +40,17 @@ Las distintas entidades (tablas) del backend en NodeJS estan listadas en el proy
 D:\nodejs\friendlypos_nodejs\config\databases.config.js
 ```
 
+---
+
 ### Firebase
 
 Firebase para:
 
 - Autenticación (Firebase Auth)
-- Base de datos (Firestore)
-- Almacenamiento (Firebase Storage)
 - Push Notifications (FCM)
+
+y nada mas.
+
 
 ## Que hace la app
 
@@ -91,7 +93,7 @@ npm run create-admin help
 
 ## Comandos CLI
 
-Hay varios comandos "CLI" (para la terminal) en la app en NodeJS (backend) que se pueden conocer usando la ayuda:
+Hay varios comandos "CLI" (para la terminal) que se pueden conocer usando la ayuda:
 ```
 npm run cli help
 ```
@@ -137,13 +139,8 @@ Todos los endpoints están disponibles desde una API REST de un SDK en PHP:
 
 Solicitar documentación completa para más endpoints.
 
-Para conocer la URL base de la API REST del SDK de OpenFactura leer la constante BASE_URL_OPENFACTURA del .env.
+Para conocer la URL base de la API REST del SDK de OpenFactura leer debera leerse `ApiConfig.kt` y para la url contendra algo como "http://sr-haulmer.lan/api/openfactura"
 
-Ej:
-
-```
-BASE_URL_OPENFACTURA=http://sr-haulmer.lan/api/openfactura
-```
 
 ---
 
