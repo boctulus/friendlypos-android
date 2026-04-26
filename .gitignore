@@ -1,18 +1,52 @@
-*.iml
+# --- General ---
 *.log
+*.tmp
+*.temp
+*.swp
+.DS_Store
+
+# --- Archives ---
 *.zip
 *.rar
-.gradle
-/local.properties
-/.idea/caches
-/.idea/libraries
-/.idea/modules.xml
-/.idea/workspace.xml
-/.idea/navEditor.xml
-/.idea/assetWizardSettings.xml
-.DS_Store
-/build
-/captures
-.externalNativeBuild
-.cxx
+*.7z
+*.tar
+*.gz
+
+# --- Env ---
+.env
+
+# --- Gradle ---
+.gradle/
+build/
+**/build/
+
+# --- Kotlin ---
+.kotlin/
+
+# --- Android Studio ---
+.idea/
+*.iml
+
+# --- Local config ---
 local.properties
+
+# --- NDK / C++ ---
+.externalNativeBuild/
+.cxx/
+
+# --- Captures ---
+captures/
+
+# --- Crash / debug ---
+*.txt
+
+# --- AVD / Emulator ---
+*.avd
+*.keystore
+
+# --- OS ---
+Thumbs.db
+
+# --- Misc ---
+.config/
+
