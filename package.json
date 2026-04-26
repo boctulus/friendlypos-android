@@ -1,0 +1,17 @@
+{
+  "name": "friendlypos-kotlin",
+  "version": "1.0.0",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "com": "node cmd/com.js",
+    "com:sql": "node cmd/com.js sql",
+    "com:make": "node cmd/com.js make",
+    "com:list": "node cmd/com.js sql list main",
+    "com:help": "node cmd/com.js --help"
+  },
+  "dependencies": {  
+  },
+  "devDependencies": {    
+  }
+}
