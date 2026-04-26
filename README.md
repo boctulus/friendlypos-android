@@ -31,6 +31,16 @@ Ej:
 BASE_URL_BACKEND=http://localhost:3001
 ```
 
+### Database
+
+La base de datos vive en el backend en NodeJS y es PGSQL ('supabase').
+
+Las distintas entidades (tablas) del backend en NodeJS estan listadas en el proyecto en NodeJS:
+
+```
+D:\nodejs\friendlypos_nodejs\config\databases.config.js
+```
+
 ### Firebase
 
 Firebase para:
