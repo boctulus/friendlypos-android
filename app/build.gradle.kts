@@ -115,6 +115,15 @@ dependencies {
     implementation("androidx.compose.runtime:runtime-livedata")
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.8.7")
 
+    // Retrofit + OkHttp para API REST
+    implementation("com.squareup.retrofit2:retrofit:2.9.0")
+    implementation("com.squareup.retrofit2:converter-gson:2.9.0")
+    implementation("com.squareup.okhttp3:okhttp:4.12.0")
+    implementation("com.squareup.okhttp3:logging-interceptor:4.12.0")
+
+    // Coroutines para operaciones async
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3")
+
     // Librerías legacy POS (soporte para .jar antiguos de Java 6/7)
     implementation(fileTree(mapOf("dir" to "libs", "include" to listOf("*.jar"))))
 
