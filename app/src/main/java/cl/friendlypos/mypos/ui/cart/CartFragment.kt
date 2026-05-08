@@ -1,123 +1,59 @@
 package cl.friendlypos.mypos.ui.cart
 
+import android.app.Activity
+import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.appcompat.app.AlertDialog
+import androidx.compose.ui.platform.ComposeView
+import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.fragment.findNavController
-import androidx.recyclerview.widget.LinearLayoutManager
-import cl.friendlypos.mypos.databinding.FragmentCartBinding
-import cl.friendlypos.mypos.ui.sales.SaleItem
+import cl.friendlypos.mypos.PaymentActivity
+import cl.friendlypos.mypos.compose.screen.CartScreen
 import cl.friendlypos.mypos.ui.sales.SalesCalculatorViewModel
 
 class CartFragment : Fragment() {
 
-    private var _binding: FragmentCartBinding? = null
-    private val binding get() = _binding!!
     private lateinit var viewModel: SalesCalculatorViewModel
-    private lateinit var adapter: SaleItemAdapter
+
+    companion object {
+        private const val PAYMENT_REQUEST_CODE = 2
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentCartBinding.inflate(inflater, container, false)
-
         viewModel = ViewModelProvider(requireActivity()).get(SalesCalculatorViewModel::class.java)
-        Log.d("ViewModelDebug", "CartFragment - ViewModel instance: ${viewModel.hashCode()}")
 
-        binding.viewModel = viewModel
-        binding.lifecycleOwner = viewLifecycleOwner
-
-        setupRecyclerView()
-        setupListeners()
-
-        return binding.root
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
-        val initialItems = viewModel.saleItems.value
-        Log.d("CartFragment", "Items iniciales: ${initialItems?.size ?: 0}")
-        initialItems?.forEach {
-            Log.d("CartFragment", "Item: $it")
-        }
-
-        updateCartVisibility(initialItems ?: emptyList())
-        setupObservers()
-    }
-
-    private fun setupRecyclerView() {
-        adapter = SaleItemAdapter(
-            onItemDelete = { item ->
-                viewModel.removeSaleItem(item)
+        return ComposeView(requireContext()).apply {
+            setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
+            setContent {
+                CartScreen(
+                    viewModel = viewModel,
+                    onNavigateBack = {
+                        @Suppress("DEPRECATION")
+                        requireActivity().onBackPressed()
+                    },
+                    onProceedToPayment = { totalAmount ->
+                        val intent = Intent(requireContext(), PaymentActivity::class.java)
+                        intent.putExtra("totalAmount", totalAmount)
+                        @Suppress("DEPRECATION")
+                        startActivityForResult(intent, PAYMENT_REQUEST_CODE)
+                    }
+                )
             }
-        )
-
-        binding.cartItemsRecyclerView.apply {
-            layoutManager = LinearLayoutManager(context)
-            adapter = this@CartFragment.adapter
-        }
-
-        Log.d("CartFragment", "RecyclerView configurado con adaptador")
-    }
-
-    private fun setupObservers() {
-        viewModel.saleItems.observe(viewLifecycleOwner) { items ->
-            Log.d("CartFragment", "Observer activado. Items recibidos: ${items.size}")
-            items.forEach { Log.d("CartFragment", "Item en observer: $it") }
-            adapter.submitList(items.toList()) // Pasar una copia de la lista
-            updateCartVisibility(items)
-
-            // Calcular el subtotal y la cantidad total directamente desde los ítems
-            val subtotal = items.sumOf { it.unitPrice * it.quantity }
-            val itemCount = items.sumOf { it.quantity }
-            binding.subtotalAmount.text = "$$subtotal"
-            binding.itemCountBadge.text = itemCount.toString()
         }
     }
 
-    private fun updateCartVisibility(items: List<SaleItem>) {
-        if (items.isEmpty()) {
-            Log.d("CartFragment", "Carrito vacío")
-            binding.emptyCartContainer.visibility = View.VISIBLE
-            binding.cartItemsRecyclerView.visibility = View.GONE
-        } else {
-            Log.d("CartFragment", "Carrito con items: ${items.size}")
-            binding.emptyCartContainer.visibility = View.GONE
-            binding.cartItemsRecyclerView.visibility = View.VISIBLE
+    @Suppress("DEPRECATION")
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == PAYMENT_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
+            viewModel.processSale()
         }
-    }
-
-    private fun setupListeners() {
-        binding.calculatorButton.setOnClickListener {
-            requireActivity().onBackPressed()
-        }
-
-        binding.clear.setOnClickListener {
-            AlertDialog.Builder(requireContext())
-                .setTitle("Limpiar Carrito")
-                .setMessage("¿Está seguro de que desea limpiar el carrito?")
-                .setPositiveButton("Sí") { _, _ ->
-                    viewModel.clearCart() // Método a agregar en el ViewModel
-                }
-                .setNegativeButton("No", null)
-                .show()
-        }
-
-        binding.subtotalCard.setOnClickListener {
-            // Lógica para proceder al pago
-        }
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
     }
 }

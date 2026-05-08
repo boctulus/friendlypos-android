@@ -21,6 +21,9 @@ class SalesCalculatorViewModel : ViewModel() {
     private val _cartItemCount = MutableLiveData<Int>(0)
     val cartItemCount: LiveData<Int> = _cartItemCount
 
+    private val _cartSearchQuery = MutableLiveData<String>("")
+    val cartSearchQuery: LiveData<String> = _cartSearchQuery
+
     init {
         Log.d("SalesCalcVM", "ViewModel creado: $this")
     }
@@ -157,5 +160,19 @@ class SalesCalculatorViewModel : ViewModel() {
         _saleItems.value = emptyList()
         _totalAmount.value = "0"
         _cartItemCount.value = 0
+    }
+
+    fun updateCartSearchQuery(query: String) {
+        _cartSearchQuery.value = query
+    }
+
+    fun updateSaleItem(updatedItem: SaleItem) {
+        val currentItems = _saleItems.value?.toMutableList() ?: return
+        val index = currentItems.indexOfFirst { it.id == updatedItem.id }
+        if (index < 0) return
+        currentItems[index] = updatedItem
+        _saleItems.value = currentItems
+        _totalAmount.value = currentItems.sumOf { it.unitPrice * it.quantity }.toString()
+        _cartItemCount.value = currentItems.sumOf { it.quantity }
     }
 }

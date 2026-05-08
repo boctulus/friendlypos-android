@@ -24,3 +24,4 @@ cmd/node_modules/
 *.bat
 *.ps1
 *.log
+screenshots/
