@@ -42,8 +42,8 @@ class AuthRepository {
                 Result.success(
                     UserSession(
                         uid = user.uid,
-                        email = user.email,
-                        displayName = user.displayName ?: user.email,
+                        email = user.email ?: email.trim(),
+                        displayName = user.displayName ?: user.email ?: email.trim(),
                         role = user.role,
                         storeId = user.storeId
                     )

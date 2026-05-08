@@ -9,7 +9,7 @@ data class KeepAliveResponseDto(
 
 data class UserDto(
     val uid: String,
-    val email: String,
+    val email: String?,
     @SerializedName("displayName") val displayName: String?,
     val role: String,
     @SerializedName("store_id") val storeId: String?
