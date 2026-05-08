@@ -29,6 +29,7 @@ class LoginFlowViewModel : ViewModel() {
 
     private val authRepo = AuthRepository()
     private val cashboxRepo = CashboxRepository()
+    private var pendingSession: UserSession? = null
 
     fun login(email: String, password: String) {
         if (email.isBlank() || password.isBlank()) {
@@ -54,23 +55,22 @@ class LoginFlowViewModel : ViewModel() {
     }
 
     private suspend fun checkCashboxAndProceed(session: UserSession) {
+        pendingSession = session
         cashboxRepo.getCurrentSession()
             .onSuccess { currentSession ->
                 if (currentSession != null) {
                     _state.value = FlowState.Done(session)
                 } else {
-                    val storeId = session.storeId ?: ""
-                    _state.value = FlowState.CashboxOpen(storeId)
+                    _state.value = FlowState.CashboxOpen(session.storeId ?: "")
                 }
             }
             .onFailure {
-                val storeId = session.storeId ?: ""
-                _state.value = FlowState.CashboxOpen(storeId)
+                _state.value = FlowState.CashboxOpen(session.storeId ?: "")
             }
     }
 
-    fun onCashboxOpened(session: UserSession) {
-        _state.value = FlowState.Done(session)
+    fun onCashboxOpened() {
+        pendingSession?.let { _state.value = FlowState.Done(it) }
     }
 
     fun clearError() {

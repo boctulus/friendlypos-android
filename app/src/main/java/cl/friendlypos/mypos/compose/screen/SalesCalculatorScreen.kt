@@ -1,5 +1,6 @@
 package cl.friendlypos.mypos.compose.screen
 
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -61,20 +62,11 @@ fun SalesCalculatorScreen(
     ) {
         Spacer(modifier = Modifier.height(8.dp))
 
-        // Amount display + barcode button (same row, no overlap)
+        // Barcode button — top right, alone
         Row(
             modifier = Modifier.fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically
+            horizontalArrangement = Arrangement.End
         ) {
-            Text(
-                text = "$$currentAmount",
-                fontSize = 40.sp,
-                fontWeight = FontWeight.Bold,
-                color = Color(0xFF333333),
-                modifier = Modifier
-                    .weight(1f)
-                    .padding(start = 16.dp)
-            )
             IconButton(
                 onClick = { showSearchModal = true },
                 modifier = Modifier
@@ -89,6 +81,17 @@ fun SalesCalculatorScreen(
                 )
             }
         }
+
+        // Amount display — below the barcode button
+        Text(
+            text = "$$currentAmount",
+            fontSize = 40.sp,
+            fontWeight = FontWeight.Bold,
+            color = Color(0xFF333333),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp)
+        )
 
         // Item name row
         Row(
@@ -370,7 +373,7 @@ internal fun ProductSearchBar(
     modifier: Modifier = Modifier
 ) {
     Card(
-        modifier = modifier,
+        modifier = modifier.border(1.dp, Color(0xFFBDBDBD), RoundedCornerShape(8.dp)),
         shape = RoundedCornerShape(8.dp),
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
     ) {

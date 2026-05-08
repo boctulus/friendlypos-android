@@ -8,7 +8,9 @@
       "Bash(./gradlew assembleDebug --no-daemon)",
       "Bash(./gradlew assembleDebug --no-daemon --stacktrace)",
       "Bash(./gradlew assembleDebug --no-daemon -Dorg.gradle.jvmargs=\"-Xmx2g\")",
-      "Bash(grep -E \"\\\\.js$|\\\\.ts$\")"
+      "Bash(grep -E \"\\\\.js$|\\\\.ts$\")",
+      "Bash(./gradlew compileDebugKotlin --no-daemon --stacktrace)",
+      "Bash(./gradlew compileDebugKotlin --no-daemon --info)"
     ]
   }
 }

@@ -9,6 +9,7 @@ import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import cl.friendlypos.mypos.R
+import cl.friendlypos.mypos.SessionManager
 import cl.friendlypos.mypos.compose.screen.HomeScreen
 
 class HomeFragment : Fragment() {
@@ -21,7 +22,10 @@ class HomeFragment : Fragment() {
         return ComposeView(requireContext()).apply {
             setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
             setContent {
+                val role = SessionManager.getRole(requireContext())
+
                 HomeScreen(
+                    role = role,
                     onNavigateToNewSale = {
                         findNavController().navigate(R.id.action_home_to_sales_calc)
                     },
@@ -33,6 +37,15 @@ class HomeFragment : Fragment() {
                     },
                     onNavigateToReports = {
                         findNavController().navigate(R.id.action_home_to_reports)
+                    },
+                    onNavigateToCashbox = {
+                        findNavController().navigate(R.id.action_home_to_cashbox)
+                    },
+                    onNavigateToTickets = {
+                        findNavController().navigate(R.id.action_home_to_tickets)
+                    },
+                    onNavigateToSettings = {
+                        findNavController().navigate(R.id.action_home_to_settings)
                     }
                 )
             }

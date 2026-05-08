@@ -2,6 +2,7 @@ package cl.friendlypos.mypos
 
 import android.content.Context
 import android.content.SharedPreferences
+import cl.friendlypos.mypos.api.ApiClient
 
 data class UserSession(
     val uid: String,

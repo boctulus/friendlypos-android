@@ -19,6 +19,26 @@ android {
         
         // Configuración para librerías legacy
         multiDexEnabled = true
+
+        buildConfigField("String", "FIREBASE_API_KEY", "\"AIzaSyDs5hJ0HEBqAG7F78tX1rxDlgiOYkH1C64\"")
+    }
+
+    flavorDimensions += "environment"
+
+    productFlavors {
+        create("emulator") {
+            dimension = "environment"
+            buildConfigField("String", "BASE_URL_BACKEND", "\"http://10.0.2.2:3001\"")
+        }
+        create("device") {
+            dimension = "environment"
+            // Update this IP to match your local backend host
+            buildConfigField("String", "BASE_URL_BACKEND", "\"http://192.168.1.50:3001\"")
+        }
+        create("production") {
+            dimension = "environment"
+            buildConfigField("String", "BASE_URL_BACKEND", "\"https://api.example.com\"")
+        }
     }
 
     buildTypes {
@@ -49,6 +69,7 @@ android {
         viewBinding = true
         dataBinding = true
         compose = true
+        buildConfig = true
     }
 
     composeOptions {

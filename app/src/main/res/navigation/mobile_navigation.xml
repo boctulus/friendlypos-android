@@ -27,6 +27,18 @@
         <action
             android:id="@+id/action_home_to_reports"
             app:destination="@id/navigation_reports" />
+
+        <action
+            android:id="@+id/action_home_to_cashbox"
+            app:destination="@id/navigation_cashbox" />
+
+        <action
+            android:id="@+id/action_home_to_tickets"
+            app:destination="@id/navigation_tickets" />
+
+        <action
+            android:id="@+id/action_home_to_settings"
+            app:destination="@id/navigation_settings" />
     </fragment>
 
     <!-- Fragments secundarios -->
@@ -94,5 +106,20 @@
         android:name="cl.friendlypos.mypos.ui.cart.CartFragment"
         android:label="Carrito"
         tools:layout="@layout/fragment_cart" />
+
+    <fragment
+        android:id="@+id/navigation_cashbox"
+        android:name="cl.friendlypos.mypos.ui.cashbox.CashboxFragment"
+        android:label="Caja" />
+
+    <fragment
+        android:id="@+id/navigation_tickets"
+        android:name="cl.friendlypos.mypos.ui.tickets.TicketsFragment"
+        android:label="Tickets" />
+
+    <fragment
+        android:id="@+id/navigation_settings"
+        android:name="cl.friendlypos.mypos.ui.settings.SettingsFragment"
+        android:label="Configuración" />
 
 </navigation>
