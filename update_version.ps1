@@ -1,102 +1,55 @@
-function get_current_version {
-    param (
-        [string]$file = "composer.json"
-    )
-    
-    if (!(Test-Path $file)) {
-        return $null
-    }
-    
-    $content = Get-Content $file -Raw
-    $versionMatch = Select-String -InputObject $content -Pattern '"version":\s*"(\d+\.\d+\.\d+)"' -AllMatches
-    
-    if ($versionMatch.Matches.Count -gt 0) {
-        return $versionMatch.Matches[0].Groups[1].Value
-    }
-    
-    return $null
-}
+# PowerShell script to get or update the version in package.json
+# Usage:
+#   .\update_version.ps1 --get_version    # Returns the current version
+#   .\update_version.ps1                  # Increments the revision number (e.g., 1.0.0 to 1.0.1)
 
-function get_next_version {
-    param (
-        [string]$current_version
-    )
-    
-    if ($current_version) {
-        $segments = $current_version -split "\."
-        $segments[2] = [int]$segments[2] + 1
-        return $segments -join "."
-    }
-    
-    return $null
-}
+# Determine the script directory
+$scriptDir = Split-Path -Parent $MyInvocation.MyCommand.Path
 
-# Procesar argumentos de línea de comandos
-if ($args.Count -gt 0) {
-    switch ($args[0]) {
-        "--get_version" {
-            $version = get_current_version
-            if ($version) {
-                Write-Output $version
-            } else {
-                Write-Output "No se encontró una version válida"
-            }
-            return
-        }
-        "--get_next_version" {
-            $current = get_current_version
-            if ($current) {
-                $next = get_next_version $current
-                Write-Output $next
-            } else {
-                Write-Output "No se encontró una version válida"
-            }
-            return
-        }
-    }
-}
+# Get the package.json path
+$packageJsonPath = Join-Path $scriptDir "package.json"
 
-# Script principal de actualización
-$file = "composer.json"
-
-# Verificar si el archivo existe
-if (!(Test-Path $file)) {
-    Write-Output "El archivo $file no existe."
+# Check if package.json exists
+if (-not (Test-Path $packageJsonPath)) {
+    Write-Error "package.json not found at $packageJsonPath"
     exit 1
 }
 
-$current_version = get_current_version
-if ($current_version) {
-    $new_version = get_next_version $current_version
-    
-    # Crear un archivo temporal con el contenido actualizado
-    $tempFile = Join-Path (Get-Location).Path "composer.json.tmp"
-    Write-Output "Intentando crear archivo temporal en: $tempFile"
-    
-    $newContent = (Get-Content $file -Raw) -replace [regex]::Escape("""version"": ""$current_version"""), """version"": ""$new_version"""
-    
-    try {
-        # Intentar crear el archivo temporal primero
-        "" | Set-Content -Path $tempFile
-        if (Test-Path $tempFile) {
-            [System.IO.File]::WriteAllText($tempFile, $newContent)
-            
-            $verificationContent = Get-Content $tempFile -Raw
-            if ($verificationContent -match [regex]::Escape("""version"": ""$new_version""")) {
-                Move-Item -Path $tempFile -Destination $file -Force
-                Write-Output "Version actualizada de $current_version a $new_version"
-            } else {
-                Write-Output "Error: El contenido del archivo temporal no es correcto"
-                if (Test-Path $tempFile) { Remove-Item $tempFile }
-            }
-        } else {
-            Write-Output "Error: No se tienen permisos para crear archivos en este directorio"
-        }
+# Read the package.json content
+$content = Get-Content $packageJsonPath -Raw
+$packageJson = $content | ConvertFrom-Json
+
+# Check command line arguments to handle the --get_version case
+# Use $args[0] to access the first argument passed to the script
+if ($args[0] -eq "--get_version") {
+    Write-Output $packageJson.version
+    exit 0
+}
+# If no arguments were provided, increment the version
+else {
+    # Parse the current version
+    $currentVersion = $packageJson.version
+    if ($currentVersion -match "^(\d+)\.(\d+)\.(\d+)$") {
+        $major = [int]$matches[1]
+        $minor = [int]$matches[2]
+        $patch = [int]$matches[3]
+        
+        # Increment the patch version (revision)
+        $newPatch = $patch + 1
+        $newVersion = "$major.$minor.$newPatch"
+        
+        # Update the version in the object
+        $packageJson.version = $newVersion
+        
+        # Convert back to JSON with proper formatting
+        $updatedContent = $packageJson | ConvertTo-Json -Depth 10
+        
+        # Write the updated content back to package.json
+        Set-Content -Path $packageJsonPath -Value $updatedContent
+        
+        Write-Output "Version updated from $currentVersion to $newVersion"
+    } else {
+        Write-Error "Current version '$currentVersion' does not match the expected format (x.y.z)"
+        exit 1
     }
-    catch {
-        Write-Output "Error durante la operación: $_"
-        if (Test-Path $tempFile) { Remove-Item $tempFile }
-    }
-} else {
-    Write-Output "No se encontró una version válida en el archivo."
 }
