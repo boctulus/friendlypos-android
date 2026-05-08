@@ -104,33 +104,46 @@ class MainActivity : AppCompatActivity()
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        // Inflar el menú superior (tres puntos)
         menuInflater.inflate(R.menu.top_menu, menu)
+        val role = SessionManager.getRole(this)
+
+        for (i in 0 until menu.size()) {
+            val item = menu.getItem(i)
+            when (item.itemId) {
+                R.id.action_scanner_testing -> {
+                    item.isVisible = role == "admin"
+                }
+                R.id.action_logout -> {
+                    item.isVisible = role == "admin" || role == "supermarket"
+                    item.title = "Cerrar session"
+                }
+                R.id.action_close_cashbox -> {
+                    item.isVisible = role == "cashier"
+                    item.title = "Cerrar caja"
+                }
+            }
+        }
         return true
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
-            R.id.action_settings -> {
-                Log.d("POS", "Configuración seleccionada")
-                // Implementar acción para abrir configuración
-                true
-            }
-            R.id.action_reports -> {
-                Log.d("POS", "Reportes seleccionados")
-                // Implementar acción para mostrar reportes
-                true
-            }
-            R.id.action_user -> {
-                Log.d("POS", "Gestión de usuario seleccionada")
-                // Implementar acción para gestión de usuario
-                true
-            }
             R.id.action_scanner_testing -> {
-                Log.d("POS", "Iniciando prueba de escáner...")
-                // Crea un Intent para iniciar ScannerActivity
                 val intent = Intent(this, ScannerActivity::class.java)
                 startActivity(intent)
+                true
+            }
+            R.id.action_logout -> {
+                SessionManager.clear(this)
+                val intent = Intent(this, LoginActivity::class.java)
+                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                startActivity(intent)
+                finish()
+                true
+            }
+            R.id.action_close_cashbox -> {
+                findNavController(R.id.nav_host_fragment_activity_main)
+                    .navigate(R.id.navigation_cashbox)
                 true
             }
             else -> super.onOptionsItemSelected(item)

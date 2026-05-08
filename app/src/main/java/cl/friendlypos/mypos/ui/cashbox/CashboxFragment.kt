@@ -1,15 +1,18 @@
 package cl.friendlypos.mypos.ui.cashbox
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.viewmodel.compose.viewModel
+import cl.friendlypos.mypos.LoginActivity
 import cl.friendlypos.mypos.SessionManager
 import cl.friendlypos.mypos.compose.screen.CashboxScreen
 import cl.friendlypos.mypos.compose.viewmodel.CashboxViewModel
@@ -33,6 +36,17 @@ class CashboxFragment : Fragment() {
                 val successMessage by viewModel.successMessage.collectAsState()
 
                 val storeId = SessionManager.get(requireContext())?.storeId ?: ""
+                val role = SessionManager.getRole(requireContext())
+
+                LaunchedEffect(successMessage) {
+                    if (successMessage != null && role == "cashier") {
+                        SessionManager.clear(requireContext())
+                        val intent = Intent(requireContext(), LoginActivity::class.java)
+                        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                        startActivity(intent)
+                        requireActivity().finish()
+                    }
+                }
 
                 CashboxScreen(
                     currentSession = currentSession,
