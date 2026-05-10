@@ -114,7 +114,7 @@ fun CashboxOpenScreen(
                 onExpandedChange = { cashboxDropdownExpanded = it }
             ) {
                 OutlinedTextField(
-                    value = selectedCashbox?.let { "${it.displayName ?: "Caja"} (Nº ${it.cashboxNumber})" } ?: "",
+                    value = selectedCashbox?.let { "${it.displayName ?: "Caja"} (Nº ${it.cashboxLabel ?: ""})" } ?: "",
                     onValueChange = {},
                     readOnly = true,
                     label = { Text("Número de caja *") },
@@ -130,7 +130,7 @@ fun CashboxOpenScreen(
                 ) {
                     availableCashboxes.forEach { box ->
                         DropdownMenuItem(
-                            text = { Text("${box.displayName ?: "Caja"} (Nº ${box.cashboxNumber})") },
+                            text = { Text("${box.displayName ?: "Caja"} (Nº ${box.cashboxLabel ?: ""})") },
                             onClick = {
                                 selectedCashboxId = box.cashboxId
                                 cashboxDropdownExpanded = false

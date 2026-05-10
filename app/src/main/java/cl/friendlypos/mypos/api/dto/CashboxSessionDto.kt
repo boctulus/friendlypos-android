@@ -35,7 +35,7 @@ data class CashboxSessionItemDto(
     val id: String,
     @SerializedName("store_id") val storeId: String,
     @SerializedName("cashbox_id") val cashboxId: String?,
-    @SerializedName("cashbox_number") val cashboxNumber: Int,
+    @SerializedName("cashbox_label") val cashboxLabel: String?,
     @SerializedName("initial_amount") val initialAmount: Double,
     @SerializedName("final_amount") val finalAmount: Double?,
     @SerializedName("expected_amount") val expectedAmount: Double?,

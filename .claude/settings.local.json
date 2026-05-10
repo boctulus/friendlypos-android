@@ -19,7 +19,14 @@
       "Bash(Get-ChildItem -Path \"C:\\\\Users\\\\jayso\\\\AndroidStudioProjects\\\\FriendlyPOS\\\\app\\\\src\\\\main\\\\java\\\\cl\\\\friendlypos\\\\mypos\" -Directory -Recurse)",
       "Bash(Select-Object FullName)",
       "PowerShell(.\\\\build.ps1)",
-      "PowerShell(Get-ChildItem *)"
+      "PowerShell(Get-ChildItem *)",
+      "Bash(New-Item -Path \"prompts\" -ItemType Directory -Force)",
+      "Bash(Out-Null)",
+      "Bash(Set-Content -Path \"prompts\\\\2026-05-10 00-00 6bce99d.txt\" -Value 'En \"Estado de Cajas\" se lee siempre \"Caja N° 0\". El campo cashbox_number fue renombrado a cashbox_label \\(TEXT\\). Hay que revisar que entrega el endpoint y no hacer casting.')",
+      "Read(//d/nodejs/friendlypos_nodejs/**)",
+      "Bash(Get-ChildItem -Recurse -Filter \"*.js\")",
+      "Bash(Select-Object -First 5)",
+      "Bash(grep -E \"\\\\.\\(sql|js\\)$\")"
     ]
   }
 }

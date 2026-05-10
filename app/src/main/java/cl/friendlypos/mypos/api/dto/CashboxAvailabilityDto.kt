@@ -9,7 +9,7 @@ data class CashboxAvailabilityResponseDto(
 
 data class CashboxAvailabilityItemDto(
     @SerializedName("cashbox_id") val cashboxId: String,
-    @SerializedName("cashbox_number") val cashboxNumber: Int,
+    @SerializedName("cashbox_label") val cashboxLabel: String?,
     @SerializedName("display_name") val displayName: String?,
     val status: String,
     @SerializedName("session_id") val sessionId: String?,

@@ -118,7 +118,7 @@ private fun CashboxCloseContent(
         ) {
             Column(modifier = Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
                 Text("Sesión activa", fontWeight = FontWeight.Bold, style = MaterialTheme.typography.titleSmall)
-                SessionInfoRow("Caja Nº", session.cashboxNumber.toString())
+                SessionInfoRow("Caja Nº", session.cashboxLabel ?: "")
                 SessionInfoRow("Monto inicial", "$ ${session.initialAmount}")
                 if (!session.openedAt.isNullOrBlank()) {
                     SessionInfoRow("Abierta", session.openedAt.take(19).replace("T", " "))

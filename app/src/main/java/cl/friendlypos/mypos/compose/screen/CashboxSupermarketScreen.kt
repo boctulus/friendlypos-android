@@ -140,7 +140,7 @@ private fun CashboxStatusCard(
             ) {
                 Column {
                     Text(
-                        "Caja Nº ${item.cashboxNumber}",
+                        "Caja Nº ${item.cashboxLabel ?: ""}",
                         fontWeight = FontWeight.Bold,
                         style = MaterialTheme.typography.titleSmall
                     )
