@@ -36,10 +36,15 @@ fun CashboxOpenScreen(
 
     val availableCashboxes = availability.filter { it.isAvailable }
 
-    LaunchedEffect(successMessage) {
-        if (successMessage != null) {
-            onClearMessages()
-        }
+    if (errorMessage != null) {
+        AlertDialog(
+            onDismissRequest = onClearMessages,
+            title = { Text("Error al abrir caja") },
+            text = { Text(errorMessage) },
+            confirmButton = {
+                TextButton(onClick = onClearMessages) { Text("Aceptar") }
+            }
+        )
     }
 
     Column(
@@ -166,15 +171,6 @@ fun CashboxOpenScreen(
             enabled = !isLoading,
             textStyle = MaterialTheme.typography.bodyMedium
         )
-
-        if (errorMessage != null) {
-            Spacer(modifier = Modifier.height(12.dp))
-            Text(
-                text = errorMessage,
-                color = MaterialTheme.colorScheme.error,
-                style = MaterialTheme.typography.bodySmall
-            )
-        }
 
         Spacer(modifier = Modifier.height(28.dp))
 

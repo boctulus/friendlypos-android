@@ -16,18 +16,37 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import cl.friendlypos.mypos.R
 import cl.friendlypos.mypos.api.dto.CashboxAvailabilityItemDto
+import cl.friendlypos.mypos.api.dto.CashboxSessionItemDto
 
 @Composable
 fun CashboxSupermarketScreen(
+    currentSession: CashboxSessionItemDto?,
     availability: List<CashboxAvailabilityItemDto>,
     isLoading: Boolean,
     errorMessage: String?,
+    successMessage: String?,
+    onOpenSession: (cashboxId: String, initialAmount: Double, notes: String?) -> Unit,
     onCloseSession: (sessionId: String, finalAmount: Double, notes: String?) -> Unit,
     onClearMessages: () -> Unit
 ) {
+    val terminalHasOpenSession = currentSession?.status == "open"
+
     var closingSessionId by remember { mutableStateOf<String?>(null) }
+    var openingCashboxId by remember { mutableStateOf<String?>(null) }
     var finalAmountText by remember { mutableStateOf("") }
+    var initialAmountText by remember { mutableStateOf("") }
     var notes by remember { mutableStateOf("") }
+
+    if (errorMessage != null) {
+        AlertDialog(
+            onDismissRequest = onClearMessages,
+            title = { Text("Error") },
+            text = { Text(errorMessage) },
+            confirmButton = {
+                TextButton(onClick = onClearMessages) { Text("Aceptar") }
+            }
+        )
+    }
 
     Column(
         modifier = Modifier
@@ -58,6 +77,33 @@ fun CashboxSupermarketScreen(
 
         Spacer(modifier = Modifier.height(20.dp))
 
+        if (terminalHasOpenSession) {
+            Card(
+                modifier = Modifier.fillMaxWidth(),
+                colors = CardDefaults.cardColors(containerColor = Color(0xFFFFF3E0))
+            ) {
+                Row(
+                    modifier = Modifier.padding(horizontal = 16.dp, vertical = 12.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Icon(
+                        painter = painterResource(R.drawable.ic_cash),
+                        contentDescription = null,
+                        tint = Color(0xFFE65100),
+                        modifier = Modifier.size(20.dp)
+                    )
+                    Spacer(modifier = Modifier.width(10.dp))
+                    Text(
+                        "Caja ya abierta en esta terminal",
+                        fontWeight = FontWeight.SemiBold,
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = Color(0xFFE65100)
+                    )
+                }
+            }
+            Spacer(modifier = Modifier.height(12.dp))
+        }
+
         if (availability.isEmpty()) {
             Card(
                 modifier = Modifier.fillMaxWidth(),
@@ -83,29 +129,53 @@ fun CashboxSupermarketScreen(
                 }
             }
         } else {
-            LazyColumn(verticalArrangement = Arrangement.spacedBy(12.dp)) {
+            LazyColumn(
+                modifier = Modifier.weight(1f),
+                verticalArrangement = Arrangement.spacedBy(12.dp)
+            ) {
                 items(availability, key = { it.cashboxId }) { item ->
+                    val isCurrentTerminalSession = terminalHasOpenSession &&
+                        currentSession != null &&
+                        item.sessionId == currentSession.id
                     CashboxStatusCard(
                         item = item,
+                        terminalHasOpenSession = terminalHasOpenSession,
+                        isCurrentTerminalSession = isCurrentTerminalSession,
+                        currentSession = if (isCurrentTerminalSession) currentSession else null,
                         isClosing = closingSessionId == item.sessionId,
-                        isLoading = isLoading && closingSessionId == item.sessionId,
+                        isOpening = openingCashboxId == item.cashboxId,
+                        isLoading = isLoading && (closingSessionId == item.sessionId || openingCashboxId == item.cashboxId),
                         finalAmountText = if (closingSessionId == item.sessionId) finalAmountText else "",
-                        notes = if (closingSessionId == item.sessionId) notes else "",
-                        errorMessage = if (closingSessionId == item.sessionId) errorMessage else null,
+                        initialAmountText = if (openingCashboxId == item.cashboxId) initialAmountText else "",
+                        notes = if (closingSessionId == item.sessionId || openingCashboxId == item.cashboxId) notes else "",
                         onStartClose = {
                             closingSessionId = item.sessionId
+                            openingCashboxId = null
                             finalAmountText = ""
                             notes = ""
                             onClearMessages()
                         },
                         onCancelClose = { closingSessionId = null },
                         onFinalAmountChange = { finalAmountText = it },
+                        onStartOpen = {
+                            openingCashboxId = item.cashboxId
+                            closingSessionId = null
+                            initialAmountText = ""
+                            notes = ""
+                            onClearMessages()
+                        },
+                        onCancelOpen = { openingCashboxId = null },
+                        onInitialAmountChange = { initialAmountText = it },
                         onNotesChange = { notes = it },
                         onConfirmClose = {
                             item.sessionId?.let { sessionId ->
                                 val amount = finalAmountText.toDoubleOrNull() ?: 0.0
                                 onCloseSession(sessionId, amount, notes.ifBlank { null })
                             }
+                        },
+                        onConfirmOpen = {
+                            val amount = initialAmountText.toDoubleOrNull() ?: 0.0
+                            onOpenSession(item.cashboxId, amount, notes.ifBlank { null })
                         }
                     )
                 }
@@ -117,17 +187,26 @@ fun CashboxSupermarketScreen(
 @Composable
 private fun CashboxStatusCard(
     item: CashboxAvailabilityItemDto,
+    terminalHasOpenSession: Boolean,
+    isCurrentTerminalSession: Boolean,
+    currentSession: CashboxSessionItemDto?,
     isClosing: Boolean,
+    isOpening: Boolean,
     isLoading: Boolean,
     finalAmountText: String,
+    initialAmountText: String,
     notes: String,
-    errorMessage: String?,
     onStartClose: () -> Unit,
     onCancelClose: () -> Unit,
     onFinalAmountChange: (String) -> Unit,
+    onStartOpen: () -> Unit,
+    onCancelOpen: () -> Unit,
+    onInitialAmountChange: (String) -> Unit,
     onNotesChange: (String) -> Unit,
-    onConfirmClose: () -> Unit
+    onConfirmClose: () -> Unit,
+    onConfirmOpen: () -> Unit
 ) {
+    var showDetails by remember { mutableStateOf(false) }
     Card(
         modifier = Modifier.fillMaxWidth(),
         colors = CardDefaults.cardColors(containerColor = Color(0xFFF5F5F5))
@@ -181,7 +260,132 @@ private fun CashboxStatusCard(
                 }
             }
 
-            if (item.isOccupied) {
+            if (item.isAvailable && !terminalHasOpenSession) {
+                if (isOpening) {
+                    OutlinedTextField(
+                        value = initialAmountText,
+                        onValueChange = onInitialAmountChange,
+                        label = { Text("Monto inicial *") },
+                        singleLine = true,
+                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
+                        modifier = Modifier.fillMaxWidth(),
+                        enabled = !isLoading,
+                        prefix = { Text("$") },
+                        textStyle = MaterialTheme.typography.bodyMedium
+                    )
+                    OutlinedTextField(
+                        value = notes,
+                        onValueChange = onNotesChange,
+                        label = { Text("Notas (opcional)") },
+                        modifier = Modifier.fillMaxWidth(),
+                        maxLines = 2,
+                        enabled = !isLoading,
+                        textStyle = MaterialTheme.typography.bodyMedium
+                    )
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.spacedBy(8.dp)
+                    ) {
+                        OutlinedButton(
+                            onClick = onCancelOpen,
+                            enabled = !isLoading,
+                            modifier = Modifier.weight(1f)
+                        ) {
+                            Text("Cancelar", fontSize = 13.sp)
+                        }
+                        Button(
+                            onClick = onConfirmOpen,
+                            enabled = !isLoading && initialAmountText.isNotBlank(),
+                            modifier = Modifier.weight(1f),
+                            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF009688))
+                        ) {
+                            if (isLoading) {
+                                CircularProgressIndicator(
+                                    color = Color.White,
+                                    strokeWidth = 2.dp,
+                                    modifier = Modifier.size(18.dp)
+                                )
+                            } else {
+                                Text("Abrir Caja", fontSize = 13.sp, fontWeight = FontWeight.SemiBold)
+                            }
+                        }
+                    }
+                } else {
+                    Button(
+                        onClick = onStartOpen,
+                        modifier = Modifier.fillMaxWidth(),
+                        colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF009688))
+                    ) {
+                        Text("Abrir Caja", fontWeight = FontWeight.SemiBold)
+                    }
+                }
+            }
+
+            if (isCurrentTerminalSession && currentSession != null && !isClosing) {
+                if (showDetails) {
+                    Card(
+                        modifier = Modifier.fillMaxWidth(),
+                        colors = CardDefaults.cardColors(containerColor = Color(0xFFE8F5E9))
+                    ) {
+                        Column(
+                            modifier = Modifier.padding(12.dp),
+                            verticalArrangement = Arrangement.spacedBy(4.dp)
+                        ) {
+                            Text(
+                                "Sesión activa (esta terminal)",
+                                fontWeight = FontWeight.SemiBold,
+                                style = MaterialTheme.typography.labelMedium,
+                                color = Color(0xFF2E7D32)
+                            )
+                            if (!currentSession.cashierName.isNullOrBlank()) {
+                                Row(
+                                    modifier = Modifier.fillMaxWidth(),
+                                    horizontalArrangement = Arrangement.SpaceBetween
+                                ) {
+                                    Text("Cajero", style = MaterialTheme.typography.bodySmall, color = Color(0xFF666666))
+                                    Text(currentSession.cashierName, style = MaterialTheme.typography.bodySmall, fontWeight = FontWeight.Medium)
+                                }
+                            }
+                            Row(
+                                modifier = Modifier.fillMaxWidth(),
+                                horizontalArrangement = Arrangement.SpaceBetween
+                            ) {
+                                Text("Monto inicial", style = MaterialTheme.typography.bodySmall, color = Color(0xFF666666))
+                                Text("$ ${currentSession.initialAmount}", style = MaterialTheme.typography.bodySmall, fontWeight = FontWeight.Medium)
+                            }
+                            if (!currentSession.openedAt.isNullOrBlank()) {
+                                Row(
+                                    modifier = Modifier.fillMaxWidth(),
+                                    horizontalArrangement = Arrangement.SpaceBetween
+                                ) {
+                                    Text("Abierta", style = MaterialTheme.typography.bodySmall, color = Color(0xFF666666))
+                                    Text(currentSession.openedAt.take(19).replace("T", " "), style = MaterialTheme.typography.bodySmall, fontWeight = FontWeight.Medium)
+                                }
+                            }
+                        }
+                    }
+                }
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    OutlinedButton(
+                        onClick = { showDetails = !showDetails },
+                        modifier = Modifier.weight(1f)
+                    ) {
+                        Text(if (showDetails) "Ocultar" else "Ver detalles", fontSize = 13.sp)
+                    }
+                    Button(
+                        onClick = onStartClose,
+                        modifier = Modifier.weight(1f),
+                        colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFE53935))
+                    ) {
+                        Text("Cerrar caja", fontSize = 13.sp, fontWeight = FontWeight.SemiBold)
+                    }
+                }
+            }
+
+            if (item.isOccupied && (isClosing || !isCurrentTerminalSession)) {
                 if (isClosing) {
                     OutlinedTextField(
                         value = finalAmountText,
@@ -203,13 +407,6 @@ private fun CashboxStatusCard(
                         enabled = !isLoading,
                         textStyle = MaterialTheme.typography.bodyMedium
                     )
-                    if (errorMessage != null) {
-                        Text(
-                            text = errorMessage,
-                            color = MaterialTheme.colorScheme.error,
-                            style = MaterialTheme.typography.bodySmall
-                        )
-                    }
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.spacedBy(8.dp)

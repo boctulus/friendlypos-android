@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -12,7 +13,9 @@ import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.navigation.fragment.findNavController
 import cl.friendlypos.mypos.LoginActivity
+import cl.friendlypos.mypos.R
 import cl.friendlypos.mypos.SessionManager
 import cl.friendlypos.mypos.compose.screen.CashboxScreen
 import cl.friendlypos.mypos.compose.viewmodel.CashboxViewModel
@@ -38,10 +41,24 @@ class CashboxFragment : Fragment() {
 
                 val storeId = SessionManager.get(requireContext())?.storeId ?: ""
                 val role = SessionManager.getRole(requireContext())
+                val context = requireContext()
 
                 LaunchedEffect(storeId) {
                     if (storeId.isNotBlank()) {
                         cashboxViewModel.loadAvailability(storeId)
+                    }
+                }
+
+                LaunchedEffect(successMessage) {
+                    if (successMessage != null) {
+                        Toast.makeText(context, successMessage, Toast.LENGTH_SHORT).show()
+                        cashboxViewModel.clearMessages()
+                        when {
+                            role == "cashier" && currentSession?.status == "open" ->
+                                findNavController().navigate(R.id.navigation_home)
+                            role == "supermarket" && storeId.isNotBlank() ->
+                                cashboxViewModel.loadAvailability(storeId)
+                        }
                     }
                 }
 

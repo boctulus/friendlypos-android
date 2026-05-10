@@ -26,7 +26,9 @@
       "Read(//d/nodejs/friendlypos_nodejs/**)",
       "Bash(Get-ChildItem -Recurse -Filter \"*.js\")",
       "Bash(Select-Object -First 5)",
-      "Bash(grep -E \"\\\\.\\(sql|js\\)$\")"
+      "Bash(grep -E \"\\\\.\\(sql|js\\)$\")",
+      "Bash(git *)",
+      "Bash(not exist *)"
     ]
   }
 }

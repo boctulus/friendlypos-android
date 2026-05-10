@@ -36,9 +36,12 @@ fun CashboxScreen(
 ) {
     when {
         role == "supermarket" -> CashboxSupermarketScreen(
+            currentSession = currentSession,
             availability = availability,
             isLoading = isLoading,
             errorMessage = errorMessage,
+            successMessage = successMessage,
+            onOpenSession = onOpenSession,
             onCloseSession = onCloseSession,
             onClearMessages = onClearMessages
         )
@@ -81,6 +84,11 @@ private fun CashboxCloseContent(
     var finalAmountText by remember { mutableStateOf("") }
     var notes by remember { mutableStateOf("") }
     var hasAttempted by remember { mutableStateOf(false) }
+    var hadError by remember { mutableStateOf(false) }
+
+    if (errorMessage != null) {
+        hadError = true
+    }
 
     Column(
         modifier = Modifier
@@ -200,11 +208,13 @@ private fun CashboxCloseContent(
         )
 
         if (errorMessage != null) {
-            Spacer(modifier = Modifier.height(12.dp))
-            Text(
-                text = errorMessage,
-                color = MaterialTheme.colorScheme.error,
-                style = MaterialTheme.typography.bodySmall
+            AlertDialog(
+                onDismissRequest = onClearMessages,
+                title = { Text("Error al cerrar caja") },
+                text = { Text(errorMessage) },
+                confirmButton = {
+                    TextButton(onClick = onClearMessages) { Text("Aceptar") }
+                }
             )
         }
 
@@ -229,8 +239,7 @@ private fun CashboxCloseContent(
             }
         }
 
-        // "Guardar y salir" solo aparece tras un intento fallido
-        if (hasAttempted && errorMessage != null) {
+        if (hasAttempted && hadError) {
             Spacer(modifier = Modifier.height(12.dp))
             OutlinedButton(
                 onClick = onSaveAndLogout,
