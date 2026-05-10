@@ -31,7 +31,9 @@
       "Bash(not exist *)",
       "Bash(New-Item -ItemType Directory -Force -Path \"C:\\\\Users\\\\jayso\\\\AndroidStudioProjects\\\\FriendlyPOS\\\\prompts\")",
       "Bash(Set-Content \"C:\\\\Users\\\\jayso\\\\AndroidStudioProjects\\\\FriendlyPOS\\\\prompts\\\\2026-05-10 00-00 2b7b1b8.txt\" \"En el proyecto en NodeJS \\(el backend en D:\\\\nodejs\\\\friendlypos_nodejs\\) en la UI para el modulo cashbox no se permite cerrar caja sin colocar texto aclaratorio como nota \\(campo 'notes'\\) si la diferencia entre el valor esperado y el declarado difiere en mas de cierto porcentaje. Revisa la documentacion del proyecto en NodeJS e implementa el mismo comportamiento.\")",
-      "PowerShell(Test-Path \"D:\\\\nodejs\\\\friendlypos_nodejs\"; Test-Path \"C:\\\\Users\\\\jayso\\\\nodejs\\\\friendlypos_nodejs\"; Get-PSDrive | Where-Object {$_.Name -match \"D\"})"
+      "PowerShell(Test-Path \"D:\\\\nodejs\\\\friendlypos_nodejs\"; Test-Path \"C:\\\\Users\\\\jayso\\\\nodejs\\\\friendlypos_nodejs\"; Get-PSDrive | Where-Object {$_.Name -match \"D\"})",
+      "Bash(powershell.exe *)",
+      "Bash(del *)"
     ]
   }
 }

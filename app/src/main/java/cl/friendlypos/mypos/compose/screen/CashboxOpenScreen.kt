@@ -12,59 +12,58 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.unit.sp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import cl.friendlypos.mypos.R
-import cl.friendlypos.mypos.compose.theme.AppColors
 import cl.friendlypos.mypos.api.dto.CashboxAvailabilityItemDto
+import cl.friendlypos.mypos.compose.theme.AppColors
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CashboxOpenScreen(
-    availability: List<CashboxAvailabilityItemDto>,
-    isLoadingAvailability: Boolean = false,
-    isLoading: Boolean,
-    errorMessage: String?,
-    onOpenSession: (cashboxId: String, initialAmount: Double, notes: String?) -> Unit,
-    successMessage: String?,
-    onClearMessages: () -> Unit
+availability: List<CashboxAvailabilityItemDto>,
+isLoadingAvailability: Boolean = false,
+isLoading: Boolean,
+errorMessage: String?,
+onOpenSession: (cashboxId: String, initialAmount: Double, notes: String?) -> Unit,
+successMessage: String?,
+onClearMessages: () -> Unit
 ) {
-    var selectedCashboxId by remember { mutableStateOf<String?>(null) }
-    var initialAmountText by remember { mutableStateOf("") }
-    var notes by remember { mutableStateOf("") }
-    var cashboxDropdownExpanded by remember { mutableStateOf(false) }
+var selectedCashboxId by remember { mutableStateOf<String?>(null) }
+var initialAmountText by remember { mutableStateOf("") }
+var notes by remember { mutableStateOf("") }
+var cashboxDropdownExpanded by remember { mutableStateOf(false) }
 
-    val availableCashboxes = availability.filter { it.isAvailable }
+val availableCashboxes = availability.filter { it.isAvailable }
 
-    if (errorMessage != null) {
-        AlertDialog(
-            onDismissRequest = onClearMessages,
-            title = { Text("Error al abrir caja") },
-            text = {
-                Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                    Text(errorMessage)
-                    Text(
-                        "Si el terminal ya tiene una caja abierta, solicite a un supervisor que la cierre antes de continuar.",
-                        style = MaterialTheme.typography.bodySmall,
-                        color = Color(0xFF666666),
-                        fontSize = 12.sp
-                    )
-                }
-            },
-            confirmButton = {
-                TextButton(onClick = onClearMessages) { Text("Aceptar") }
+if (errorMessage != null) {
+    AlertDialog(
+        onDismissRequest = onClearMessages,
+        title = { Text("Error al abrir caja") },
+        text = {
+            Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                Text(errorMessage)
+                Text(
+                    "Si el terminal ya tiene una caja abierta, solicite a un supervisor que la cierre antes de continuar.",
+                    style = MaterialTheme.typography.bodySmall,
+                    color = Color(0xFF666666),
+                    fontSize = 12.sp
+                )
             }
-        )
-    }
+        },
+        confirmButton = {
+            TextButton(onClick = onClearMessages) { Text("Aceptar") }
+        }
+    )
+}
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .verticalScroll(rememberScrollState())
-            .padding(24.dp),
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
+Column(
+    modifier = Modifier
+        .fillMaxSize()
+        .verticalScroll(rememberScrollState())
+        .padding(horizontal = 24.dp, vertical = 24.dp),
+    horizontalAlignment = Alignment.CenterHorizontally
+) {
         Icon(
             painter = painterResource(id = R.drawable.ic_cash),
             contentDescription = "Caja",
@@ -209,3 +208,4 @@ fun CashboxOpenScreen(
         }
     }
 }
+
