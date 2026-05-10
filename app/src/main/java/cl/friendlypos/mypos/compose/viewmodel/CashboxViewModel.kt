@@ -60,7 +60,7 @@ class CashboxViewModel(application: Application) : AndroidViewModel(application)
             _isLoading.value = true
             repo.getCurrentSession()
                 .onSuccess { _currentSession.value = it }
-                .onFailure { _errorMessage.value = it.message }
+                // background refresh — no mostrar error al usuario
             _isLoading.value = false
             _hasInitialLoadCompleted.value = true
         }
@@ -87,7 +87,18 @@ class CashboxViewModel(application: Application) : AndroidViewModel(application)
                     _currentSession.value = session
                     _successMessage.value = "Caja abierta exitosamente"
                 }
-                .onFailure { _errorMessage.value = it.message }
+                .onFailure { error ->
+                    _errorMessage.value = error.message
+                    // El backend puede rechazar con 401/409 si el terminal ya tiene caja abierta.
+                    // Refrescar currentSession: si existe, limpiar error y rutear a cierre.
+                    repo.getCurrentSession()
+                        .onSuccess { session ->
+                            if (session?.status == "open") {
+                                _currentSession.value = session
+                                _errorMessage.value = null
+                            }
+                        }
+                }
             _isLoading.value = false
         }
     }

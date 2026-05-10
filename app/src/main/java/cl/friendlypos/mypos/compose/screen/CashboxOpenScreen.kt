@@ -12,6 +12,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.unit.sp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import cl.friendlypos.mypos.R
@@ -40,7 +41,17 @@ fun CashboxOpenScreen(
         AlertDialog(
             onDismissRequest = onClearMessages,
             title = { Text("Error al abrir caja") },
-            text = { Text(errorMessage) },
+            text = {
+                Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                    Text(errorMessage)
+                    Text(
+                        "Si el terminal ya tiene una caja abierta, solicite a un supervisor que la cierre antes de continuar.",
+                        style = MaterialTheme.typography.bodySmall,
+                        color = Color(0xFF666666),
+                        fontSize = 12.sp
+                    )
+                }
+            },
             confirmButton = {
                 TextButton(onClick = onClearMessages) { Text("Aceptar") }
             }

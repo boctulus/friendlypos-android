@@ -6,8 +6,11 @@ import cl.friendlypos.mypos.api.dto.CashboxSessionItemDto
 import cl.friendlypos.mypos.api.dto.CloseSessionRequestDto
 import cl.friendlypos.mypos.api.dto.OpenSessionRequestDto
 import cl.friendlypos.mypos.api.dto.StoreDto
+import com.google.gson.Gson
+import com.google.gson.JsonObject
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import retrofit2.HttpException
 
 class CashboxRepository {
 
@@ -65,10 +68,23 @@ class CashboxRepository {
             if (response.success && response.session != null) {
                 Result.success(response.session)
             } else {
-                Result.failure(Exception(response.error ?: "Error al abrir la caja"))
+                Result.failure(Exception(response.error ?: response.message ?: "Error al abrir la caja"))
             }
+        } catch (e: HttpException) {
+            val msg = parseHttpErrorBody(e) ?: "Error al abrir la caja (HTTP ${e.code()})"
+            Result.failure(Exception(msg))
         } catch (e: Exception) {
             Result.failure(e)
+        }
+    }
+
+    private fun parseHttpErrorBody(e: HttpException): String? {
+        return try {
+            val body = e.response()?.errorBody()?.string() ?: return null
+            val json = Gson().fromJson(body, JsonObject::class.java)
+            json?.get("error")?.asString ?: json?.get("message")?.asString
+        } catch (_: Exception) {
+            null
         }
     }
 
