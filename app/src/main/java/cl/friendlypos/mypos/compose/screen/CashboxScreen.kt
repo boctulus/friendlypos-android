@@ -8,6 +8,8 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
@@ -17,6 +19,7 @@ import androidx.compose.ui.unit.sp
 import cl.friendlypos.mypos.R
 import cl.friendlypos.mypos.api.dto.CashboxAvailabilityItemDto
 import cl.friendlypos.mypos.api.dto.CashboxSessionItemDto
+import kotlin.math.abs
 
 @Composable
 fun CashboxScreen(
@@ -85,9 +88,62 @@ private fun CashboxCloseContent(
     var notes by remember { mutableStateOf("") }
     var hasAttempted by remember { mutableStateOf(false) }
     var hadError by remember { mutableStateOf(false) }
+    var notesRequired by remember { mutableStateOf(false) }
+    var showConfirmDialog by remember { mutableStateOf(false) }
+    var pendingCloseAmount by remember { mutableStateOf(0.0) }
+    var pendingDiff by remember { mutableStateOf(0.0) }
+    var pendingDiffPercent by remember { mutableStateOf(0.0) }
 
-    if (errorMessage != null) {
-        hadError = true
+    val notesFocusRequester = remember { FocusRequester() }
+    val expectedAmount = session.totalCash ?: session.initialAmount
+
+    if (errorMessage != null) hadError = true
+    if (notesRequired && notes.isNotBlank()) notesRequired = false
+
+    LaunchedEffect(notesRequired) {
+        if (notesRequired) notesFocusRequester.requestFocus()
+    }
+
+    if (showConfirmDialog) {
+        val isSurplus = (pendingCloseAmount - expectedAmount) > 0
+        val diffWord = if (isSurplus) "Sobrante" else "Faltante"
+        val (dialogBg, accentColor, titleText) = when {
+            pendingDiffPercent > 5.0 -> Triple(Color(0xFFFFEBEE), Color(0xFFE53935), "Alta Diferencia Detectada")
+            pendingDiffPercent >= 1.0 -> Triple(Color(0xFFFFF8E1), Color(0xFFF57C00), "Diferencia Intermedia Detectada")
+            else -> Triple(Color(0xFFE3F2FD), Color(0xFF1976D2), "Diferencia Mínima Detectada")
+        }
+        AlertDialog(
+            onDismissRequest = { showConfirmDialog = false },
+            containerColor = dialogBg,
+            title = { Text(titleText, color = accentColor, fontWeight = FontWeight.Bold) },
+            text = {
+                Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
+                    Text("Monto esperado: ${"$"}${String.format("%.2f", expectedAmount)}")
+                    Text("Monto contado:  ${"$"}${String.format("%.2f", pendingCloseAmount)}")
+                    Spacer(Modifier.height(4.dp))
+                    Text(
+                        "Diferencia: ${"$"}${String.format("%.2f", pendingDiff)} (${String.format("%.2f", pendingDiffPercent)}%)",
+                        color = accentColor,
+                        fontWeight = FontWeight.SemiBold
+                    )
+                    Text("$diffWord en caja", style = MaterialTheme.typography.bodySmall, color = Color(0xFF666666))
+                    Spacer(Modifier.height(8.dp))
+                    Text("¿Confirmas cerrar la caja con esta diferencia?")
+                }
+            },
+            confirmButton = {
+                Button(
+                    onClick = {
+                        showConfirmDialog = false
+                        onCloseSession(session.id, pendingCloseAmount, notes.ifBlank { null })
+                    },
+                    colors = ButtonDefaults.buttonColors(containerColor = accentColor)
+                ) { Text("Sí, cerrar caja", color = Color.White) }
+            },
+            dismissButton = {
+                OutlinedButton(onClick = { showConfirmDialog = false }) { Text("Cancelar") }
+            }
+        )
     }
 
     Column(
@@ -199,12 +255,21 @@ private fun CashboxCloseContent(
 
         OutlinedTextField(
             value = notes,
-            onValueChange = { notes = it },
-            label = { Text("Notas de cierre (opcional)") },
-            modifier = Modifier.fillMaxWidth(),
+            onValueChange = {
+                notes = it
+                if (notesRequired && it.isNotBlank()) notesRequired = false
+            },
+            label = { Text(if (notesRequired && notes.isBlank()) "Notas de cierre *" else "Notas de cierre (obligatorio si diferencia ≥ 1%)") },
+            modifier = Modifier
+                .fillMaxWidth()
+                .focusRequester(notesFocusRequester),
             maxLines = 2,
             enabled = !isLoading,
-            textStyle = MaterialTheme.typography.bodyMedium
+            textStyle = MaterialTheme.typography.bodyMedium,
+            isError = notesRequired && notes.isBlank(),
+            supportingText = if (notesRequired && notes.isBlank()) {
+                { Text("Diferencia ≥ 1%: se requiere nota explicativa", color = MaterialTheme.colorScheme.error) }
+            } else null
         )
 
         if (errorMessage != null) {
@@ -223,8 +288,24 @@ private fun CashboxCloseContent(
         Button(
             onClick = {
                 hasAttempted = true
-                val amount = finalAmountText.toDoubleOrNull() ?: 0.0
-                onCloseSession(session.id, amount, notes.ifBlank { null })
+                val finalVal = finalAmountText.toDoubleOrNull() ?: 0.0
+                val diff = abs(expectedAmount - finalVal)
+                val diffPct = if (expectedAmount > 0) (diff / expectedAmount) * 100
+                              else if (diff > 0) 100.0 else 0.0
+
+                if (diffPct >= 1.0 && notes.isBlank()) {
+                    notesRequired = true
+                    return@Button
+                }
+
+                if (diff == 0.0) {
+                    onCloseSession(session.id, finalVal, notes.ifBlank { null })
+                } else {
+                    pendingCloseAmount = finalVal
+                    pendingDiff = diff
+                    pendingDiffPercent = diffPct
+                    showConfirmDialog = true
+                }
             },
             enabled = !isLoading && finalAmountText.isNotBlank(),
             modifier = Modifier
