@@ -4,14 +4,18 @@ import com.google.gson.annotations.SerializedName
 
 data class OpenSessionRequestDto(
     @SerializedName("store_id") val storeId: String,
-    @SerializedName("cashbox_number") val cashboxNumber: Int,
+    @SerializedName("cashbox_id") val cashboxId: String,
     @SerializedName("initial_amount") val initialAmount: Double,
-    val notes: String? = null
+    val notes: String? = null,
+    @SerializedName("operation_id") val operationId: String? = null,
+    @SerializedName("device_id") val deviceId: String? = null
 )
 
 data class CloseSessionRequestDto(
     @SerializedName("final_amount") val finalAmount: Double,
-    val notes: String? = null
+    val notes: String? = null,
+    @SerializedName("operation_id") val operationId: String? = null,
+    @SerializedName("device_id") val deviceId: String? = null
 )
 
 data class SessionResponseDto(
@@ -30,6 +34,7 @@ data class CurrentSessionResponseDto(
 data class CashboxSessionItemDto(
     val id: String,
     @SerializedName("store_id") val storeId: String,
+    @SerializedName("cashbox_id") val cashboxId: String?,
     @SerializedName("cashbox_number") val cashboxNumber: Int,
     @SerializedName("initial_amount") val initialAmount: Double,
     @SerializedName("final_amount") val finalAmount: Double?,
@@ -38,5 +43,12 @@ data class CashboxSessionItemDto(
     val status: String,
     @SerializedName("opened_at") val openedAt: String?,
     @SerializedName("closed_at") val closedAt: String?,
-    @SerializedName("cashier_name") val cashierName: String?
+    @SerializedName("cashier_name") val cashierName: String?,
+    @SerializedName("device_id") val deviceId: String?
+)
+
+data class SessionsListResponseDto(
+    val success: Boolean,
+    val sessions: List<CashboxSessionItemDto>?,
+    val count: Int?
 )

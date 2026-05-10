@@ -10,7 +10,16 @@
       "Bash(./gradlew assembleDebug --no-daemon -Dorg.gradle.jvmargs=\"-Xmx2g\")",
       "Bash(grep -E \"\\\\.js$|\\\\.ts$\")",
       "Bash(./gradlew compileDebugKotlin --no-daemon --stacktrace)",
-      "Bash(./gradlew compileDebugKotlin --no-daemon --info)"
+      "Bash(./gradlew compileDebugKotlin --no-daemon --info)",
+      "Bash(Get-Date *)",
+      "Bash(Get-ChildItem -Recurse -Filter \"*.xml\" \"app/src/main/res/values/\")",
+      "Bash(Select-Object -ExpandProperty Name)",
+      "PowerShell(git *)",
+      "Bash(dir C:\\\\Users\\\\jayso\\\\AndroidStudioProjects\\\\FriendlyPOS\\\\app\\\\src\\\\main\\\\java\\\\cl\\\\friendlypos\\\\mypos *)",
+      "Bash(Get-ChildItem -Path \"C:\\\\Users\\\\jayso\\\\AndroidStudioProjects\\\\FriendlyPOS\\\\app\\\\src\\\\main\\\\java\\\\cl\\\\friendlypos\\\\mypos\" -Directory -Recurse)",
+      "Bash(Select-Object FullName)",
+      "PowerShell(.\\\\build.ps1)",
+      "PowerShell(Get-ChildItem *)"
     ]
   }
 }

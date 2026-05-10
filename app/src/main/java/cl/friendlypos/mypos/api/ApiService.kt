@@ -1,12 +1,12 @@
 package cl.friendlypos.mypos.api
 
-import cl.friendlypos.mypos.api.dto.CashboxListResponseDto
-import cl.friendlypos.mypos.api.dto.CashboxSessionItemDto
+import cl.friendlypos.mypos.api.dto.CashboxAvailabilityResponseDto
 import cl.friendlypos.mypos.api.dto.CloseSessionRequestDto
 import cl.friendlypos.mypos.api.dto.CurrentSessionResponseDto
 import cl.friendlypos.mypos.api.dto.KeepAliveResponseDto
 import cl.friendlypos.mypos.api.dto.OpenSessionRequestDto
 import cl.friendlypos.mypos.api.dto.SessionResponseDto
+import cl.friendlypos.mypos.api.dto.SessionsListResponseDto
 import cl.friendlypos.mypos.api.dto.UpdateUserResponseDto
 import cl.friendlypos.mypos.api.dto.UserListResponseDto
 import cl.friendlypos.mypos.api.dto.UserStoresResponseDto
@@ -25,8 +25,14 @@ interface ApiService {
     @GET("api/firestore/cashbox/user-stores")
     suspend fun getUserStores(): UserStoresResponseDto
 
-    @GET("api/cashbox/cashboxes")
-    suspend fun getCashboxes(@Query("filter") filter: String): CashboxListResponseDto
+    @GET("api/firestore/cashbox/availability")
+    suspend fun getCashboxAvailability(@Query("store_id") storeId: String): CashboxAvailabilityResponseDto
+
+    @GET("api/firestore/cashbox/sessions")
+    suspend fun getSessions(
+        @Query("store_id") storeId: String,
+        @Query("status") status: String = "open"
+    ): SessionsListResponseDto
 
     @GET("api/firestore/cashbox/sessions/current")
     suspend fun getCurrentCashboxSession(): CurrentSessionResponseDto

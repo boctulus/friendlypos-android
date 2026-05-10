@@ -1,7 +1,7 @@
 package cl.friendlypos.mypos.repository
 
 import cl.friendlypos.mypos.api.ApiClient
-import cl.friendlypos.mypos.api.dto.CashboxItemDto
+import cl.friendlypos.mypos.api.dto.CashboxAvailabilityItemDto
 import cl.friendlypos.mypos.api.dto.CashboxSessionItemDto
 import cl.friendlypos.mypos.api.dto.CloseSessionRequestDto
 import cl.friendlypos.mypos.api.dto.OpenSessionRequestDto
@@ -24,16 +24,11 @@ class CashboxRepository {
         }
     }
 
-    suspend fun getActiveCashboxes(storeId: String): Result<List<CashboxItemDto>> =
+    suspend fun getCashboxAvailability(storeId: String): Result<List<CashboxAvailabilityItemDto>> =
         withContext(Dispatchers.IO) {
             try {
-                val filter = "store_id:$storeId,status:active"
-                val response = ApiClient.service.getCashboxes(filter)
-                if (response.success && response.data?.docs != null) {
-                    Result.success(response.data.docs)
-                } else {
-                    Result.failure(Exception("No hay cajas activas para esta tienda"))
-                }
+                val response = ApiClient.service.getCashboxAvailability(storeId)
+                Result.success(response.availability ?: emptyList())
             } catch (e: Exception) {
                 Result.failure(e)
             }
@@ -50,17 +45,21 @@ class CashboxRepository {
 
     suspend fun openSession(
         storeId: String,
-        cashboxNumber: Int,
+        cashboxId: String,
         initialAmount: Double,
-        notes: String? = null
+        notes: String? = null,
+        deviceId: String? = null,
+        operationId: String? = null
     ): Result<CashboxSessionItemDto> = withContext(Dispatchers.IO) {
         try {
             val response = ApiClient.service.openCashboxSession(
                 OpenSessionRequestDto(
                     storeId = storeId,
-                    cashboxNumber = cashboxNumber,
+                    cashboxId = cashboxId,
                     initialAmount = initialAmount,
-                    notes = notes
+                    notes = notes,
+                    operationId = operationId,
+                    deviceId = deviceId
                 )
             )
             if (response.success && response.session != null) {
@@ -76,12 +75,19 @@ class CashboxRepository {
     suspend fun closeSession(
         sessionId: String,
         finalAmount: Double,
-        notes: String? = null
+        notes: String? = null,
+        deviceId: String? = null,
+        operationId: String? = null
     ): Result<CashboxSessionItemDto> = withContext(Dispatchers.IO) {
         try {
             val response = ApiClient.service.closeCashboxSession(
                 sessionId = sessionId,
-                request = CloseSessionRequestDto(finalAmount = finalAmount, notes = notes)
+                request = CloseSessionRequestDto(
+                    finalAmount = finalAmount,
+                    notes = notes,
+                    operationId = operationId,
+                    deviceId = deviceId
+                )
             )
             if (response.success && response.session != null) {
                 Result.success(response.session)

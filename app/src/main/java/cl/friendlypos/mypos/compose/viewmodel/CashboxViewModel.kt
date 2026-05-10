@@ -1,29 +1,47 @@
 package cl.friendlypos.mypos.compose.viewmodel
 
-import androidx.lifecycle.ViewModel
+import android.app.Application
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
-import cl.friendlypos.mypos.api.dto.CashboxItemDto
+import androidx.work.BackoffPolicy
+import androidx.work.Constraints
+import androidx.work.NetworkType
+import androidx.work.OneTimeWorkRequestBuilder
+import androidx.work.WorkManager
+import cl.friendlypos.mypos.SessionManager
+import cl.friendlypos.mypos.api.dto.CashboxAvailabilityItemDto
 import cl.friendlypos.mypos.api.dto.CashboxSessionItemDto
-import cl.friendlypos.mypos.api.dto.StoreDto
+import cl.friendlypos.mypos.db.AppDatabase
+import cl.friendlypos.mypos.db.entity.PendingCashboxOperation
 import cl.friendlypos.mypos.repository.CashboxRepository
+import cl.friendlypos.mypos.utils.DeviceIdProvider
+import cl.friendlypos.mypos.work.PendingClosureWorker
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import java.util.UUID
+import java.util.concurrent.TimeUnit
 
-class CashboxViewModel : ViewModel() {
+class CashboxViewModel(application: Application) : AndroidViewModel(application) {
 
     private val repo = CashboxRepository()
 
+    // Device scope
     private val _currentSession = MutableStateFlow<CashboxSessionItemDto?>(null)
     val currentSession: StateFlow<CashboxSessionItemDto?> = _currentSession.asStateFlow()
 
-    private val _stores = MutableStateFlow<List<StoreDto>>(emptyList())
-    val stores: StateFlow<List<StoreDto>> = _stores.asStateFlow()
+    private val _hasInitialLoadCompleted = MutableStateFlow(false)
+    val hasInitialLoadCompleted: StateFlow<Boolean> = _hasInitialLoadCompleted.asStateFlow()
 
-    private val _cashboxes = MutableStateFlow<List<CashboxItemDto>>(emptyList())
-    val cashboxes: StateFlow<List<CashboxItemDto>> = _cashboxes.asStateFlow()
+    // Store scope
+    private val _availability = MutableStateFlow<List<CashboxAvailabilityItemDto>>(emptyList())
+    val availability: StateFlow<List<CashboxAvailabilityItemDto>> = _availability.asStateFlow()
 
+    private val _isLoadingAvailability = MutableStateFlow(false)
+    val isLoadingAvailability: StateFlow<Boolean> = _isLoadingAvailability.asStateFlow()
+
+    // Common
     private val _isLoading = MutableStateFlow(false)
     val isLoading: StateFlow<Boolean> = _isLoading.asStateFlow()
 
@@ -44,30 +62,27 @@ class CashboxViewModel : ViewModel() {
                 .onSuccess { _currentSession.value = it }
                 .onFailure { _errorMessage.value = it.message }
             _isLoading.value = false
+            _hasInitialLoadCompleted.value = true
         }
     }
 
-    fun loadStores() {
+    fun loadAvailability(storeId: String) {
         viewModelScope.launch {
-            repo.getUserStores()
-                .onSuccess { _stores.value = it }
-                .onFailure { _errorMessage.value = it.message }
+            _isLoadingAvailability.value = true
+            repo.getCashboxAvailability(storeId)
+                .onSuccess { _availability.value = it }
+                .onFailure { /* non-critical: UI shows from prior state */ }
+            _isLoadingAvailability.value = false
         }
     }
 
-    fun loadCashboxesForStore(storeId: String) {
-        viewModelScope.launch {
-            repo.getActiveCashboxes(storeId)
-                .onSuccess { _cashboxes.value = it }
-                .onFailure { _errorMessage.value = it.message }
-        }
-    }
-
-    fun openSession(storeId: String, cashboxNumber: Int, initialAmount: Double, notes: String?) {
+    fun openSession(storeId: String, cashboxId: String, initialAmount: Double, notes: String?) {
         viewModelScope.launch {
             _isLoading.value = true
             _errorMessage.value = null
-            repo.openSession(storeId, cashboxNumber, initialAmount, notes)
+            val operationId = UUID.randomUUID().toString()
+            val deviceId = DeviceIdProvider.getDeviceId(getApplication())
+            repo.openSession(storeId, cashboxId, initialAmount, notes, deviceId, operationId)
                 .onSuccess { session ->
                     _currentSession.value = session
                     _successMessage.value = "Caja abierta exitosamente"
@@ -81,14 +96,59 @@ class CashboxViewModel : ViewModel() {
         viewModelScope.launch {
             _isLoading.value = true
             _errorMessage.value = null
-            repo.closeSession(sessionId, finalAmount, notes)
+            val operationId = UUID.randomUUID().toString()
+            val deviceId = DeviceIdProvider.getDeviceId(getApplication())
+            repo.closeSession(sessionId, finalAmount, notes, deviceId, operationId)
                 .onSuccess { session ->
-                    _currentSession.value = session
+                    if (sessionId == _currentSession.value?.id) {
+                        _currentSession.value = session
+                    }
+                    _availability.value = _availability.value.map { item ->
+                        if (item.sessionId == sessionId)
+                            item.copy(status = "available", sessionId = null, cashierName = null)
+                        else item
+                    }
                     _successMessage.value = "Caja cerrada exitosamente"
                 }
-                .onFailure { _errorMessage.value = it.message }
+                .onFailure { error ->
+                    _errorMessage.value = error.message
+                    savePendingClosure(sessionId, operationId, deviceId, finalAmount, notes)
+                }
             _isLoading.value = false
         }
+    }
+
+    private suspend fun savePendingClosure(
+        sessionId: String,
+        operationId: String,
+        deviceId: String,
+        finalAmount: Double,
+        notes: String?
+    ) {
+        val context = getApplication<Application>()
+        val cashierId = SessionManager.get(context)?.uid ?: return
+        val db = AppDatabase.getInstance(context)
+        db.pendingCashboxOperationsDao().insert(
+            PendingCashboxOperation(
+                sessionId = sessionId,
+                operationId = operationId,
+                cashierId = cashierId,
+                deviceId = deviceId,
+                finalAmount = finalAmount,
+                notes = notes,
+                attemptedAt = System.currentTimeMillis()
+            )
+        )
+        WorkManager.getInstance(context).enqueue(
+            OneTimeWorkRequestBuilder<PendingClosureWorker>()
+                .setConstraints(
+                    Constraints.Builder()
+                        .setRequiredNetworkType(NetworkType.CONNECTED)
+                        .build()
+                )
+                .setBackoffCriteria(BackoffPolicy.EXPONENTIAL, 30, TimeUnit.SECONDS)
+                .build()
+        )
     }
 
     fun clearMessages() {

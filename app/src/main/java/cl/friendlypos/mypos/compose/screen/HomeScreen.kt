@@ -16,10 +16,12 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import cl.friendlypos.mypos.R
+import cl.friendlypos.mypos.compose.theme.AppColors
 
 @Composable
 fun HomeScreen(
     role: String,
+    isSessionOpen: Boolean?,
     onNavigateToNewSale: () -> Unit,
     onNavigateToInventory: () -> Unit,
     onNavigateToCustomers: () -> Unit,
@@ -37,7 +39,7 @@ fun HomeScreen(
         )
     } else {
         listOf(
-            HomeTile(R.drawable.ic_new_sale, "Nueva Venta", Color(0xFF4CAF50), onNavigateToNewSale),
+            HomeTile(R.drawable.ic_new_sale, "Nueva Venta", AppColors.BrandPrimary, onNavigateToNewSale),
             HomeTile(R.drawable.ic_inventory, "Inventario", Color(0xFF2196F3), onNavigateToInventory),
             HomeTile(R.drawable.ic_cash, "Caja", Color(0xFF009688), onNavigateToCashbox),
             HomeTile(R.drawable.ic_sales, "Tickets", Color(0xFFE91E63), onNavigateToTickets),
@@ -76,19 +78,29 @@ fun HomeScreen(
                 ) {
                     Button(
                         onClick = onNavigateToCashbox,
+                        enabled = isSessionOpen == false,
                         modifier = Modifier
                             .weight(1f)
                             .height(48.dp),
-                        colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF4CAF50))
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = AppColors.BrandPrimary,
+                            disabledContainerColor = AppColors.BrandPrimary.copy(alpha = 0.38f),
+                            disabledContentColor = Color.White.copy(alpha = 0.6f)
+                        )
                     ) {
                         Text("Abrir Caja", fontWeight = FontWeight.Medium, fontSize = 14.sp)
                     }
                     Button(
                         onClick = onNavigateToCashbox,
+                        enabled = isSessionOpen == true,
                         modifier = Modifier
                             .weight(1f)
                             .height(48.dp),
-                        colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFE53935))
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = Color(0xFFE53935),
+                            disabledContainerColor = Color(0xFFE53935).copy(alpha = 0.38f),
+                            disabledContentColor = Color.White.copy(alpha = 0.6f)
+                        )
                     ) {
                         Text("Cerrar Caja", fontWeight = FontWeight.Medium, fontSize = 14.sp)
                     }

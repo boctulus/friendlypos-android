@@ -256,8 +256,8 @@ private fun ProductSearchModal(
             ) {
                 Text(
                     "Buscar producto",
+                    style = MaterialTheme.typography.titleLarge,
                     fontWeight = FontWeight.Bold,
-                    fontSize = 18.sp,
                     modifier = Modifier.padding(bottom = 12.dp)
                 )
 
@@ -285,6 +285,7 @@ private fun ProductSearchModal(
                     },
                     singleLine = true,
                     modifier = Modifier.fillMaxWidth(),
+                    textStyle = MaterialTheme.typography.bodyMedium,
                     colors = OutlinedTextFieldDefaults.colors(
                         focusedBorderColor = POS_BLUE,
                         unfocusedBorderColor = Color(0xFFBDBDBD)

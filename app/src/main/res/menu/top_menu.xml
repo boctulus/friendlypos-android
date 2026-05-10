@@ -10,6 +10,10 @@
         android:title="Cerrar sesión"
         app:showAsAction="never" />
     <item
+        android:id="@+id/action_open_cashbox"
+        android:title="Abrir caja"
+        app:showAsAction="never" />
+    <item
         android:id="@+id/action_close_cashbox"
         android:title="Cerrar caja"
         app:showAsAction="never" />

@@ -17,6 +17,7 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import cl.friendlypos.mypos.R
+import cl.friendlypos.mypos.compose.theme.AppColors
 
 @Composable
 fun LoginScreen(
@@ -39,7 +40,7 @@ fun LoginScreen(
         Icon(
             painter = painterResource(id = R.drawable.ic_lock),
             contentDescription = "Login",
-            tint = Color(0xFF4CAF50),
+            tint = AppColors.BrandAction,
             modifier = Modifier.size(72.dp)
         )
 
@@ -127,7 +128,7 @@ fun LoginScreen(
             modifier = Modifier
                 .fillMaxWidth()
                 .height(50.dp),
-            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF4CAF50))
+            colors = ButtonDefaults.buttonColors(containerColor = AppColors.BrandAction)
         ) {
             if (isLoading) {
                 CircularProgressIndicator(

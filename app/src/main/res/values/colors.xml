@@ -1,5 +1,48 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- ============================================================ -->
+    <!-- DESIGN TOKENS — FriendlyPOS Brand Palette                   -->
+    <!-- ============================================================ -->
+
+    <!-- Primary: icon bg, btn Nuevo, btn Guardar -->
+    <color name="brand_primary">#1e31c7</color>
+
+    <!-- Action: btn Ingresar (login), btn Buscar, title text -->
+    <color name="brand_action">#ff4e03</color>
+
+    <!-- Error -->
+    <color name="brand_error">#ff0000</color>
+
+    <!-- Surface: card bg, datagrid bg, btn Cancelar, inactive tabs -->
+    <color name="surface_card">#bdc5cb</color>
+
+    <!-- Chart teal (bar chart slot 1) -->
+    <color name="chart_teal">#00a48b</color>
+
+    <!-- Modal: modal window bg, search/filter card bg -->
+    <color name="surface_modal">#8a9196</color>
+
+    <!-- Table header bg (text over it = surface_card) -->
+    <color name="table_header_bg">#283140</color>
+
+    <!-- Accent yellow -->
+    <color name="accent_yellow">#ffce00</color>
+
+    <!-- Metric purple (metric card slot 1) -->
+    <color name="metric_purple">#8e6dda</color>
+
+    <!-- Secondary: btn Subir Logo, btn Guardar Contraseña, bar chart slot 2 -->
+    <color name="brand_secondary">#138cb9</color>
+
+    <!-- Metric card rotation order (2+ metric cards) -->
+    <!-- 1 → metric_purple   #8e6dda  -->
+    <!-- 2 → brand_action    #ff4e03  -->
+    <!-- 3 → chart_teal      #00a48b  -->
+    <!-- 4 → brand_secondary #138cb9  -->
+
+    <!-- ============================================================ -->
+    <!-- LEGACY — kept for backward compat, do not use in new screens -->
+    <!-- ============================================================ -->
     <color name="purple_200">#FFBB86FC</color>
     <color name="purple_500">#FF6200EE</color>
     <color name="purple_700">#FF3700B3</color>
@@ -11,26 +54,23 @@
     <color name="white">#FFFFFFFF</color>
     <color name="gray">#666666</color>
     <color name="dark_gray">#2e2e33</color>
-    <color name="lightGray">#BDBDBD</color> <!-- Gris claro para posibles fondos secundarios -->
-    <color name="neutralGray">#616161</color> <!-- Gris oscuro para acciones secundarias -->
-    <color name="infoBlue">#42A5F5</color> <!-- Azul claro para información -->
-    <color name="cancelGray">#757575</color> <!-- Gris oscuro para cancelar -->
-    <color name="warningOrange">#FFA000</color> <!-- Ámbar fuerte para advertencias -->
-    <color name="errorRed">#D32F2F</color> <!-- Rojo para advertencias -->
+    <color name="lightGray">#BDBDBD</color>
+    <color name="neutralGray">#616161</color>
+    <color name="infoBlue">#42A5F5</color>
+    <color name="cancelGray">#757575</color>
+    <color name="warningOrange">#FFA000</color>
+    <color name="errorRed">#D32F2F</color>
 
-    <!-- Dashboard -->
     <color name="tile_sale">#4CAF50</color>
     <color name="tile_inventory">#2196F3</color>
     <color name="tile_customers">#9C27B0</color>
     <color name="tile_reports">#FF9800</color>
 
-    <!-- success_screen.xml -->
     <color name="successGreen">#4CAF50</color>
     <color name="successOrange">#F57C00</color>
     <color name="successBackground">#FFF5E1</color>
     <color name="textColor">#000000</color>
 
-    <!-- Cart -->
     <color name="textPrimary">#212121</color>
     <color name="textSecondary">#757575</color>
     <color name="colorPrimary">#3F51B5</color>

@@ -1,1 +1,1 @@
-rm C:\Users\jayso\.android\avd\Medium_Phone.avd\*.lockd
+rm C:\Users\jayso\.android\avd\Medium_Phone.avd\*.lock

@@ -12,6 +12,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import cl.friendlypos.mypos.compose.components.CashPaymentKeypad
+import cl.friendlypos.mypos.compose.theme.AppColors
 import java.text.NumberFormat
 import java.util.Locale
 
@@ -97,7 +98,7 @@ fun CashPaymentScreen(
                 Text(
                     text = "Cambio: ${formatter.format(change)}",
                     fontSize = 16.sp,
-                    color = Color(0xFF4CAF50),
+                    color = AppColors.ChartTeal,
                     modifier = Modifier.padding(start = 16.dp, top = 4.dp)
                 )
             }

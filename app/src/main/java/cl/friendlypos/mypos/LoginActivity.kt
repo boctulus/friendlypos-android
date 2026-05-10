@@ -4,20 +4,35 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.*
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.work.BackoffPolicy
+import androidx.work.Constraints
+import androidx.work.NetworkType
+import androidx.work.OneTimeWorkRequestBuilder
+import androidx.work.WorkManager
+import cl.friendlypos.mypos.api.ApiClient
 import cl.friendlypos.mypos.compose.screen.CashboxOpenScreen
 import cl.friendlypos.mypos.compose.screen.LoginScreen
 import cl.friendlypos.mypos.compose.viewmodel.CashboxViewModel
 import cl.friendlypos.mypos.compose.viewmodel.LoginFlowViewModel
+import cl.friendlypos.mypos.db.AppDatabase
+import cl.friendlypos.mypos.utils.DeviceIdProvider
+import cl.friendlypos.mypos.work.PendingClosureWorker
+import java.util.concurrent.TimeUnit
 
 class LoginActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        if (SessionManager.isLoggedIn(this)) {
+        ApiClient.init(this)
+
+        if (SessionManager.isLoggedIn(this) && ApiClient.hasValidSession()) {
             startMainActivity()
             return
         }
@@ -31,17 +46,43 @@ class LoginActivity : ComponentActivity() {
                 val isLoading by loginVm.isLoading.collectAsState()
                 val errorMessage by loginVm.errorMessage.collectAsState()
 
-                val stores by cashboxVm.stores.collectAsState()
-                val cashboxes by cashboxVm.cashboxes.collectAsState()
+                val availability by cashboxVm.availability.collectAsState()
                 val cashboxLoading by cashboxVm.isLoading.collectAsState()
+                val cashboxLoadingAvailability by cashboxVm.isLoadingAvailability.collectAsState()
                 val cashboxError by cashboxVm.errorMessage.collectAsState()
                 val cashboxSuccess by cashboxVm.successMessage.collectAsState()
 
+                var showPendingRecovery by remember { mutableStateOf(false) }
+                var navigatingToMain by remember { mutableStateOf(false) }
+
                 LaunchedEffect(state) {
-                    if (state is LoginFlowViewModel.FlowState.Done) {
-                        val session = (state as LoginFlowViewModel.FlowState.Done).session
-                        SessionManager.save(this@LoginActivity, session)
-                        startMainActivity()
+                    when (val s = state) {
+                        is LoginFlowViewModel.FlowState.Done -> {
+                            if (!navigatingToMain) {
+                                SessionManager.save(this@LoginActivity, s.session)
+                                if (s.session.role == "cashier") {
+                                    val deviceId = DeviceIdProvider.getDeviceId(this@LoginActivity)
+                                    val db = AppDatabase.getInstance(this@LoginActivity)
+                                    val pending = db.pendingCashboxOperationsDao()
+                                        .getByDeviceAndCashier(deviceId, s.session.uid)
+                                    if (pending != null && pending.status == "pending") {
+                                        showPendingRecovery = true
+                                    } else {
+                                        navigatingToMain = true
+                                        startMainActivity()
+                                    }
+                                } else {
+                                    navigatingToMain = true
+                                    startMainActivity()
+                                }
+                            }
+                        }
+                        is LoginFlowViewModel.FlowState.CashboxOpen -> {
+                            if (s.storeId.isNotBlank()) {
+                                cashboxVm.loadAvailability(s.storeId)
+                            }
+                        }
+                        else -> {}
                     }
                 }
 
@@ -52,10 +93,48 @@ class LoginActivity : ComponentActivity() {
                     }
                 }
 
-                LaunchedEffect(state) {
-                    if (state is LoginFlowViewModel.FlowState.CashboxOpen) {
-                        cashboxVm.loadStores()
-                    }
+                if (showPendingRecovery) {
+                    AlertDialog(
+                        onDismissRequest = {
+                            showPendingRecovery = false
+                            navigatingToMain = true
+                            startMainActivity()
+                        },
+                        title = { Text("Cierre pendiente") },
+                        text = {
+                            Text("Tienes un cierre de caja pendiente que no se pudo completar. ¿Deseas reintentarlo ahora?")
+                        },
+                        confirmButton = {
+                            TextButton(onClick = {
+                                showPendingRecovery = false
+                                WorkManager.getInstance(this@LoginActivity).enqueue(
+                                    OneTimeWorkRequestBuilder<PendingClosureWorker>()
+                                        .setConstraints(
+                                            Constraints.Builder()
+                                                .setRequiredNetworkType(NetworkType.CONNECTED)
+                                                .build()
+                                        )
+                                        .setBackoffCriteria(
+                                            BackoffPolicy.EXPONENTIAL, 30, TimeUnit.SECONDS
+                                        )
+                                        .build()
+                                )
+                                navigatingToMain = true
+                                startMainActivity()
+                            }) {
+                                Text("Reintentar")
+                            }
+                        },
+                        dismissButton = {
+                            TextButton(onClick = {
+                                showPendingRecovery = false
+                                navigatingToMain = true
+                                startMainActivity()
+                            }) {
+                                Text("Ignorar por ahora")
+                            }
+                        }
+                    )
                 }
 
                 when (val s = state) {
@@ -69,16 +148,13 @@ class LoginActivity : ComponentActivity() {
                     }
                     is LoginFlowViewModel.FlowState.CashboxOpen -> {
                         CashboxOpenScreen(
-                            storeId = s.storeId,
-                            stores = stores,
-                            cashboxes = cashboxes,
+                            availability = availability,
+                            isLoadingAvailability = cashboxLoadingAvailability,
                             isLoading = cashboxLoading,
                             errorMessage = cashboxError,
-                            onLoadCashboxes = { id -> cashboxVm.loadCashboxesForStore(id) },
-                            onOpenSession = { sid, num, amt, notes ->
-                                cashboxVm.openSession(sid, num, amt, notes)
+                            onOpenSession = { cashboxId, amt, notes ->
+                                cashboxVm.openSession(s.storeId, cashboxId, amt, notes)
                             },
-                            onSessionOpened = {},
                             successMessage = null,
                             onClearMessages = {}
                         )

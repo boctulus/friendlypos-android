@@ -17,6 +17,7 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import cl.friendlypos.mypos.R
+import cl.friendlypos.mypos.compose.theme.AppColors
 
 @Composable
 fun SettingsScreen(
@@ -114,7 +115,7 @@ fun SettingsScreen(
             Spacer(modifier = Modifier.height(12.dp))
             Text(
                 text = successMessage,
-                color = Color(0xFF4CAF50),
+                color = AppColors.ChartTeal,
                 fontSize = 13.sp
             )
         }

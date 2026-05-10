@@ -11,13 +11,15 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.fragment.app.activityViewModels
 import cl.friendlypos.mypos.LoginActivity
 import cl.friendlypos.mypos.SessionManager
 import cl.friendlypos.mypos.compose.screen.CashboxScreen
 import cl.friendlypos.mypos.compose.viewmodel.CashboxViewModel
 
 class CashboxFragment : Fragment() {
+
+    private val cashboxViewModel: CashboxViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -27,46 +29,50 @@ class CashboxFragment : Fragment() {
         return ComposeView(requireContext()).apply {
             setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
             setContent {
-                val viewModel: CashboxViewModel = viewModel()
-                val currentSession by viewModel.currentSession.collectAsState()
-                val stores by viewModel.stores.collectAsState()
-                val cashboxes by viewModel.cashboxes.collectAsState()
-                val isLoading by viewModel.isLoading.collectAsState()
-                val errorMessage by viewModel.errorMessage.collectAsState()
-                val successMessage by viewModel.successMessage.collectAsState()
+                val currentSession by cashboxViewModel.currentSession.collectAsState()
+                val availability by cashboxViewModel.availability.collectAsState()
+                val isLoading by cashboxViewModel.isLoading.collectAsState()
+                val isLoadingAvailability by cashboxViewModel.isLoadingAvailability.collectAsState()
+                val errorMessage by cashboxViewModel.errorMessage.collectAsState()
+                val successMessage by cashboxViewModel.successMessage.collectAsState()
 
                 val storeId = SessionManager.get(requireContext())?.storeId ?: ""
                 val role = SessionManager.getRole(requireContext())
 
-                LaunchedEffect(successMessage) {
-                    if (successMessage != null && role == "cashier") {
-                        SessionManager.clear(requireContext())
-                        val intent = Intent(requireContext(), LoginActivity::class.java)
-                        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-                        startActivity(intent)
-                        requireActivity().finish()
+                LaunchedEffect(storeId) {
+                    if (storeId.isNotBlank()) {
+                        cashboxViewModel.loadAvailability(storeId)
                     }
                 }
 
                 CashboxScreen(
+                    role = role,
                     currentSession = currentSession,
-                    stores = stores,
-                    cashboxes = cashboxes,
+                    availability = availability,
                     isLoading = isLoading,
+                    isLoadingAvailability = isLoadingAvailability,
                     errorMessage = errorMessage,
                     successMessage = successMessage,
-                    storeId = storeId,
-                    onLoadCashboxes = { id -> viewModel.loadCashboxesForStore(id) },
-                    onOpenSession = { sid, num, amt, notes ->
-                        viewModel.openSession(sid, num, amt, notes)
+                    onOpenSession = { cashboxId, amount, notes ->
+                        cashboxViewModel.openSession(storeId, cashboxId, amount, notes)
                     },
-                    onSessionOpened = {},
                     onCloseSession = { sessionId, amount, notes ->
-                        viewModel.closeSession(sessionId, amount, notes)
+                        cashboxViewModel.closeSession(sessionId, amount, notes)
                     },
-                    onClearMessages = { viewModel.clearMessages() }
+                    onClearMessages = { cashboxViewModel.clearMessages() },
+                    onSaveAndLogout = { doLogout() },
+                    onContinue = { cashboxViewModel.clearMessages() },
+                    onLogout = { doLogout() }
                 )
             }
         }
+    }
+
+    private fun doLogout() {
+        SessionManager.clear(requireContext())
+        val intent = Intent(requireContext(), LoginActivity::class.java)
+        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+        startActivity(intent)
+        requireActivity().finish()
     }
 }
