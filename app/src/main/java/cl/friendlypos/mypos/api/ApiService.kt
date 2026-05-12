@@ -1,6 +1,7 @@
 package cl.friendlypos.mypos.api
 
 import cl.friendlypos.mypos.api.dto.CashboxAvailabilityResponseDto
+import cl.friendlypos.mypos.api.dto.ProductSearchResponseDto
 import cl.friendlypos.mypos.api.dto.CloseSessionRequestDto
 import cl.friendlypos.mypos.api.dto.CurrentSessionResponseDto
 import cl.friendlypos.mypos.api.dto.KeepAliveResponseDto
@@ -51,4 +52,10 @@ interface ApiService {
 
     @PATCH("api/users/{uid}")
     suspend fun updateUser(@Path("uid") uid: String, @Body body: Map<String, String>): UpdateUserResponseDto
+
+    @GET("api/products/search/quick")
+    suspend fun searchProductsQuick(@Query("q") query: String): ProductSearchResponseDto
+
+    @GET("api/products")
+    suspend fun getProducts(): ProductSearchResponseDto
 }

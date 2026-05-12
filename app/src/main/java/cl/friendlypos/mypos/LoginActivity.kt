@@ -16,12 +16,11 @@ import androidx.work.NetworkType
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
 import cl.friendlypos.mypos.api.ApiClient
-import cl.friendlypos.mypos.compose.screen.CashboxOpenScreen
 import cl.friendlypos.mypos.compose.screen.LoginScreen
-import cl.friendlypos.mypos.compose.viewmodel.CashboxViewModel
 import cl.friendlypos.mypos.compose.viewmodel.LoginFlowViewModel
 import cl.friendlypos.mypos.db.AppDatabase
 import cl.friendlypos.mypos.utils.DeviceIdProvider
+import cl.friendlypos.mypos.utils.FingerprintUtils
 import cl.friendlypos.mypos.work.PendingClosureWorker
 import java.util.concurrent.TimeUnit
 
@@ -31,6 +30,7 @@ class LoginActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
 
         ApiClient.init(this)
+        FingerprintUtils.deviceFingerprintHash(this)
 
         if (SessionManager.isLoggedIn(this) && ApiClient.hasValidSession()) {
             startMainActivity()
@@ -40,17 +40,11 @@ class LoginActivity : ComponentActivity() {
         setContent {
             MaterialTheme {
                 val loginVm: LoginFlowViewModel = viewModel()
-                val cashboxVm: CashboxViewModel = viewModel()
 
                 val state by loginVm.state.collectAsState()
                 val isLoading by loginVm.isLoading.collectAsState()
                 val errorMessage by loginVm.errorMessage.collectAsState()
-
-                val availability by cashboxVm.availability.collectAsState()
-                val cashboxLoading by cashboxVm.isLoading.collectAsState()
-                val cashboxLoadingAvailability by cashboxVm.isLoadingAvailability.collectAsState()
-                val cashboxError by cashboxVm.errorMessage.collectAsState()
-                val cashboxSuccess by cashboxVm.successMessage.collectAsState()
+                val savedEmail = remember { SessionManager.getLastEmail(this@LoginActivity) }
 
                 var showPendingRecovery by remember { mutableStateOf(false) }
                 var navigatingToMain by remember { mutableStateOf(false) }
@@ -60,6 +54,7 @@ class LoginActivity : ComponentActivity() {
                         is LoginFlowViewModel.FlowState.Done -> {
                             if (!navigatingToMain) {
                                 SessionManager.save(this@LoginActivity, s.session)
+                                SessionManager.saveLastEmail(this@LoginActivity, s.session.email)
                                 if (s.session.role == "cashier") {
                                     val deviceId = DeviceIdProvider.getDeviceId(this@LoginActivity)
                                     val db = AppDatabase.getInstance(this@LoginActivity)
@@ -77,19 +72,7 @@ class LoginActivity : ComponentActivity() {
                                 }
                             }
                         }
-                        is LoginFlowViewModel.FlowState.CashboxOpen -> {
-                            if (s.storeId.isNotBlank()) {
-                                cashboxVm.loadAvailability(s.storeId)
-                            }
-                        }
                         else -> {}
-                    }
-                }
-
-                LaunchedEffect(cashboxSuccess) {
-                    if (cashboxSuccess != null) {
-                        cashboxVm.clearMessages()
-                        loginVm.onCashboxOpened()
                     }
                 }
 
@@ -137,29 +120,14 @@ class LoginActivity : ComponentActivity() {
                     )
                 }
 
-                when (val s = state) {
-                    is LoginFlowViewModel.FlowState.Login -> {
-                        LoginScreen(
-                            isLoading = isLoading,
-                            errorMessage = errorMessage,
-                            onLogin = { email, password -> loginVm.login(email, password) },
-                            onClearError = { loginVm.clearError() }
-                        )
-                    }
-                    is LoginFlowViewModel.FlowState.CashboxOpen -> {
-                        CashboxOpenScreen(
-                            availability = availability,
-                            isLoadingAvailability = cashboxLoadingAvailability,
-                            isLoading = cashboxLoading,
-                            errorMessage = cashboxError,
-                            onOpenSession = { cashboxId, amt, notes ->
-                                cashboxVm.openSession(s.storeId, cashboxId, amt, notes)
-                            },
-                            successMessage = null,
-                            onClearMessages = {}
-                        )
-                    }
-                    is LoginFlowViewModel.FlowState.Done -> Unit
+                if (state is LoginFlowViewModel.FlowState.Login) {
+                    LoginScreen(
+                        isLoading = isLoading,
+                        errorMessage = errorMessage,
+                        initialEmail = savedEmail,
+                        onLogin = { email, password -> loginVm.login(email, password) },
+                        onClearError = { loginVm.clearError() }
+                    )
                 }
             }
         }

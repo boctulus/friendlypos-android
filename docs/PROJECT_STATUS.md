@@ -203,13 +203,22 @@ FriendlyPOS/
 
 | Feature | UI | Datos | Fuente |
 |---|---|---|---|
-| Products | LazyColumn + search | 10 productos hardcodeados | `DummyDataRepository` |
+| Products (pantalla lista) | LazyColumn + search | 10 productos hardcodeados | `DummyDataRepository` |
 | Customers | LazyColumn + search | 8 clientes hardcodeados | `DummyDataRepository` |
 | Inventory | Stock + low-stock warning | Mismos 10 productos | `DummyDataRepository` |
 | Reports | Date pickers + Canvas chart + summary | 4 ventas hardcodeadas | `DummyDataRepository` |
 | Payments | Search + date filters + list | Mismas 4 ventas | `DummyDataRepository` |
 | History | Summary header + filters + detail | Mismas 4 ventas | `DummyDataRepository` |
 | Notifications | Type/date filters + read/unread | 8 notificaciones hardcodeadas | `DummyDataRepository` |
+
+### 5.2.1 UI completa, datos reales (parcial)
+
+| Feature | UI | Datos | Fuente |
+|---|---|---|---|
+| Búsqueda de productos (modal calculadora) | Modal con loading/error/resultados | API real | `GET /api/products/search/quick` |
+| Inventario | Lista + buscador + stock-bajo warning | API real | `GET /api/products` |
+
+---
 
 ### 5.3 Parcial / Buggy
 
@@ -235,10 +244,10 @@ FriendlyPOS/
 
 | Feature | Documentación | Código |
 |---|---|---|
-| Integración API REST | `API_INTEGRATION_PLAN.md` (6 fases, estructura completa) | 0% |
+| Integración API REST | `API_INTEGRATION_PLAN.md` (6 fases, estructura completa) | Fase 1 parcial |
 | Firebase Auth | Plan con `TokenProvider`, `AuthInterceptor`, `TokenRefreshInterceptor` | 0% |
-| Repositorios (Product, Customer, Sale, etc.) | 7 repos planeados | 0% |
-| DTOs | 5 DTOs planeados | 0% |
+| Repositorios (Product, Customer, Sale, etc.) | 7 repos planeados | `ProductRepository` ✅ |
+| DTOs | 5 DTOs planeados | `ProductDto` ✅ |
 | `SalePendingQueue` | Diseño con estados PENDING/SENDING/FAILED/SYNCED | 0% |
 | `ConnectivityObserver` | Plan con ping a `/health` + debounce | 0% |
 | DTE (facturación electrónica) | Flujo async completo con polling y backoff | 0% |

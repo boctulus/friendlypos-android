@@ -26,6 +26,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 import cl.friendlypos.mypos.api.ApiClient
 import cl.friendlypos.mypos.compose.viewmodel.CashboxViewModel
 import cl.friendlypos.mypos.databinding.ActivityMainBinding
+import cl.friendlypos.mypos.utils.FingerprintUtils
 import cl.friendlypos.mypos.utils.SystemUtils
 
 import kotlinx.coroutines.launch
@@ -49,6 +50,7 @@ class MainActivity : AppCompatActivity()
         ApiClient.init(this)
 
         Log.d("DeviceCheck", if (SystemUtils.isEmulator()) "Emulador" else "Real Android")
+        FingerprintUtils.deviceFingerprintHash(this)
 
 //        mDriverManager = DriverManager.getInstance();
 //        mSys = mDriverManager.getBaseSysDevice();
@@ -125,7 +127,7 @@ class MainActivity : AppCompatActivity()
 
         menu.findItem(R.id.action_scanner_testing)?.isVisible = role == "admin"
         menu.findItem(R.id.action_logout)?.apply {
-            isVisible = role == "admin" || role == "supermarket"
+            isVisible = role.isNotEmpty()
             title = "Cerrar sesión"
         }
         menu.findItem(R.id.action_open_cashbox)?.apply {

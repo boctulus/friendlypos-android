@@ -23,10 +23,11 @@ import cl.friendlypos.mypos.compose.theme.AppColors
 fun LoginScreen(
     isLoading: Boolean,
     errorMessage: String?,
+    initialEmail: String = "",
     onLogin: (email: String, password: String) -> Unit,
     onClearError: () -> Unit
 ) {
-    var email by remember { mutableStateOf("") }
+    var email by remember { mutableStateOf(initialEmail) }
     var password by remember { mutableStateOf("") }
     var passwordVisible by remember { mutableStateOf(false) }
 

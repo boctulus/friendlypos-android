@@ -24,7 +24,6 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import cl.friendlypos.mypos.R
 import cl.friendlypos.mypos.compose.components.SalesCalcKeypad
-import cl.friendlypos.mypos.data.DummyDataRepository
 import cl.friendlypos.mypos.model.Product
 import cl.friendlypos.mypos.ui.sales.SalesCalculatorViewModel
 
@@ -44,12 +43,24 @@ fun SalesCalculatorScreen(
 
     var showSearchModal by remember { mutableStateOf(false) }
 
+    val productSearchResults by viewModel.productSearchResults.observeAsState(emptyList())
+    val productSearchLoading by viewModel.productSearchLoading.observeAsState(false)
+    val productSearchError by viewModel.productSearchError.observeAsState(null)
+
     if (showSearchModal) {
         ProductSearchModal(
-            onDismiss = { showSearchModal = false },
+            products = productSearchResults,
+            isLoading = productSearchLoading,
+            error = productSearchError,
+            onQueryChange = { viewModel.searchProducts(it) },
+            onDismiss = {
+                viewModel.clearProductSearch()
+                showSearchModal = false
+            },
             onSelectProduct = { name, price ->
                 viewModel.updateItemName(name)
                 viewModel.setAmount(price.toString())
+                viewModel.clearProductSearch()
                 showSearchModal = false
             }
         )
@@ -225,23 +236,14 @@ fun SalesCalculatorScreen(
 
 @Composable
 private fun ProductSearchModal(
+    products: List<Product>,
+    isLoading: Boolean,
+    error: String?,
+    onQueryChange: (String) -> Unit,
     onDismiss: () -> Unit,
     onSelectProduct: (name: String, price: Int) -> Unit
 ) {
     var query by remember { mutableStateOf("") }
-
-    val allProducts by produceState(initialValue = emptyList<Product>()) {
-        DummyDataRepository.getProducts().collect { value = it }
-    }
-
-    val filtered = remember(allProducts, query) {
-        if (query.isBlank()) allProducts
-        else allProducts.filter {
-            it.name.contains(query, ignoreCase = true) ||
-            it.description.contains(query, ignoreCase = true) ||
-            it.category.contains(query, ignoreCase = true)
-        }
-    }
 
     Dialog(onDismissRequest = onDismiss) {
         Card(
@@ -263,7 +265,10 @@ private fun ProductSearchModal(
 
                 OutlinedTextField(
                     value = query,
-                    onValueChange = { query = it },
+                    onValueChange = {
+                        query = it
+                        onQueryChange(it)
+                    },
                     placeholder = { Text("Nombre, categoría...") },
                     leadingIcon = {
                         Icon(
@@ -274,7 +279,10 @@ private fun ProductSearchModal(
                     },
                     trailingIcon = {
                         if (query.isNotEmpty()) {
-                            IconButton(onClick = { query = "" }) {
+                            IconButton(onClick = {
+                                query = ""
+                                onQueryChange("")
+                            }) {
                                 Icon(
                                     imageVector = Icons.Default.Clear,
                                     contentDescription = "Limpiar",
@@ -294,31 +302,70 @@ private fun ProductSearchModal(
 
                 Spacer(modifier = Modifier.height(8.dp))
 
-                LazyColumn(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .heightIn(max = 320.dp),
-                    verticalArrangement = Arrangement.spacedBy(0.dp)
-                ) {
-                    items(filtered, key = { it.id }) { product ->
-                        ProductSearchRow(
-                            product = product,
-                            onClick = {
-                                onSelectProduct(product.name, product.price.toInt())
-                            }
-                        )
-                        HorizontalDivider(color = Color(0xFFE0E0E0))
+                when {
+                    isLoading -> {
+                        Box(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(120.dp),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            CircularProgressIndicator(color = POS_BLUE, strokeWidth = 2.dp)
+                        }
                     }
+                    error != null -> {
+                        Text(
+                            text = "Error: $error",
+                            color = MaterialTheme.colorScheme.error,
+                            fontSize = 13.sp,
+                            modifier = Modifier
+                                .padding(vertical = 16.dp)
+                                .fillMaxWidth(),
+                            textAlign = androidx.compose.ui.text.style.TextAlign.Center
+                        )
+                    }
+                    else -> {
+                        LazyColumn(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .heightIn(max = 320.dp),
+                            verticalArrangement = Arrangement.spacedBy(0.dp)
+                        ) {
+                            items(products, key = { it.id }) { product ->
+                                ProductSearchRow(
+                                    product = product,
+                                    onClick = { onSelectProduct(product.name, product.price.toInt()) }
+                                )
+                                HorizontalDivider(color = Color(0xFFE0E0E0))
+                            }
 
-                    if (filtered.isEmpty() && query.isNotBlank()) {
-                        item {
-                            Text(
-                                "Sin resultados para \"$query\"",
-                                color = Color(0xFF757575),
-                                fontSize = 14.sp,
-                                modifier = Modifier.padding(vertical = 16.dp).fillMaxWidth(),
-                                textAlign = androidx.compose.ui.text.style.TextAlign.Center
-                            )
+                            if (products.isEmpty() && query.isNotBlank()) {
+                                item {
+                                    Text(
+                                        "Sin resultados para \"$query\"",
+                                        color = Color(0xFF757575),
+                                        fontSize = 14.sp,
+                                        modifier = Modifier
+                                            .padding(vertical = 16.dp)
+                                            .fillMaxWidth(),
+                                        textAlign = androidx.compose.ui.text.style.TextAlign.Center
+                                    )
+                                }
+                            }
+
+                            if (query.isBlank()) {
+                                item {
+                                    Text(
+                                        "Escriba para buscar productos",
+                                        color = Color(0xFF757575),
+                                        fontSize = 14.sp,
+                                        modifier = Modifier
+                                            .padding(vertical = 16.dp)
+                                            .fillMaxWidth(),
+                                        textAlign = androidx.compose.ui.text.style.TextAlign.Center
+                                    )
+                                }
+                            }
                         }
                     }
                 }

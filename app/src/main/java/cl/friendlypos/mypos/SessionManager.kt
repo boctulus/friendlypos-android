@@ -15,6 +15,7 @@ data class UserSession(
 object SessionManager {
 
     private const val PREFS = "UserSession"
+    private const val PREFS_LOGIN = "LoginPrefs"
     private const val KEY_UID = "uid"
     private const val KEY_EMAIL = "email"
     private const val KEY_DISPLAY_NAME = "displayName"
@@ -24,6 +25,16 @@ object SessionManager {
 
     private fun prefs(context: Context): SharedPreferences =
         context.getSharedPreferences(PREFS, Context.MODE_PRIVATE)
+
+    private fun loginPrefs(context: Context): SharedPreferences =
+        context.getSharedPreferences(PREFS_LOGIN, Context.MODE_PRIVATE)
+
+    fun saveLastEmail(context: Context, email: String) {
+        loginPrefs(context).edit().putString("lastEmail", email).apply()
+    }
+
+    fun getLastEmail(context: Context): String =
+        loginPrefs(context).getString("lastEmail", "") ?: ""
 
     fun save(context: Context, session: UserSession) {
         prefs(context).edit()

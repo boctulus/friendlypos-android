@@ -4,8 +4,61 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import cl.friendlypos.mypos.model.Product
+import cl.friendlypos.mypos.repository.ProductRepository
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 class SalesCalculatorViewModel : ViewModel() {
+
+    private val productRepo = ProductRepository()
+
+    private val _productSearchResults = MutableLiveData<List<Product>>(emptyList())
+    val productSearchResults: LiveData<List<Product>> = _productSearchResults
+
+    private val _productSearchLoading = MutableLiveData<Boolean>(false)
+    val productSearchLoading: LiveData<Boolean> = _productSearchLoading
+
+    private val _productSearchError = MutableLiveData<String?>(null)
+    val productSearchError: LiveData<String?> = _productSearchError
+
+    private var searchJob: Job? = null
+
+    fun searchProducts(query: String) {
+        searchJob?.cancel()
+        if (query.isBlank()) {
+            _productSearchResults.value = emptyList()
+            _productSearchLoading.value = false
+            _productSearchError.value = null
+            return
+        }
+        searchJob = viewModelScope.launch {
+            delay(300)
+            _productSearchLoading.value = true
+            _productSearchError.value = null
+            val result = productRepo.searchQuick(query)
+            result.fold(
+                onSuccess = {
+                    _productSearchResults.value = it
+                    _productSearchLoading.value = false
+                },
+                onFailure = { e ->
+                    _productSearchError.value = e.message
+                    _productSearchLoading.value = false
+                    Log.e("SalesCalcVM", "Error buscando productos: ${e.message}", e)
+                }
+            )
+        }
+    }
+
+    fun clearProductSearch() {
+        searchJob?.cancel()
+        _productSearchResults.value = emptyList()
+        _productSearchLoading.value = false
+        _productSearchError.value = null
+    }
     private val _currentAmount = MutableLiveData<String>("0")
     val currentAmount: LiveData<String> = _currentAmount
 
