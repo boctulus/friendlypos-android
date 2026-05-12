@@ -1,6 +1,7 @@
 package cl.friendlypos.mypos.api
 
 import cl.friendlypos.mypos.api.dto.CashboxAvailabilityResponseDto
+import cl.friendlypos.mypos.api.dto.CustomerListResponseDto
 import cl.friendlypos.mypos.api.dto.ProductSearchResponseDto
 import cl.friendlypos.mypos.api.dto.CloseSessionRequestDto
 import cl.friendlypos.mypos.api.dto.CurrentSessionResponseDto
@@ -57,5 +58,16 @@ interface ApiService {
     suspend fun searchProductsQuick(@Query("q") query: String): ProductSearchResponseDto
 
     @GET("api/products")
-    suspend fun getProducts(): ProductSearchResponseDto
+    suspend fun getProducts(
+        @Query("cursor") cursor: String? = null,
+        @Query("limit") limit: Int = 50
+    ): ProductSearchResponseDto
+
+    @GET("api/supabase/customers")
+    suspend fun getCustomers(
+        @Query("startAfterDocId") startAfterDocId: String? = null,
+        @Query("limit") limit: Int = 50,
+        @Query("orderBy") orderBy: String = "created_at",
+        @Query("order") order: String = "desc"
+    ): CustomerListResponseDto
 }

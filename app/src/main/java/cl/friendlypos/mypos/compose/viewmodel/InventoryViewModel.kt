@@ -26,8 +26,14 @@ class InventoryViewModel : ViewModel() {
     private val _isLoading = MutableStateFlow(false)
     val isLoading: StateFlow<Boolean> = _isLoading.asStateFlow()
 
+    private val _isLoadingMore = MutableStateFlow(false)
+    val isLoadingMore: StateFlow<Boolean> = _isLoadingMore.asStateFlow()
+
     private val _errorMessage = MutableStateFlow<String?>(null)
     val errorMessage: StateFlow<String?> = _errorMessage.asStateFlow()
+
+    private var nextCursor: String? = null
+    private var hasMore: Boolean = true
 
     val filteredProducts: StateFlow<List<Product>> = combine(_products, _searchQuery) { products, query ->
         if (query.isBlank()) products
@@ -50,15 +56,41 @@ class InventoryViewModel : ViewModel() {
         viewModelScope.launch {
             _isLoading.value = true
             _errorMessage.value = null
-            val result = repo.getAll()
+            nextCursor = null
+            hasMore = true
+
+            val result = repo.getPage(cursor = null)
             result.fold(
-                onSuccess = { _products.value = it },
+                onSuccess = { page ->
+                    _products.value = page.products
+                    nextCursor = page.nextCursor
+                    hasMore = page.hasMore
+                },
                 onFailure = { e ->
                     _errorMessage.value = e.message
                     Log.e("InventoryVM", "Error cargando inventario: ${e.message}", e)
                 }
             )
             _isLoading.value = false
+        }
+    }
+
+    fun loadMore() {
+        if (_isLoadingMore.value || !hasMore || nextCursor == null) return
+        viewModelScope.launch {
+            _isLoadingMore.value = true
+            val result = repo.getPage(cursor = nextCursor)
+            result.fold(
+                onSuccess = { page ->
+                    _products.value = _products.value + page.products
+                    nextCursor = page.nextCursor
+                    hasMore = page.hasMore
+                },
+                onFailure = { e ->
+                    Log.e("InventoryVM", "Error cargando más productos: ${e.message}", e)
+                }
+            )
+            _isLoadingMore.value = false
         }
     }
 

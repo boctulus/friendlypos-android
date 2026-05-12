@@ -217,6 +217,7 @@ FriendlyPOS/
 |---|---|---|---|
 | Búsqueda de productos (modal calculadora) | Modal con loading/error/resultados | API real | `GET /api/products/search/quick` |
 | Inventario | Lista + buscador + stock-bajo warning | API real | `GET /api/products` |
+| Clientes | Lista + buscador + infinite scroll | API real | `GET /api/supabase/customers` |
 
 ---
 
@@ -246,8 +247,8 @@ FriendlyPOS/
 |---|---|---|
 | Integración API REST | `API_INTEGRATION_PLAN.md` (6 fases, estructura completa) | Fase 1 parcial |
 | Firebase Auth | Plan con `TokenProvider`, `AuthInterceptor`, `TokenRefreshInterceptor` | 0% |
-| Repositorios (Product, Customer, Sale, etc.) | 7 repos planeados | `ProductRepository` ✅ |
-| DTOs | 5 DTOs planeados | `ProductDto` ✅ |
+| Repositorios (Product, Customer, Sale, etc.) | 7 repos planeados | `ProductRepository` ✅ `CustomerRepository` ✅ |
+| DTOs | 5 DTOs planeados | `ProductDto` ✅ `CustomerDto` ✅ |
 | `SalePendingQueue` | Diseño con estados PENDING/SENDING/FAILED/SYNCED | 0% |
 | `ConnectivityObserver` | Plan con ping a `/health` + debounce | 0% |
 | DTE (facturación electrónica) | Flujo async completo con polling y backoff | 0% |

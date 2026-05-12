@@ -6,7 +6,9 @@ import com.google.gson.annotations.SerializedName
 data class ProductSearchResponseDto(
     val success: Boolean,
     val products: List<ProductDto>?,
-    val total: Int?
+    val total: Int?,
+    @SerializedName("hasMore") val hasMore: Boolean? = null,
+    @SerializedName("nextCursor") val nextCursor: String? = null
 )
 
 data class ProductDto(

@@ -3,6 +3,7 @@ package cl.friendlypos.mypos.compose.screen
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.filled.Search
@@ -24,8 +25,24 @@ fun InventoryScreen(
 ) {
     val products by viewModel.filteredProducts.collectAsState()
     val isLoading by viewModel.isLoading.collectAsState()
+    val isLoadingMore by viewModel.isLoadingMore.collectAsState()
     val searchQuery by viewModel.searchQuery.collectAsState()
     val errorMessage by viewModel.errorMessage.collectAsState()
+
+    val listState = rememberLazyListState()
+
+    // Trigger loadMore when 4 items from bottom
+    val shouldLoadMore by remember {
+        derivedStateOf {
+            val lastVisible = listState.layoutInfo.visibleItemsInfo.lastOrNull()?.index ?: 0
+            val total = listState.layoutInfo.totalItemsCount
+            total > 0 && lastVisible >= total - 4
+        }
+    }
+
+    LaunchedEffect(shouldLoadMore) {
+        if (shouldLoadMore) viewModel.loadMore()
+    }
 
     Column(
         modifier = Modifier
@@ -39,7 +56,6 @@ fun InventoryScreen(
             modifier = Modifier.padding(bottom = 16.dp)
         )
 
-        // Buscador
         OutlinedTextField(
             value = searchQuery,
             onValueChange = { viewModel.updateSearchQuery(it) },
@@ -101,10 +117,27 @@ fun InventoryScreen(
             }
             else -> {
                 LazyColumn(
+                    state = listState,
                     verticalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
                     items(products) { product ->
                         InventoryItemCard(product = product)
+                    }
+
+                    if (isLoadingMore) {
+                        item {
+                            Box(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(vertical = 12.dp),
+                                contentAlignment = Alignment.Center
+                            ) {
+                                CircularProgressIndicator(
+                                    modifier = Modifier.size(24.dp),
+                                    strokeWidth = 2.dp
+                                )
+                            }
+                        }
                     }
                 }
             }

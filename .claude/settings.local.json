@@ -43,7 +43,9 @@
       "Bash(mkdir -p \"/mnt/c/Users/jayso/AndroidStudioProjects/FriendlyPOS/prompts\")",
       "Bash(cat)",
       "PowerShell(Get-ChildItem \"C:\\\\Users\\\\jayso\\\\AndroidStudioProjects\\\\FriendlyPOS\\\\docs\" -ErrorAction SilentlyContinue | Select-Object Name; if \\(-not \\(Test-Path \"C:\\\\Users\\\\jayso\\\\AndroidStudioProjects\\\\FriendlyPOS\\\\docs\"\\)\\) { Write-Host \"NO DOCS DIR\" })",
-      "PowerShell(Get-ChildItem \"C:\\\\Users\\\\jayso\\\\AndroidStudioProjects\\\\FriendlyPOS\\\\docs\\\\pending\" -ErrorAction SilentlyContinue | Select-Object Name; if \\(-not \\(Test-Path \"C:\\\\Users\\\\jayso\\\\AndroidStudioProjects\\\\FriendlyPOS\\\\docs\\\\pending\"\\)\\) { Write-Host \"NO PENDING DIR\" })"
+      "PowerShell(Get-ChildItem \"C:\\\\Users\\\\jayso\\\\AndroidStudioProjects\\\\FriendlyPOS\\\\docs\\\\pending\" -ErrorAction SilentlyContinue | Select-Object Name; if \\(-not \\(Test-Path \"C:\\\\Users\\\\jayso\\\\AndroidStudioProjects\\\\FriendlyPOS\\\\docs\\\\pending\"\\)\\) { Write-Host \"NO PENDING DIR\" })",
+      "PowerShell(Get-ChildItem \"D:\\\\nodejs\\\\friendlypos_nodejs\" -Depth 2 | Where-Object { !$_.PSIsContainer } | Select-Object FullName | Format-List)",
+      "PowerShell(New-Item *)"
     ]
   }
 }
