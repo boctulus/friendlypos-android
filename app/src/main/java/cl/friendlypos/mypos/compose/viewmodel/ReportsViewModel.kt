@@ -2,10 +2,10 @@ package cl.friendlypos.mypos.compose.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import cl.friendlypos.mypos.data.DummyDataRepository
 import cl.friendlypos.mypos.model.ChartData
 import cl.friendlypos.mypos.model.ReportSummary
 import cl.friendlypos.mypos.model.SaleReport
+import cl.friendlypos.mypos.repository.ReportRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -14,9 +14,10 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import java.time.LocalDate
-import java.time.format.DateTimeFormatter
 
 class ReportsViewModel : ViewModel() {
+
+    private val repository = ReportRepository()
 
     private val _sales = MutableStateFlow<List<SaleReport>>(emptyList())
     val sales: StateFlow<List<SaleReport>> = _sales.asStateFlow()
@@ -30,10 +31,12 @@ class ReportsViewModel : ViewModel() {
     private val _isLoading = MutableStateFlow(false)
     val isLoading: StateFlow<Boolean> = _isLoading.asStateFlow()
 
+    private val _error = MutableStateFlow<String?>(null)
+    val error: StateFlow<String?> = _error.asStateFlow()
+
     private val _reportSummary = MutableStateFlow<ReportSummary?>(null)
     val reportSummary: StateFlow<ReportSummary?> = _reportSummary.asStateFlow()
 
-    // --- CORRECCIÓN 1: Devolver explícitamente la lista filtrada y ordenada ---
     val filteredSales: StateFlow<List<SaleReport>> = combine(
         _sales,
         _fromDate,
@@ -43,18 +46,16 @@ class ReportsViewModel : ViewModel() {
             val isAfterFromDate = fromDate == null || !sale.date.isBefore(fromDate)
             val isBeforeToDate = toDate == null || !sale.date.isAfter(toDate)
             isAfterFromDate && isBeforeToDate
-        }.sortedByDescending { it.date } // Esta expresión es el valor de retorno
+        }.sortedByDescending { it.date }
     }.stateIn(
         scope = viewModelScope,
         started = SharingStarted.WhileSubscribed(5000),
         initialValue = emptyList()
     )
 
-    // --- CORRECCIÓN 2: Acceder al primer elemento del array en el combine ---
     val chartData: StateFlow<List<ChartData>> = combine(
         filteredSales
-    ) { (sales) -> // Desestructurar para obtener la lista directamente
-        // Agrupar ventas por fecha y sumar totales
+    ) { (sales) ->
         sales.groupBy { it.date }
             .map { (date, salesList) ->
                 ChartData(
@@ -71,43 +72,49 @@ class ReportsViewModel : ViewModel() {
 
     init {
         loadSales()
-        loadReportSummary()
     }
 
     private fun loadSales() {
         viewModelScope.launch {
             _isLoading.value = true
-            DummyDataRepository.getSalesReports().collect { salesList ->
+            _error.value = null
+            runCatching {
+                repository.getSales(
+                    fromDate = _fromDate.value,
+                    toDate = _toDate.value
+                )
+            }.onSuccess { salesList ->
                 _sales.value = salesList
-                _isLoading.value = false
+                _reportSummary.value = buildSummary(salesList)
+            }.onFailure { e ->
+                _error.value = e.message ?: "Error al cargar ventas"
             }
+            _isLoading.value = false
         }
     }
 
-    private fun loadReportSummary() {
-        viewModelScope.launch {
-            val fromDateStr = _fromDate.value?.format(DateTimeFormatter.ofPattern("dd/MM/yyyy")) ?: ""
-            val toDateStr = _toDate.value?.format(DateTimeFormatter.ofPattern("dd/MM/yyyy")) ?: ""
-
-            DummyDataRepository.getReportSummary(fromDateStr, toDateStr).collect { summary ->
-                _reportSummary.value = summary
-            }
-        }
+    private fun buildSummary(salesList: List<SaleReport>): ReportSummary {
+        return ReportSummary(
+            totalSales = salesList.sumOf { it.total },
+            totalCustomers = salesList.map { it.customerName }.distinct().size,
+            totalProducts = salesList.size,
+            dateRange = "${_fromDate.value} — ${_toDate.value}"
+        )
     }
 
     fun updateFromDate(date: LocalDate?) {
         _fromDate.value = date
-        loadReportSummary()
+        loadSales()
     }
 
     fun updateToDate(date: LocalDate?) {
         _toDate.value = date
-        loadReportSummary()
+        loadSales()
     }
 
     fun clearDateFilters() {
         _fromDate.value = LocalDate.now().minusDays(30)
         _toDate.value = LocalDate.now()
-        loadReportSummary()
+        loadSales()
     }
 }

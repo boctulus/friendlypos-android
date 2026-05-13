@@ -35,7 +35,8 @@ android {
         create("device") {
             dimension = "environment"
             // Update this IP to match your local backend host
-            buildConfigField("String", "BASE_URL_BACKEND", "\"http://192.168.1.50:3001\"")
+            // buildConfigField("String", "BASE_URL_BACKEND", "\"http://192.168.1.50:3001\"")
+            buildConfigField("String", "BASE_URL_BACKEND", "\"https://espacio.friendlypos.app\"")
         }
         create("production") {
             dimension = "environment"
