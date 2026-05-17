@@ -123,3 +123,4 @@
 [2026-05-13 01:12:11]	1.5.13	Automatic update
 [2026-05-13 23:56:14]	1.5.14	Automatic update
 [2026-05-17 23:39:15]	1.5.15	OK Reportes, Pagos, Historial
+[2026-05-17 23:58:20]	1.5.16	Automatic update
