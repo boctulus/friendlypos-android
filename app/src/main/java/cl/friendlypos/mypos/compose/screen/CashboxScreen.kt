@@ -30,7 +30,7 @@ fun CashboxScreen(
     isLoadingAvailability: Boolean,
     errorMessage: String?,
     successMessage: String?,
-    onOpenSession: (cashboxId: String, initialAmount: Double, notes: String?) -> Unit,
+    onOpenSession: (cashboxId: String, cashboxLabel: String, initialAmount: Double, notes: String?) -> Unit,
     onCloseSession: (sessionId: String, finalAmount: Double, notes: String?) -> Unit,
     onClearMessages: () -> Unit,
     onSaveAndLogout: () -> Unit,

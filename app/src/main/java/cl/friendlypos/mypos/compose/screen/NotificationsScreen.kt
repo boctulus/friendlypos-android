@@ -5,13 +5,15 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.filled.DateRange
-import androidx.compose.material.icons.filled.Info
-import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material.icons.filled.Error
-import androidx.compose.material.icons.filled.CheckCircle
+import androidx.compose.material.icons.filled.Event
 import androidx.compose.material.icons.filled.FilterList
+import androidx.compose.material.icons.filled.Info
+import androidx.compose.material.icons.filled.Today
+import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -22,8 +24,12 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 
+import java.time.DayOfWeek
+import java.time.LocalDate
 import java.time.format.DateTimeFormatter
+import java.time.temporal.TemporalAdjusters
 
+import cl.friendlypos.mypos.compose.components.DatePickerDialog
 import cl.friendlypos.mypos.compose.viewmodel.NotificationsViewModel
 import cl.friendlypos.mypos.model.Notification
 import cl.friendlypos.mypos.model.NotificationType
@@ -176,7 +182,7 @@ fun NotificationsScreen(
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(bottom = 16.dp),
+                .padding(bottom = 8.dp),
             horizontalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             Button(
@@ -198,6 +204,64 @@ fun NotificationsScreen(
             ) {
                 Text("Seleccionar Hasta")
             }
+        }
+
+        // Selector rápido de rango
+        val today = LocalDate.now()
+        val yearStart = LocalDate.of(today.year, 1, 1)
+        val monthStart = today.withDayOfMonth(1)
+        val weekStart = today.with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY))
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(bottom = 16.dp),
+            horizontalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            FilterChip(
+                selected = fromDate == yearStart && toDate == today,
+                onClick = {
+                    viewModel.updateFromDate(yearStart)
+                    viewModel.updateToDate(today)
+                },
+                label = { Text("Este Año") },
+                leadingIcon = {
+                    Icon(
+                        imageVector = Icons.Default.Event,
+                        contentDescription = "Este Año",
+                        modifier = Modifier.size(18.dp)
+                    )
+                }
+            )
+            FilterChip(
+                selected = fromDate == monthStart && toDate == today,
+                onClick = {
+                    viewModel.updateFromDate(monthStart)
+                    viewModel.updateToDate(today)
+                },
+                label = { Text("Este Mes") },
+                leadingIcon = {
+                    Icon(
+                        imageVector = Icons.Default.DateRange,
+                        contentDescription = "Este Mes",
+                        modifier = Modifier.size(18.dp)
+                    )
+                }
+            )
+            FilterChip(
+                selected = fromDate == weekStart && toDate == today,
+                onClick = {
+                    viewModel.updateFromDate(weekStart)
+                    viewModel.updateToDate(today)
+                },
+                label = { Text("Esta Semana") },
+                leadingIcon = {
+                    Icon(
+                        imageVector = Icons.Default.Today,
+                        contentDescription = "Esta Semana",
+                        modifier = Modifier.size(18.dp)
+                    )
+                }
+            )
         }
 
         if (isLoading) {

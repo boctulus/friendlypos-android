@@ -76,13 +76,13 @@ class CashboxViewModel(application: Application) : AndroidViewModel(application)
         }
     }
 
-    fun openSession(storeId: String, cashboxId: String, initialAmount: Double, notes: String?) {
+    fun openSession(storeId: String, cashboxId: String, cashboxLabel: String, initialAmount: Double, notes: String?) {
         viewModelScope.launch {
             _isLoading.value = true
             _errorMessage.value = null
             val operationId = UUID.randomUUID().toString()
             val deviceId = DeviceIdProvider.getDeviceId(getApplication())
-            repo.openSession(storeId, cashboxId, initialAmount, notes, deviceId, operationId)
+            repo.openSession(storeId, cashboxId, cashboxLabel, initialAmount, notes, deviceId, operationId)
                 .onSuccess { session ->
                     _currentSession.value = session
                     _successMessage.value = "Caja abierta exitosamente"

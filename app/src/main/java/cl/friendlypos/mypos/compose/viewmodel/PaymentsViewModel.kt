@@ -1,20 +1,22 @@
 package cl.friendlypos.mypos.compose.viewmodel
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import cl.friendlypos.mypos.data.DummyDataRepository
 import cl.friendlypos.mypos.model.SaleReport
+import cl.friendlypos.mypos.repository.ReportRepository
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
-import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.launch
 import java.time.LocalDate
-import java.time.format.DateTimeFormatter
 
 class PaymentsViewModel : ViewModel() {
+
+    private val repository = ReportRepository()
 
     private val _payments = MutableStateFlow<List<SaleReport>>(emptyList())
     val payments: StateFlow<List<SaleReport>> = _payments.asStateFlow()
@@ -22,14 +24,17 @@ class PaymentsViewModel : ViewModel() {
     private val _searchQuery = MutableStateFlow("")
     val searchQuery: StateFlow<String> = _searchQuery.asStateFlow()
 
-    private val _fromDate = MutableStateFlow<LocalDate?>(null)
+    private val _fromDate = MutableStateFlow<LocalDate?>(LocalDate.of(LocalDate.now().year, 1, 1))
     val fromDate: StateFlow<LocalDate?> = _fromDate.asStateFlow()
 
-    private val _toDate = MutableStateFlow<LocalDate?>(null)
+    private val _toDate = MutableStateFlow<LocalDate?>(LocalDate.now())
     val toDate: StateFlow<LocalDate?> = _toDate.asStateFlow()
 
     private val _isLoading = MutableStateFlow(false)
     val isLoading: StateFlow<Boolean> = _isLoading.asStateFlow()
+
+    private val _errorMessage = MutableStateFlow<String?>(null)
+    val errorMessage: StateFlow<String?> = _errorMessage.asStateFlow()
 
     val filteredPayments: StateFlow<List<SaleReport>> = combine(
         _payments,
@@ -39,27 +44,20 @@ class PaymentsViewModel : ViewModel() {
     ) { payments, query, fromDate, toDate ->
         var filtered = payments
 
-        // Filtrar por búsqueda de customer
         if (query.isNotBlank()) {
             filtered = filtered.filter { payment ->
                 payment.customerName.contains(query, ignoreCase = true)
             }
         }
 
-        // Filtrar por fechas
         if (fromDate != null) {
-            filtered = filtered.filter { payment ->
-                payment.date >= fromDate
-            }
+            filtered = filtered.filter { payment -> payment.date >= fromDate }
         }
 
         if (toDate != null) {
-            filtered = filtered.filter { payment ->
-                payment.date <= toDate
-            }
+            filtered = filtered.filter { payment -> payment.date <= toDate }
         }
 
-        // Ordenar por fecha más reciente primero
         filtered.sortedByDescending { it.date }
     }.stateIn(
         scope = viewModelScope,
@@ -71,13 +69,23 @@ class PaymentsViewModel : ViewModel() {
         loadPayments()
     }
 
-    private fun loadPayments() {
+    fun loadPayments() {
         viewModelScope.launch {
             _isLoading.value = true
-            DummyDataRepository.getSalesReports().collect { paymentList ->
-                _payments.value = paymentList
-                _isLoading.value = false
+            _errorMessage.value = null
+            runCatching {
+                repository.getSales(
+                    fromDate = _fromDate.value,
+                    toDate = _toDate.value
+                )
+            }.onSuccess { list ->
+                Log.d("PaymentsViewModel", "loadPayments OK — ${list.size} items")
+                _payments.value = list
+            }.onFailure { e ->
+                Log.e("PaymentsViewModel", "loadPayments FAILED: ${e.javaClass.simpleName} — ${e.message}", e)
+                _errorMessage.value = e.message ?: "Error al cargar pagos"
             }
+            _isLoading.value = false
         }
     }
 
@@ -91,14 +99,17 @@ class PaymentsViewModel : ViewModel() {
 
     fun updateFromDate(date: LocalDate?) {
         _fromDate.value = date
+        loadPayments()
     }
 
     fun updateToDate(date: LocalDate?) {
         _toDate.value = date
+        loadPayments()
     }
 
     fun clearDateFilters() {
         _fromDate.value = null
         _toDate.value = null
+        loadPayments()
     }
 }

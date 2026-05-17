@@ -70,8 +70,8 @@ class CashboxFragment : Fragment() {
                     isLoadingAvailability = isLoadingAvailability,
                     errorMessage = errorMessage,
                     successMessage = successMessage,
-                    onOpenSession = { cashboxId, amount, notes ->
-                        cashboxViewModel.openSession(storeId, cashboxId, amount, notes)
+                    onOpenSession = { cashboxId, cashboxLabel, amount, notes ->
+                        cashboxViewModel.openSession(storeId, cashboxId, cashboxLabel, amount, notes)
                     },
                     onCloseSession = { sessionId, amount, notes ->
                         cashboxViewModel.closeSession(sessionId, amount, notes)

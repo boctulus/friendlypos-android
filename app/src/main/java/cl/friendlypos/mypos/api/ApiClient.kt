@@ -1,5 +1,6 @@
 package cl.friendlypos.mypos.api
 
+import android.annotation.SuppressLint
 import android.content.Context
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -9,10 +10,10 @@ import java.util.concurrent.TimeUnit
 
 object ApiClient {
 
+    @SuppressLint("StaticFieldLeak")
     @Volatile
     private var _cookieJar: PersistentCookieJar? = null
-    
-    private var _loginClient: OkHttpClient? = null
+
     private var _apiHttpClient: OkHttpClient? = null
     private var _service: ApiService? = null
 
@@ -23,28 +24,20 @@ object ApiClient {
 
         synchronized(lock) {
             if (_cookieJar != null) return
-            
+
             val appContext = context.applicationContext
             _cookieJar = PersistentCookieJar(appContext)
-
-            _loginClient = OkHttpClient.Builder()
-                .cookieJar(_cookieJar!!)
-                .connectTimeout(10, TimeUnit.SECONDS)
-                .readTimeout(30, TimeUnit.SECONDS)
-                .writeTimeout(30, TimeUnit.SECONDS)
-                .followRedirects(false)
-                .addInterceptor(HttpLoggingInterceptor().apply { 
-                    level = HttpLoggingInterceptor.Level.HEADERS 
-                })
-                .build()
+            JwtTokenStorage.init(appContext)
 
             _apiHttpClient = OkHttpClient.Builder()
-                .cookieJar(_cookieJar!!)
                 .connectTimeout(10, TimeUnit.SECONDS)
                 .readTimeout(30, TimeUnit.SECONDS)
                 .writeTimeout(30, TimeUnit.SECONDS)
-                .addInterceptor(HttpLoggingInterceptor().apply { 
-                    level = HttpLoggingInterceptor.Level.BODY 
+                .addInterceptor(JwtAuthInterceptor())
+                .addInterceptor(JwtRefreshInterceptor())
+                .addInterceptor(DebugHttpInterceptor())
+                .addInterceptor(HttpLoggingInterceptor().apply {
+                    level = HttpLoggingInterceptor.Level.BODY
                 })
                 .build()
 
@@ -60,20 +53,12 @@ object ApiClient {
     val cookieJar: PersistentCookieJar
         get() = _cookieJar ?: throw IllegalStateException("ApiClient not initialized. Call init(context) first.")
 
-    val loginClient: OkHttpClient
-        get() = _loginClient ?: throw IllegalStateException("ApiClient not initialized. Call init(context) first.")
-
     val service: ApiService
         get() = _service ?: throw IllegalStateException("ApiClient not initialized. Call init(context) first.")
 
     fun hasValidSession(): Boolean {
         return try {
-            val cj = _cookieJar ?: return false
-            val host = ApiConfig.BASE_URL
-                .replace("https://", "")
-                .replace("http://", "")
-                .split("/")[0]
-            cj.hasValidCookiesForHost(host)
+            JwtTokenStorage.isAccessTokenValid()
         } catch (e: Exception) {
             false
         }

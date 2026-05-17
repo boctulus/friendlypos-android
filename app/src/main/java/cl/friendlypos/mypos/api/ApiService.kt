@@ -2,6 +2,8 @@ package cl.friendlypos.mypos.api
 
 import cl.friendlypos.mypos.api.dto.CashboxAvailabilityResponseDto
 import cl.friendlypos.mypos.api.dto.CustomerListResponseDto
+import cl.friendlypos.mypos.api.dto.LoginRequestDto
+import cl.friendlypos.mypos.api.dto.LoginResponseDto
 import cl.friendlypos.mypos.api.dto.ProductSearchResponseDto
 import cl.friendlypos.mypos.api.dto.SaleListResponseDto
 import cl.friendlypos.mypos.api.dto.CloseSessionRequestDto
@@ -21,6 +23,9 @@ import retrofit2.http.Path
 import retrofit2.http.Query
 
 interface ApiService {
+
+    @POST("api/auth/login")
+    suspend fun login(@Body request: LoginRequestDto): LoginResponseDto
 
     @GET("auth/session/keepalive")
     suspend fun getSessionKeepAlive(): KeepAliveResponseDto

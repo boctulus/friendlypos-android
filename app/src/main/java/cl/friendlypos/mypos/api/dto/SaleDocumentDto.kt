@@ -19,11 +19,11 @@ data class SaleDto(
     @SerializedName("ticket_number") val ticketNumber: String?,
     val customer: SaleCustomerDto?,
     val items: List<SaleItemDto>?,
-    val subtotal: Double?,
-    val tax: Double?,
-    val total: Double?,
+    val subtotal: String?,
+    val tax: String?,
+    val total: String?,
     @SerializedName("payment_method") val paymentMethod: String?,
-    @SerializedName("amount_paid") val amountPaid: Double?,
+    @SerializedName("amount_paid") val amountPaid: String?,
     val status: String?,
     @SerializedName("cashier_name") val cashierName: String?,
     @SerializedName("tipo_documento") val tipoDocumento: String?,
@@ -41,15 +41,15 @@ data class SaleDto(
             ProductSale(
                 productName = item.productName ?: "",
                 quantity = item.quantity ?: 0,
-                unitPrice = item.unitPrice ?: 0.0,
-                total = item.total ?: 0.0
+                unitPrice = item.unitPrice?.toDoubleOrNull() ?: 0.0,
+                total = item.total?.toDoubleOrNull() ?: 0.0
             )
         } ?: emptyList()
 
         return SaleReport(
             id = ticketNumber ?: id,
             customerName = customer?.name ?: customer?.rut ?: "Sin cliente",
-            total = total ?: 0.0,
+            total = total?.toDoubleOrNull() ?: 0.0,
             paymentMethod = paymentMethod ?: tipoDocumento ?: "—",
             date = date,
             items = productSales,
@@ -67,6 +67,6 @@ data class SaleCustomerDto(
 data class SaleItemDto(
     @SerializedName("productName") val productName: String?,
     val quantity: Int?,
-    @SerializedName("unitPrice") val unitPrice: Double?,
-    val total: Double?
+    @SerializedName("unitPrice") val unitPrice: String?,
+    val total: String?
 )

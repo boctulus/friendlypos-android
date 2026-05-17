@@ -19,10 +19,10 @@ class NotificationsViewModel : ViewModel() {
     private val _notifications = MutableStateFlow<List<Notification>>(emptyList())
     val notifications: StateFlow<List<Notification>> = _notifications.asStateFlow()
 
-    private val _fromDate = MutableStateFlow<LocalDate?>(null)
+    private val _fromDate = MutableStateFlow<LocalDate?>(LocalDate.of(LocalDate.now().year, 1, 1))
     val fromDate: StateFlow<LocalDate?> = _fromDate.asStateFlow()
 
-    private val _toDate = MutableStateFlow<LocalDate?>(null)
+    private val _toDate = MutableStateFlow<LocalDate?>(LocalDate.now())
     val toDate: StateFlow<LocalDate?> = _toDate.asStateFlow()
 
     private val _selectedType = MutableStateFlow<NotificationType?>(null)

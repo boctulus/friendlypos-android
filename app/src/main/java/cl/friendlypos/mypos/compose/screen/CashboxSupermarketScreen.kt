@@ -25,7 +25,7 @@ fun CashboxSupermarketScreen(
     isLoading: Boolean,
     errorMessage: String?,
     successMessage: String?,
-    onOpenSession: (cashboxId: String, initialAmount: Double, notes: String?) -> Unit,
+    onOpenSession: (cashboxId: String, cashboxLabel: String, initialAmount: Double, notes: String?) -> Unit,
     onCloseSession: (sessionId: String, finalAmount: Double, notes: String?) -> Unit,
     onClearMessages: () -> Unit
 ) {
@@ -175,7 +175,8 @@ fun CashboxSupermarketScreen(
                         },
                         onConfirmOpen = {
                             val amount = initialAmountText.toDoubleOrNull() ?: 0.0
-                            onOpenSession(item.cashboxId, amount, notes.ifBlank { null })
+                            val label = item.cashboxLabel.toString()
+                            onOpenSession(item.cashboxId, label, amount, notes.ifBlank { null })
                         }
                     )
                 }
@@ -219,7 +220,7 @@ private fun CashboxStatusCard(
             ) {
                 Column {
                     Text(
-                        "Caja Nº ${item.cashboxLabel ?: ""}",
+                        "Caja Nº ${item.cashboxLabel}",
                         fontWeight = FontWeight.Bold,
                         style = MaterialTheme.typography.titleSmall
                     )

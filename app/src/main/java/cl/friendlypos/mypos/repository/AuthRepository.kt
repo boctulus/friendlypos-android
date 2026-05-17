@@ -2,50 +2,38 @@ package cl.friendlypos.mypos.repository
 
 import cl.friendlypos.mypos.UserSession
 import cl.friendlypos.mypos.api.ApiClient
-import cl.friendlypos.mypos.api.ApiConfig
+import cl.friendlypos.mypos.api.JwtTokenStorage
+import cl.friendlypos.mypos.api.dto.LoginRequestDto
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import okhttp3.MediaType.Companion.toMediaType
-import okhttp3.Request
-import okhttp3.RequestBody.Companion.toRequestBody
 
 class AuthRepository {
 
     suspend fun login(email: String, password: String): Result<UserSession> =
         withContext(Dispatchers.IO) {
             try {
-                val jsonBody = """{"email":"${email.trim()}","password":"$password"}"""
-                val request = Request.Builder()
-                    .url("${ApiConfig.BASE_URL}/auth/login")
-                    .post(jsonBody.toRequestBody("application/json".toMediaType()))
-                    .header("Accept", "application/json")
-                    .build()
+                val response = ApiClient.service.login(
+                    LoginRequestDto(email = email.trim(), password = password)
+                )
 
-                // Execute login — expect 302; cookie is captured by CookieJar
-                val response = ApiClient.loginClient.newCall(request).execute()
-                response.close()
-
-                val location = response.header("Location", "") ?: ""
-
-                // Backend redirects to /auth/login on failure, /dashboard* on success
-                if (location.contains("/auth/login")) {
-                    return@withContext Result.failure(Exception("Credenciales incorrectas o usuario sin permisos"))
+                if (!response.success || response.data == null) {
+                    val msg = response.error ?: "Credenciales incorrectas o usuario sin permisos"
+                    return@withContext Result.failure(Exception(msg))
                 }
 
-                // Fetch user session info
-                val keepAlive = ApiClient.service.getSessionKeepAlive()
-                if (!keepAlive.success || keepAlive.user == null) {
-                    return@withContext Result.failure(Exception("No se pudo obtener la sesión del usuario"))
-                }
+                val tokens = response.data
+                JwtTokenStorage.saveTokens(tokens.accessToken, tokens.refreshToken)
 
-                val user = keepAlive.user
+                val claims = JwtTokenStorage.decodePayload()
+                    ?: return@withContext Result.failure(Exception("Token de sesión inválido"))
+
                 Result.success(
                     UserSession(
-                        uid = user.uid,
-                        email = user.email ?: email.trim(),
-                        displayName = user.displayName ?: user.email ?: email.trim(),
-                        role = user.role,
-                        storeId = user.storeId
+                        uid = claims.sub,
+                        email = claims.email,
+                        displayName = claims.email,
+                        role = claims.role,
+                        storeId = claims.storeId
                     )
                 )
             } catch (e: Exception) {

@@ -1,5 +1,6 @@
 package cl.friendlypos.mypos.compose.viewmodel
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import cl.friendlypos.mypos.model.ChartData
@@ -22,7 +23,7 @@ class ReportsViewModel : ViewModel() {
     private val _sales = MutableStateFlow<List<SaleReport>>(emptyList())
     val sales: StateFlow<List<SaleReport>> = _sales.asStateFlow()
 
-    private val _fromDate = MutableStateFlow<LocalDate?>(LocalDate.now().minusDays(30))
+    private val _fromDate = MutableStateFlow<LocalDate?>(LocalDate.of(LocalDate.now().year, 1, 1))
     val fromDate: StateFlow<LocalDate?> = _fromDate.asStateFlow()
 
     private val _toDate = MutableStateFlow<LocalDate?>(LocalDate.now())
@@ -84,9 +85,11 @@ class ReportsViewModel : ViewModel() {
                     toDate = _toDate.value
                 )
             }.onSuccess { salesList ->
+                Log.d("ReportsViewModel", "loadSales OK — ${salesList.size} items")
                 _sales.value = salesList
                 _reportSummary.value = buildSummary(salesList)
             }.onFailure { e ->
+                Log.e("ReportsViewModel", "loadSales FAILED: ${e.javaClass.simpleName} — ${e.message}", e)
                 _error.value = e.message ?: "Error al cargar ventas"
             }
             _isLoading.value = false
@@ -113,8 +116,8 @@ class ReportsViewModel : ViewModel() {
     }
 
     fun clearDateFilters() {
-        _fromDate.value = LocalDate.now().minusDays(30)
-        _toDate.value = LocalDate.now()
+        _fromDate.value = null
+        _toDate.value = null
         loadSales()
     }
 }

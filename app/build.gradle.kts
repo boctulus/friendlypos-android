@@ -29,8 +29,8 @@ android {
     productFlavors {
         create("emulator") {
             dimension = "environment"
-            // buildConfigField("String", "BASE_URL_BACKEND", "\"http://10.0.2.2:3001\"")
-            buildConfigField("String", "BASE_URL_BACKEND", "\"https://espacio.friendlypos.app\"")
+            buildConfigField("String", "BASE_URL_BACKEND", "\"http://10.0.2.2:3001\"")
+            // buildConfigField("String", "BASE_URL_BACKEND", "\"https://espacio.friendlypos.app\"")
         }
         create("device") {
             dimension = "environment"

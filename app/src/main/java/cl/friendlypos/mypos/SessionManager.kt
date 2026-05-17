@@ -3,6 +3,7 @@ package cl.friendlypos.mypos
 import android.content.Context
 import android.content.SharedPreferences
 import cl.friendlypos.mypos.api.ApiClient
+import cl.friendlypos.mypos.api.JwtTokenStorage
 
 data class UserSession(
     val uid: String,
@@ -67,6 +68,7 @@ object SessionManager {
 
     fun clear(context: Context) {
         prefs(context).edit().clear().apply()
-        ApiClient.cookieJar.clearAll()
+        try { ApiClient.cookieJar.clearAll() } catch (_: Exception) {}
+        JwtTokenStorage.clear()
     }
 }

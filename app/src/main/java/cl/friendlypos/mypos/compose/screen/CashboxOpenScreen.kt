@@ -25,7 +25,7 @@ availability: List<CashboxAvailabilityItemDto>,
 isLoadingAvailability: Boolean = false,
 isLoading: Boolean,
 errorMessage: String?,
-onOpenSession: (cashboxId: String, initialAmount: Double, notes: String?) -> Unit,
+onOpenSession: (cashboxId: String, cashboxLabel: String, initialAmount: Double, notes: String?) -> Unit,
 successMessage: String?,
 onClearMessages: () -> Unit
 ) {
@@ -129,7 +129,7 @@ Column(
                 onExpandedChange = { cashboxDropdownExpanded = it }
             ) {
                 OutlinedTextField(
-                    value = selectedCashbox?.let { "${it.displayName ?: "Caja"} (Nº ${it.cashboxLabel ?: ""})" } ?: "",
+                    value = selectedCashbox?.let { "${it.displayName ?: "Caja"} (Nº ${it.cashboxLabel})" } ?: "",
                     onValueChange = {},
                     readOnly = true,
                     label = { Text("Número de caja *") },
@@ -145,7 +145,7 @@ Column(
                 ) {
                     availableCashboxes.forEach { box ->
                         DropdownMenuItem(
-                            text = { Text("${box.displayName ?: "Caja"} (Nº ${box.cashboxLabel ?: ""})") },
+                            text = { Text("${box.displayName ?: "Caja"} (Nº ${box.cashboxLabel})") },
                             onClick = {
                                 selectedCashboxId = box.cashboxId
                                 cashboxDropdownExpanded = false
@@ -186,9 +186,11 @@ Column(
 
         Button(
             onClick = {
-                val cashboxId = selectedCashboxId ?: return@Button
+                val selected = selectedCashboxId?.let { id -> availableCashboxes.find { it.cashboxId == id } }
+                val cashboxId = selected?.cashboxId ?: return@Button
+                val cashboxLabel = selected.cashboxLabel.toString()
                 val amount = initialAmountText.toDoubleOrNull() ?: 0.0
-                onOpenSession(cashboxId, amount, notes.ifBlank { null })
+                onOpenSession(cashboxId, cashboxLabel, amount, notes.ifBlank { null })
             },
             enabled = !isLoading && selectedCashboxId != null && initialAmountText.isNotBlank(),
             modifier = Modifier

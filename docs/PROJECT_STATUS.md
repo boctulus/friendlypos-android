@@ -203,21 +203,18 @@ FriendlyPOS/
 
 | Feature | UI | Datos | Fuente |
 |---|---|---|---|
-| Products (pantalla lista) | LazyColumn + search | 10 productos hardcodeados | `DummyDataRepository` |
-| Customers | LazyColumn + search | 8 clientes hardcodeados | `DummyDataRepository` |
-| Inventory | Stock + low-stock warning | Mismos 10 productos | `DummyDataRepository` |
-| Reports | Date pickers + Canvas chart + summary | 4 ventas hardcodeadas | `DummyDataRepository` |
-| Payments | Search + date filters + list | Mismas 4 ventas | `DummyDataRepository` |
-| History | Summary header + filters + detail | Mismas 4 ventas | `DummyDataRepository` |
 | Notifications | Type/date filters + read/unread | 8 notificaciones hardcodeadas | `DummyDataRepository` |
 
-### 5.2.1 UI completa, datos reales (parcial)
+### 5.2.1 UI completa, datos reales (JWT auth — 2026-05-17)
 
 | Feature | UI | Datos | Fuente |
 |---|---|---|---|
 | Búsqueda de productos (modal calculadora) | Modal con loading/error/resultados | API real | `GET /api/products/search/quick` |
-| Inventario | Lista + buscador + stock-bajo warning | API real | `GET /api/products` |
+| Inventario / Productos | Lista + buscador + stock-bajo warning | API real | `GET /api/products` |
 | Clientes | Lista + buscador + infinite scroll | API real | `GET /api/supabase/customers` |
+| Pagos | Search + date filters + list | API real | `GET /api/sales` |
+| Historial de Transacciones | Summary header + filters + detail | API real | `GET /api/sales` |
+| Reports | Date pickers + Canvas chart + summary | API real | `GET /api/sales` |
 
 ---
 

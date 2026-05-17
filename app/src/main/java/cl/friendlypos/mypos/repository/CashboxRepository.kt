@@ -49,6 +49,7 @@ class CashboxRepository {
     suspend fun openSession(
         storeId: String,
         cashboxId: String,
+        cashboxLabel: String,
         initialAmount: Double,
         notes: String? = null,
         deviceId: String? = null,
@@ -59,6 +60,7 @@ class CashboxRepository {
                 OpenSessionRequestDto(
                     storeId = storeId,
                     cashboxId = cashboxId,
+                    cashboxLabel = cashboxLabel,
                     initialAmount = initialAmount,
                     notes = notes,
                     operationId = operationId,

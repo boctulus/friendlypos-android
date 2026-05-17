@@ -11,6 +11,8 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.filled.DateRange
+import androidx.compose.material.icons.filled.Event
+import androidx.compose.material.icons.filled.Today
 import androidx.compose.material.icons.filled.TrendingUp
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -26,8 +28,10 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 
+import java.time.DayOfWeek
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
+import java.time.temporal.TemporalAdjusters
 import kotlin.math.max
 
 import cl.friendlypos.mypos.compose.viewmodel.ReportsViewModel
@@ -126,7 +130,7 @@ fun ReportsScreen(
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(bottom = 16.dp),
+                .padding(bottom = 8.dp),
             horizontalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             Button(
@@ -148,6 +152,64 @@ fun ReportsScreen(
             ) {
                 Text("Seleccionar Hasta")
             }
+        }
+
+        // Selector rápido de rango
+        val today = LocalDate.now()
+        val yearStart = LocalDate.of(today.year, 1, 1)
+        val monthStart = today.withDayOfMonth(1)
+        val weekStart = today.with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY))
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(bottom = 16.dp),
+            horizontalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            FilterChip(
+                selected = fromDate == yearStart && toDate == today,
+                onClick = {
+                    viewModel.updateFromDate(yearStart)
+                    viewModel.updateToDate(today)
+                },
+                label = { Text("Este Año") },
+                leadingIcon = {
+                    Icon(
+                        imageVector = Icons.Default.Event,
+                        contentDescription = "Este Año",
+                        modifier = Modifier.size(18.dp)
+                    )
+                }
+            )
+            FilterChip(
+                selected = fromDate == monthStart && toDate == today,
+                onClick = {
+                    viewModel.updateFromDate(monthStart)
+                    viewModel.updateToDate(today)
+                },
+                label = { Text("Este Mes") },
+                leadingIcon = {
+                    Icon(
+                        imageVector = Icons.Default.DateRange,
+                        contentDescription = "Este Mes",
+                        modifier = Modifier.size(18.dp)
+                    )
+                }
+            )
+            FilterChip(
+                selected = fromDate == weekStart && toDate == today,
+                onClick = {
+                    viewModel.updateFromDate(weekStart)
+                    viewModel.updateToDate(today)
+                },
+                label = { Text("Esta Semana") },
+                leadingIcon = {
+                    Icon(
+                        imageVector = Icons.Default.Today,
+                        contentDescription = "Esta Semana",
+                        modifier = Modifier.size(18.dp)
+                    )
+                }
+            )
         }
 
         // Resumen de estadísticas
@@ -199,7 +261,7 @@ fun ReportsScreen(
     // DatePicker Dialog
     if (showDatePicker) {
         DatePickerDialog(
-            onDateSelected = { selectedDate ->
+            onDateSelected = { selectedDate: java.time.LocalDate ->
                 when (datePickerType) {
                     "from" -> viewModel.updateFromDate(selectedDate)
                     "to" -> viewModel.updateToDate(selectedDate)
@@ -448,34 +510,3 @@ fun SaleItemCard(sale: SaleReport) {
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun DatePickerDialog(
-    onDateSelected: (LocalDate) -> Unit,
-    onDismiss: () -> Unit
-) {
-    val datePickerState = rememberDatePickerState()
-
-    DatePickerDialog(
-        onDismissRequest = onDismiss,
-        confirmButton = {
-            TextButton(
-                onClick = {
-                    datePickerState.selectedDateMillis?.let { millis ->
-                        val date = LocalDate.ofEpochDay(millis / (24 * 60 * 60 * 1000))
-                        onDateSelected(date)
-                    }
-                }
-            ) {
-                Text("Confirmar")
-            }
-        },
-        dismissButton = {
-            TextButton(onClick = onDismiss) {
-                Text("Cancelar")
-            }
-        }
-    ) {
-        DatePicker(state = datePickerState)
-    }
-}

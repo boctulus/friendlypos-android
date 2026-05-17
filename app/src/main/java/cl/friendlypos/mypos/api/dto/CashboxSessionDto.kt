@@ -5,6 +5,7 @@ import com.google.gson.annotations.SerializedName
 data class OpenSessionRequestDto(
     @SerializedName("store_id") val storeId: String,
     @SerializedName("cashbox_id") val cashboxId: String,
+    @SerializedName("cashbox_label") val cashboxLabel: String,
     @SerializedName("initial_amount") val initialAmount: Double,
     val notes: String? = null,
     @SerializedName("operation_id") val operationId: String? = null,
