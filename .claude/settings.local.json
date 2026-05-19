@@ -77,7 +77,13 @@
       "Bash(curl -s --max-time 10 \"http://localhost:3001/api/auth/login\" -X POST -H \"Content-Type: application/json\" -d '{\"email\":\"cashier1@pos.com\",\"password\":\"password123\"}')",
       "Bash(curl -s --max-time 5 \"http://localhost:3001/api/sales\" -H \"Accept: application/json\")",
       "Bash(cmd /c \"dir D:\\\\nodejs\\\\friendlypos_nodejs\\\\modules\")",
-      "Bash(mkdir -p /c/Users/jayso/AndroidStudioProjects/FriendlyPOS/prompts)"
+      "Bash(mkdir -p /c/Users/jayso/AndroidStudioProjects/FriendlyPOS/prompts)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" -X POST https://espacio.friendlypos.app/api/auth/login -H \"Content-Type: application/json\" -d '{\"email\":\"cashier3@pos.com\",\"password\":\"zzz123\"}')",
+      "Bash(curl *)",
+      "PowerShell(cd \"D:\\\\nodejs\\\\friendlypos_nodejs\" && \\(Get-Content package.json | ConvertFrom-Json\\).dependencies | ConvertTo-Json)",
+      "PowerShell(cd \"D:\\\\nodejs\\\\friendlypos_nodejs\" && \\(Get-Content package.json | ConvertFrom-Json\\).devDependencies | ConvertTo-Json)",
+      "PowerShell(Test-Path \"D:\\\\nodejs\\\\friendlypos_nodejs\\\\node_modules\\\\jsonwebtoken\" && \\(Get-Content \"D:\\\\nodejs\\\\friendlypos_nodejs\\\\node_modules\\\\jsonwebtoken\\\\package.json\" | ConvertFrom-Json\\).version)",
+      "Bash(ssh *)"
     ]
   }
 }

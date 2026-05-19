@@ -6,6 +6,7 @@ import cl.friendlypos.mypos.api.JwtTokenStorage
 import cl.friendlypos.mypos.api.dto.LoginRequestDto
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import retrofit2.HttpException
 
 class AuthRepository {
 
@@ -36,6 +37,10 @@ class AuthRepository {
                         storeId = claims.storeId
                     )
                 )
+            } catch (e: HttpException) {
+                val msg = if (e.code() == 401) "Usuario o contraseña incorrectos"
+                          else "Error de servidor (${e.code()})"
+                Result.failure(Exception(msg))
             } catch (e: Exception) {
                 Result.failure(e)
             }
