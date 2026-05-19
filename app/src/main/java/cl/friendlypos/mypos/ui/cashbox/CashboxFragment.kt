@@ -36,6 +36,8 @@ class CashboxFragment : Fragment() {
                 val availability by cashboxViewModel.availability.collectAsState()
                 val isLoading by cashboxViewModel.isLoading.collectAsState()
                 val isLoadingAvailability by cashboxViewModel.isLoadingAvailability.collectAsState()
+                val isLoadingMovementTypes by cashboxViewModel.isLoadingMovementTypes.collectAsState()
+                val movementTypes by cashboxViewModel.movementTypes.collectAsState()
                 val errorMessage by cashboxViewModel.errorMessage.collectAsState()
                 val successMessage by cashboxViewModel.successMessage.collectAsState()
 
@@ -51,13 +53,12 @@ class CashboxFragment : Fragment() {
 
                 LaunchedEffect(successMessage) {
                     if (successMessage != null) {
-                        Toast.makeText(context, successMessage, Toast.LENGTH_SHORT).show()
-                        cashboxViewModel.clearMessages()
-                        when {
-                            role == "cashier" && currentSession?.status == "open" ->
-                                findNavController().navigate(R.id.navigation_home)
-                            role == "supermarket" && storeId.isNotBlank() ->
-                                cashboxViewModel.loadAvailability(storeId)
+                        when (role) {
+                            "supermarket" -> {
+                                Toast.makeText(context, successMessage, Toast.LENGTH_SHORT).show()
+                                cashboxViewModel.clearMessages()
+                                if (storeId.isNotBlank()) cashboxViewModel.loadAvailability(storeId)
+                            }
                         }
                     }
                 }
@@ -68,6 +69,8 @@ class CashboxFragment : Fragment() {
                     availability = availability,
                     isLoading = isLoading,
                     isLoadingAvailability = isLoadingAvailability,
+                    isLoadingMovementTypes = isLoadingMovementTypes,
+                    movementTypes = movementTypes,
                     errorMessage = errorMessage,
                     successMessage = successMessage,
                     onOpenSession = { cashboxId, cashboxLabel, amount, notes ->
@@ -76,6 +79,20 @@ class CashboxFragment : Fragment() {
                     onCloseSession = { sessionId, amount, notes ->
                         cashboxViewModel.closeSession(sessionId, amount, notes)
                     },
+                    onRegisterMovement = { movementCode, amount, description, paymentMethod ->
+                        val sessionId = currentSession?.id ?: return@CashboxScreen
+                        cashboxViewModel.registerMovement(
+                            sessionId = sessionId,
+                            movementCode = movementCode,
+                            amount = amount,
+                            description = description,
+                            paymentMethod = paymentMethod,
+                            onSuccess = {
+                                Toast.makeText(context, "Movimiento registrado", Toast.LENGTH_SHORT).show()
+                            }
+                        )
+                    },
+                    onLoadMovementTypes = { cashboxViewModel.loadMovementTypes() },
                     onClearMessages = { cashboxViewModel.clearMessages() },
                     onSaveAndLogout = { doLogout() },
                     onContinue = { cashboxViewModel.clearMessages() },

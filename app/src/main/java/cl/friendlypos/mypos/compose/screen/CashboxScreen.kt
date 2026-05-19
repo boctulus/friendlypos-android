@@ -1,5 +1,6 @@
 package cl.friendlypos.mypos.compose.screen
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
@@ -19,7 +20,10 @@ import androidx.compose.ui.unit.sp
 import cl.friendlypos.mypos.R
 import cl.friendlypos.mypos.api.dto.CashboxAvailabilityItemDto
 import cl.friendlypos.mypos.api.dto.CashboxSessionItemDto
+import cl.friendlypos.mypos.api.dto.MovementTypeDto
 import kotlin.math.abs
+
+enum class CashboxSubScreen { MENU, OPEN, CLOSE, MOVEMENT }
 
 @Composable
 fun CashboxScreen(
@@ -28,17 +32,21 @@ fun CashboxScreen(
     availability: List<CashboxAvailabilityItemDto>,
     isLoading: Boolean,
     isLoadingAvailability: Boolean,
+    isLoadingMovementTypes: Boolean,
     errorMessage: String?,
     successMessage: String?,
+    movementTypes: List<MovementTypeDto>,
     onOpenSession: (cashboxId: String, cashboxLabel: String, initialAmount: Double, notes: String?) -> Unit,
     onCloseSession: (sessionId: String, finalAmount: Double, notes: String?) -> Unit,
+    onRegisterMovement: (movementCode: String, amount: Double, description: String, paymentMethod: String) -> Unit,
+    onLoadMovementTypes: () -> Unit,
     onClearMessages: () -> Unit,
     onSaveAndLogout: () -> Unit,
     onContinue: () -> Unit,
     onLogout: () -> Unit
 ) {
-    when {
-        role == "supermarket" -> CashboxSupermarketScreen(
+    if (role == "supermarket") {
+        CashboxSupermarketScreen(
             currentSession = currentSession,
             availability = availability,
             isLoading = isLoading,
@@ -48,18 +56,77 @@ fun CashboxScreen(
             onCloseSession = onCloseSession,
             onClearMessages = onClearMessages
         )
-        currentSession != null && currentSession.status == "open" -> CashboxCloseContent(
-            session = currentSession,
+    } else {
+        CashboxCashierContent(
+            currentSession = currentSession,
+            availability = availability,
             isLoading = isLoading,
+            isLoadingAvailability = isLoadingAvailability,
+            isLoadingMovementTypes = isLoadingMovementTypes,
+            movementTypes = movementTypes,
             errorMessage = errorMessage,
             successMessage = successMessage,
+            onOpenSession = onOpenSession,
             onCloseSession = onCloseSession,
+            onRegisterMovement = onRegisterMovement,
+            onLoadMovementTypes = onLoadMovementTypes,
             onClearMessages = onClearMessages,
             onSaveAndLogout = onSaveAndLogout,
             onContinue = onContinue,
             onLogout = onLogout
         )
-        else -> CashboxOpenScreen(
+    }
+}
+
+@Composable
+private fun CashboxCashierContent(
+    currentSession: CashboxSessionItemDto?,
+    availability: List<CashboxAvailabilityItemDto>,
+    isLoading: Boolean,
+    isLoadingAvailability: Boolean,
+    isLoadingMovementTypes: Boolean,
+    movementTypes: List<MovementTypeDto>,
+    errorMessage: String?,
+    successMessage: String?,
+    onOpenSession: (cashboxId: String, cashboxLabel: String, initialAmount: Double, notes: String?) -> Unit,
+    onCloseSession: (sessionId: String, finalAmount: Double, notes: String?) -> Unit,
+    onRegisterMovement: (movementCode: String, amount: Double, description: String, paymentMethod: String) -> Unit,
+    onLoadMovementTypes: () -> Unit,
+    onClearMessages: () -> Unit,
+    onSaveAndLogout: () -> Unit,
+    onContinue: () -> Unit,
+    onLogout: () -> Unit
+) {
+    val isSessionOpen = currentSession?.status == "open"
+    var subScreen by remember { mutableStateOf(CashboxSubScreen.MENU) }
+
+    BackHandler(enabled = subScreen != CashboxSubScreen.MENU) {
+        subScreen = CashboxSubScreen.MENU
+    }
+
+    LaunchedEffect(successMessage) {
+        if (successMessage != null) {
+            when (subScreen) {
+                CashboxSubScreen.OPEN, CashboxSubScreen.MOVEMENT -> {
+                    onClearMessages()
+                    subScreen = CashboxSubScreen.MENU
+                }
+                else -> {}
+            }
+        }
+    }
+
+    when (subScreen) {
+        CashboxSubScreen.MENU -> CashboxMenuScreen(
+            isSessionOpen = isSessionOpen,
+            onOpenCashbox = { subScreen = CashboxSubScreen.OPEN },
+            onCloseCashbox = { subScreen = CashboxSubScreen.CLOSE },
+            onRegisterMovement = {
+                onLoadMovementTypes()
+                subScreen = CashboxSubScreen.MOVEMENT
+            }
+        )
+        CashboxSubScreen.OPEN -> CashboxOpenScreen(
             availability = availability,
             isLoadingAvailability = isLoadingAvailability,
             isLoading = isLoading,
@@ -68,6 +135,40 @@ fun CashboxScreen(
             successMessage = successMessage,
             onClearMessages = onClearMessages
         )
+        CashboxSubScreen.CLOSE -> {
+            if (currentSession != null && isSessionOpen) {
+                CashboxCloseContent(
+                    session = currentSession,
+                    isLoading = isLoading,
+                    errorMessage = errorMessage,
+                    successMessage = successMessage,
+                    onCloseSession = onCloseSession,
+                    onClearMessages = onClearMessages,
+                    onSaveAndLogout = onSaveAndLogout,
+                    onContinue = onContinue,
+                    onLogout = onLogout
+                )
+            } else {
+                LaunchedEffect(Unit) { subScreen = CashboxSubScreen.MENU }
+            }
+        }
+        CashboxSubScreen.MOVEMENT -> {
+            val session = currentSession
+            if (session != null && isSessionOpen) {
+                CashboxMovementScreen(
+                    sessionId = session.id,
+                    movementTypes = movementTypes,
+                    isLoadingTypes = isLoadingMovementTypes,
+                    isLoading = isLoading,
+                    errorMessage = errorMessage,
+                    onRegister = onRegisterMovement,
+                    onClearError = onClearMessages,
+                    onBack = { subScreen = CashboxSubScreen.MENU }
+                )
+            } else {
+                LaunchedEffect(Unit) { subScreen = CashboxSubScreen.MENU }
+            }
+        }
     }
 }
 

@@ -11,6 +11,7 @@ import androidx.work.WorkManager
 import cl.friendlypos.mypos.SessionManager
 import cl.friendlypos.mypos.api.dto.CashboxAvailabilityItemDto
 import cl.friendlypos.mypos.api.dto.CashboxSessionItemDto
+import cl.friendlypos.mypos.api.dto.MovementTypeDto
 import cl.friendlypos.mypos.db.AppDatabase
 import cl.friendlypos.mypos.db.entity.PendingCashboxOperation
 import cl.friendlypos.mypos.repository.CashboxRepository
@@ -40,6 +41,13 @@ class CashboxViewModel(application: Application) : AndroidViewModel(application)
 
     private val _isLoadingAvailability = MutableStateFlow(false)
     val isLoadingAvailability: StateFlow<Boolean> = _isLoadingAvailability.asStateFlow()
+
+    // Movement types
+    private val _movementTypes = MutableStateFlow<List<MovementTypeDto>>(emptyList())
+    val movementTypes: StateFlow<List<MovementTypeDto>> = _movementTypes.asStateFlow()
+
+    private val _isLoadingMovementTypes = MutableStateFlow(false)
+    val isLoadingMovementTypes: StateFlow<Boolean> = _isLoadingMovementTypes.asStateFlow()
 
     // Common
     private val _isLoading = MutableStateFlow(false)
@@ -160,6 +168,39 @@ class CashboxViewModel(application: Application) : AndroidViewModel(application)
                 .setBackoffCriteria(BackoffPolicy.EXPONENTIAL, 30, TimeUnit.SECONDS)
                 .build()
         )
+    }
+
+    fun loadMovementTypes() {
+        if (_movementTypes.value.isNotEmpty()) return
+        viewModelScope.launch {
+            _isLoadingMovementTypes.value = true
+            repo.getMovementTypes()
+                .onSuccess { _movementTypes.value = it }
+                .onFailure { _errorMessage.value = it.message }
+            _isLoadingMovementTypes.value = false
+        }
+    }
+
+    fun registerMovement(
+        sessionId: String,
+        movementCode: String,
+        amount: Double,
+        description: String,
+        paymentMethod: String = "cash",
+        onSuccess: () -> Unit
+    ) {
+        viewModelScope.launch {
+            _isLoading.value = true
+            _errorMessage.value = null
+            repo.registerMovement(sessionId, movementCode, amount, description, paymentMethod)
+                .onSuccess {
+                    _successMessage.value = "Movimiento registrado exitosamente"
+                    loadCurrentSession()
+                    onSuccess()
+                }
+                .onFailure { _errorMessage.value = it.message }
+            _isLoading.value = false
+        }
     }
 
     fun clearMessages() {

@@ -4,7 +4,10 @@ import cl.friendlypos.mypos.api.dto.CashboxAvailabilityResponseDto
 import cl.friendlypos.mypos.api.dto.CustomerListResponseDto
 import cl.friendlypos.mypos.api.dto.LoginRequestDto
 import cl.friendlypos.mypos.api.dto.LoginResponseDto
+import cl.friendlypos.mypos.api.dto.MovementTypesResponseDto
 import cl.friendlypos.mypos.api.dto.ProductSearchResponseDto
+import cl.friendlypos.mypos.api.dto.RegisterMovementRequestDto
+import cl.friendlypos.mypos.api.dto.RegisterMovementResponseDto
 import cl.friendlypos.mypos.api.dto.SaleListResponseDto
 import cl.friendlypos.mypos.api.dto.CloseSessionRequestDto
 import cl.friendlypos.mypos.api.dto.CurrentSessionResponseDto
@@ -76,6 +79,12 @@ interface ApiService {
         @Query("orderBy") orderBy: String = "created_at",
         @Query("order") order: String = "desc"
     ): CustomerListResponseDto
+
+    @GET("api/firestore/cashbox/movement-types")
+    suspend fun getMovementTypes(): MovementTypesResponseDto
+
+    @POST("api/firestore/cashbox/movements")
+    suspend fun registerMovement(@Body request: RegisterMovementRequestDto): RegisterMovementResponseDto
 
     @GET("api/sales")
     suspend fun getSales(

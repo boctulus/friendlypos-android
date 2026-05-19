@@ -4,7 +4,10 @@ import cl.friendlypos.mypos.api.ApiClient
 import cl.friendlypos.mypos.api.dto.CashboxAvailabilityItemDto
 import cl.friendlypos.mypos.api.dto.CashboxSessionItemDto
 import cl.friendlypos.mypos.api.dto.CloseSessionRequestDto
+import cl.friendlypos.mypos.api.dto.MovementItemDto
+import cl.friendlypos.mypos.api.dto.MovementTypeDto
 import cl.friendlypos.mypos.api.dto.OpenSessionRequestDto
+import cl.friendlypos.mypos.api.dto.RegisterMovementRequestDto
 import cl.friendlypos.mypos.api.dto.StoreDto
 import com.google.gson.Gson
 import com.google.gson.JsonObject
@@ -74,6 +77,49 @@ class CashboxRepository {
             }
         } catch (e: HttpException) {
             val msg = parseHttpErrorBody(e) ?: "Error al abrir la caja (HTTP ${e.code()})"
+            Result.failure(Exception(msg))
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+
+    suspend fun getMovementTypes(): Result<List<MovementTypeDto>> = withContext(Dispatchers.IO) {
+        try {
+            val response = ApiClient.service.getMovementTypes()
+            if (response.success && response.movementTypes != null) {
+                Result.success(response.movementTypes)
+            } else {
+                Result.failure(Exception("Error al obtener tipos de movimiento"))
+            }
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+
+    suspend fun registerMovement(
+        sessionId: String,
+        movementCode: String,
+        amount: Double,
+        description: String,
+        paymentMethod: String = "cash"
+    ): Result<MovementItemDto> = withContext(Dispatchers.IO) {
+        try {
+            val response = ApiClient.service.registerMovement(
+                RegisterMovementRequestDto(
+                    cashboxSessionId = sessionId,
+                    movementCode = movementCode,
+                    amount = amount,
+                    description = description,
+                    paymentMethod = paymentMethod
+                )
+            )
+            if (response.success && response.movement != null) {
+                Result.success(response.movement)
+            } else {
+                Result.failure(Exception(response.error ?: response.message ?: "Error al registrar movimiento"))
+            }
+        } catch (e: HttpException) {
+            val msg = parseHttpErrorBody(e) ?: "Error al registrar movimiento (HTTP ${e.code()})"
             Result.failure(Exception(msg))
         } catch (e: Exception) {
             Result.failure(e)
