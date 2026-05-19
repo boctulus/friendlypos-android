@@ -2,12 +2,13 @@ package cl.friendlypos.mypos
 
 import android.content.Intent
 import android.os.Bundle
-import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
+import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.*
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.work.BackoffPolicy
@@ -24,7 +25,7 @@ import cl.friendlypos.mypos.utils.FingerprintUtils
 import cl.friendlypos.mypos.work.PendingClosureWorker
 import java.util.concurrent.TimeUnit
 
-class LoginActivity : ComponentActivity() {
+class LoginActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -38,7 +39,7 @@ class LoginActivity : ComponentActivity() {
         }
 
         setContent {
-            MaterialTheme {
+            MaterialTheme(colorScheme = lightColorScheme()) {
                 val loginVm: LoginFlowViewModel = viewModel()
 
                 val state by loginVm.state.collectAsState()
