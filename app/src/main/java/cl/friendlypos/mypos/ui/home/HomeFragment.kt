@@ -8,6 +8,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.ViewCompositionStrategy
+import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
@@ -55,6 +56,18 @@ class HomeFragment : Fragment() {
                     },
                     onNavigateToCashbox = {
                         findNavController().navigate(R.id.action_home_to_cashbox)
+                    },
+                    onNavigateToOpenCashbox = {
+                        findNavController().navigate(
+                            R.id.action_home_to_cashbox,
+                            bundleOf("initialScreen" to "OPEN")
+                        )
+                    },
+                    onNavigateToCloseCashbox = {
+                        findNavController().navigate(
+                            R.id.action_home_to_cashbox,
+                            bundleOf("initialScreen" to "CLOSE")
+                        )
                     },
                     onNavigateToTickets = {
                         findNavController().navigate(R.id.action_home_to_tickets)

@@ -110,7 +110,12 @@
     <fragment
         android:id="@+id/navigation_cashbox"
         android:name="cl.friendlypos.mypos.ui.cashbox.CashboxFragment"
-        android:label="Caja" />
+        android:label="Caja">
+        <argument
+            android:name="initialScreen"
+            app:argType="string"
+            android:defaultValue="MENU" />
+    </fragment>
 
     <fragment
         android:id="@+id/navigation_tickets"

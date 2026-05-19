@@ -28,9 +28,9 @@ function EjecutarComandoGradle($comando) {
 # Generar el APK según el tipo especificado
 if ($buildType -eq "--debug") {
     EjecutarComandoGradle("./gradlew assemble${flavor}Debug")
-    $apkPath = "${basePath}${flavor}\debug\"
+    $apkFile = "app-${flavor}-debug.apk"
+    $apkPath = "${basePath}${flavor}\debug\${apkFile}"
     Write-Host "APK generado en: $apkPath"
-    Write-Host "Archivo: app-${flavor}-debug.apk"
     Write-Host "ADVERTENCIA: --release produce APKs SIN FIRMAR. Usa --debug para instalar."
 }
 elseif ($buildType -eq "--release") {

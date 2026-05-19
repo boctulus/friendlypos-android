@@ -28,6 +28,7 @@ enum class CashboxSubScreen { MENU, OPEN, CLOSE, MOVEMENT }
 @Composable
 fun CashboxScreen(
     role: String,
+    initialScreen: String = "MENU",
     currentSession: CashboxSessionItemDto?,
     availability: List<CashboxAvailabilityItemDto>,
     isLoading: Boolean,
@@ -58,6 +59,7 @@ fun CashboxScreen(
         )
     } else {
         CashboxCashierContent(
+            initialScreen = initialScreen,
             currentSession = currentSession,
             availability = availability,
             isLoading = isLoading,
@@ -80,6 +82,7 @@ fun CashboxScreen(
 
 @Composable
 private fun CashboxCashierContent(
+    initialScreen: String = "MENU",
     currentSession: CashboxSessionItemDto?,
     availability: List<CashboxAvailabilityItemDto>,
     isLoading: Boolean,
@@ -98,7 +101,13 @@ private fun CashboxCashierContent(
     onLogout: () -> Unit
 ) {
     val isSessionOpen = currentSession?.status == "open"
-    var subScreen by remember { mutableStateOf(CashboxSubScreen.MENU) }
+    val initialSubScreen = when (initialScreen) {
+        "OPEN" -> CashboxSubScreen.OPEN
+        "CLOSE" -> CashboxSubScreen.CLOSE
+        "MOVEMENT" -> CashboxSubScreen.MOVEMENT
+        else -> CashboxSubScreen.MENU
+    }
+    var subScreen by remember { mutableStateOf(initialSubScreen) }
 
     BackHandler(enabled = subScreen != CashboxSubScreen.MENU) {
         subScreen = CashboxSubScreen.MENU

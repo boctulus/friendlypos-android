@@ -44,6 +44,7 @@ class CashboxFragment : Fragment() {
                 val storeId = SessionManager.get(requireContext())?.storeId ?: ""
                 val role = SessionManager.getRole(requireContext())
                 val context = requireContext()
+                val initialScreen = arguments?.getString("initialScreen") ?: "MENU"
 
                 LaunchedEffect(storeId) {
                     if (storeId.isNotBlank()) {
@@ -65,6 +66,7 @@ class CashboxFragment : Fragment() {
 
                 CashboxScreen(
                     role = role,
+                    initialScreen = initialScreen,
                     currentSession = currentSession,
                     availability = availability,
                     isLoading = isLoading,

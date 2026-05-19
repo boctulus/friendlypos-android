@@ -27,6 +27,8 @@ fun HomeScreen(
     onNavigateToCustomers: () -> Unit,
     onNavigateToReports: () -> Unit,
     onNavigateToCashbox: () -> Unit,
+    onNavigateToOpenCashbox: () -> Unit,
+    onNavigateToCloseCashbox: () -> Unit,
     onNavigateToTickets: () -> Unit,
     onNavigateToSettings: () -> Unit
 ) {
@@ -77,7 +79,7 @@ fun HomeScreen(
                     horizontalArrangement = Arrangement.spacedBy(12.dp)
                 ) {
                     Button(
-                        onClick = onNavigateToCashbox,
+                        onClick = onNavigateToOpenCashbox,
                         enabled = isSessionOpen == false,
                         modifier = Modifier
                             .weight(1f)
@@ -91,7 +93,7 @@ fun HomeScreen(
                         Text("Abrir Caja", fontWeight = FontWeight.Medium, fontSize = 14.sp)
                     }
                     Button(
-                        onClick = onNavigateToCashbox,
+                        onClick = onNavigateToCloseCashbox,
                         enabled = isSessionOpen == true,
                         modifier = Modifier
                             .weight(1f)

@@ -29,17 +29,17 @@ android {
     productFlavors {
         create("emulator") {
             dimension = "environment"
-            buildConfigField("String", "BASE_URL_BACKEND", "\"http://10.0.2.2:3001\"")
-            // buildConfigField("String", "BASE_URL_BACKEND", "\"https://espacio.friendlypos.app\"")
+            applicationIdSuffix = ".emulator"
+            buildConfigField("String", "BASE_URL_BACKEND", "\"http://10.0.2.2:3001\"")            
         }
         create("device") {
             dimension = "environment"
-            // Update this IP to match your local backend host
-            // buildConfigField("String", "BASE_URL_BACKEND", "\"http://192.168.1.50:3001\"")
-            buildConfigField("String", "BASE_URL_BACKEND", "\"https://espacio.friendlypos.app\"")
+            applicationIdSuffix = ".device"            
+            buildConfigField("String", "BASE_URL_BACKEND", "\"http://192.168.1.50:3001\"")            
         }
         create("production") {
             dimension = "environment"
+            applicationIdSuffix = ".prod"
             buildConfigField("String", "BASE_URL_BACKEND", "\"https://espacio.friendlypos.app\"")
         }
     }
