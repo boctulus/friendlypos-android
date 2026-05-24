@@ -103,7 +103,7 @@
 - **Sin DI**: No Hilt, Koin ni Dagger. ViewModels con `ViewModelProvider()` o `viewModel()` manual.
 - **Sin capa de dominio**: No hay use cases ni interactors.
 - **Sin capa de datos real**: `DummyDataRepository` es singleton con datos hardcodeados.
-- **Sin API**: Retrofit/OkHttp en gradle pero cero código de API.
+- **API parcial**: Retrofit/OkHttp con `ApiClient`, `ApiService`, interceptores JWT implementados. Consume datos reales de productos, clientes, pagos, reportes. Falta `POST /api/sales` (registro venta dummy).
 - **Sin Room**: No hay base de datos local.
 
 ### Navegación
@@ -195,7 +195,7 @@ FriendlyPOS/
 
 | Feature | Archivos | % UI | % Datos |
 |---|---|---|---|
-| Flujo de ventas (calculadora + carrito) | `SalesCalculatorFragment`, `CartFragment`, `SalesCalculatorViewModel` | 90% | 90% (cart logic real, pero sin API) |
+| Flujo de ventas (calculadora + carrito) | `SalesCalculatorFragment`, `CartFragment`, `SalesCalculatorViewModel` | 90% | 90% (búsqueda productos via API real, registro venta dummy) |
 | Pago en efectivo (único método disponible) | `CashPaymentActivity` | 90% | 50% (procesamiento dummy — sin POST a backend) |
 | Selección de documento tributario | `BillingActivity` | 100% | 100% (retorna selección) |
 | Home Dashboard | `HomeFragment` | 100% | 100% (navegación funcional) |
@@ -272,7 +272,7 @@ FriendlyPOS/
 | UI (Compose) | ~70% | UI completa, todos los datos son dummy |
 | ViewModel | ~70% | Lógica de UI funcional, sin conexión a datos reales |
 | Data Layer | 0% | `DummyDataRepository` debe ser reemplazado por completo |
-| API Layer | 0% | Retrofit presente en gradle, cero código |
+| API Layer | 40% | ApiClient, ApiService, interceptores JWT implementados. Consume datos reales (GET). Falta POST /api/sales |
 | Domain Layer | 0% | No existe |
 | DI | 0% | No existe |
 | Hardware | 5% | Managers definidos, lógica 100% comentada |
@@ -283,7 +283,7 @@ FriendlyPOS/
 
 ## 6. Observaciones Clave
 
-1. **La app compila y ejecuta un flujo POS funcional** pero completamente aislado (sin backend, sin API, sin datos reales).
+1. **La app compila y ejecuta un flujo POS funcional con integración API parcial**. Productos, clientes, pagos, historial y reportes ya consumen datos reales del backend NodeJS vía JWT (sección 5.2.1). Sin embargo, el registro de ventas (`POST /api/sales`) sigue siendo dummy — el carrito solo se limpia localmente sin enviar datos al backend.
 
 2. **cmd/** es un CLI tool de NodeJS (sistema de comandos auto-descubribles, abstracción multi-base de datos, controladores de auth, utilidades). El backend REST real referido en la documentación está en `D:\nodejs\friendlypos_nodejs\` (fuera de este repositorio).
 
