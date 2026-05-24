@@ -1,7 +1,7 @@
 # Hallazgos — FriendlyPOS
 
 > Relevamiento de scaffolding, patrones, tecnologías, arquitectura y grado de implementación real.
-> Fecha: 2026-05-08
+> Fecha: 2026-05-24
 
 ---
 
@@ -62,7 +62,9 @@
 │  ├── SalesCalculatorFragment (keypad + cart)  │
 │  ├── CartFragment (shared VM con SalesCalc)   │
 │  ├── PaymentActivity → BillingActivity        │
-│  │                  └── CashPaymentActivity   │
+│  │                  ├── CashPaymentActivity   │
+│  │                  ├── WebPaymentActivity    │  ← PLANIFICADO
+│  │                  └── SplitPaymentActivity  │  ← PLANIFICADO
 │  └── SetupAccessFragment (API key)            │
 │                                               │
 │  Fragments (Compose hosts):                   │
@@ -171,9 +173,9 @@ FriendlyPOS/
 
 5. **ViewModels legacy muertos**: `HomeViewModel`, `DashboardFragment`+`DashboardViewModel`, y `NotificationsViewModel` (package `ui/`) no son usados por nadie. Son resabios de templates de Android Studio.
 
-6. **Hardware managers scaffold**: `CardReaderManager` y `PrinterManager` tienen clases definidas con métodos, pero toda la implementación está comentada. El SDK de hardware ZCS está comentado en `MainActivity` y `ScannerActivity`.
+6. **Hardware managers scaffold + SDK ZCS a eliminar**: `CardReaderManager` y `PrinterManager` son stubs con lógica comentada. El SDK ZCS (`app/libs/core-3.2.1.jar`, `emv_2.0.0_R240607.jar`, `SmartPos_1.9.3_R241021.jar`) se usaba para lector chip, NFC y escáner de código de barras. **Se elimina por completo** — la terminal destino ya no usa este fabricante. El escáner se reemplazará por cámara estándar (ML Kit). La impresión usará protocolos estándar (USB/Bluetooth térmica). La lectura de tarjetas se delega al POS azul vía API.
 
-7. **Assets EMV presentes**: `assets/emv/AidRec.data` y `CapkRec.data` indican que se planeó integración con pagos EMV (tarjetas de crédito/débito chip).
+7. **Assets EMV a eliminar**: `assets/emv/AidRec.data` y `CapkRec.data` formaban parte del SDK ZCS. Se eliminan junto con los JARs. La nueva arquitectura no requiere datos EMV locales.
 
 8. **API plan detallado pero sin código**: `API_INTEGRATION_PLAN.md` tiene 6 fases, estructura de archivos, endpoints, flujo DTE async, idempotency keys, y SalePendingQueue. Cero líneas escritas.
 
@@ -194,7 +196,7 @@ FriendlyPOS/
 | Feature | Archivos | % UI | % Datos |
 |---|---|---|---|
 | Flujo de ventas (calculadora + carrito) | `SalesCalculatorFragment`, `CartFragment`, `SalesCalculatorViewModel` | 90% | 90% (cart logic real, pero sin API) |
-| Pago en efectivo | `CashPaymentActivity` | 90% | 50% (procesamiento dummy) |
+| Pago en efectivo (único método disponible) | `CashPaymentActivity` | 90% | 50% (procesamiento dummy — sin POST a backend) |
 | Selección de documento tributario | `BillingActivity` | 100% | 100% (retorna selección) |
 | Home Dashboard | `HomeFragment` | 100% | 100% (navegación funcional) |
 | Setup de API Key | `SetupAccessFragment` | 100% | 100% (SharedPreferences) |
@@ -222,16 +224,18 @@ FriendlyPOS/
 
 | Feature | Problema |
 |---|---|
-| Barcode Scanner | SDK init parcialmente comentado, listener comentado. Dos screens casi idénticas (una es refactor abandonado). |
+| Barcode Scanner | SDK ZCS activo en `ScannerActivity.kt` (3 imports vivos + `initSdk()` real), pero barcode manager comentado. Dos screens casi idénticas (una es refactor abandonado). El SDK ZCS completo será eliminado. |
 | `SalesCalculatorViewModel.processSale()` | Posible bug: usa `saleItems.value?.toIntOrNull()` sobre estado incorrecto. |
-| Código SDK comentado | `MainActivity`, `ScannerActivity`, `CardReaderManager`, `PrinterManager` — todo hardware está comentado para compilar sin SDK físico. |
+| Código SDK ZCS mezclado | `ScannerActivity.kt` tiene imports vivos de `com.zcs.sdk.*` + `initSdk()` real; `MainActivity.kt` lo tiene comentado. `CardReaderManager` y `PrinterManager` son stubs. Todo el SDK ZCS (3 JARs) será eliminado. |
 
 ### 5.4 Scaffold / Placeholder solamente
 
 | Feature | Estado |
 |---|---|
-| `CardReaderManager` | Clase vacía, toda la lógica comentada |
-| `PrinterManager` | Clase vacía, toda la lógica comentada |
+| `CardReaderManager` | Eliminar — reemplazado por API de pago vía WEB (POS azul) |
+| `PrinterManager` | Refactorizar a impresión estándar (USB/Bluetooth térmica, sin SDK ZCS) |
+| JARs SDK ZCS (`core-3.2.1.jar`, `emv_2.0.0_R240607.jar`, `SmartPos_1.9.3_R241021.jar`) | Eliminar — la terminal destino usa otro fabricante |
+| Assets EMV (`assets/emv/AidRec.data`, `CapkRec.data`) | Eliminar — vestigios del SDK ZCS |
 | `CashFundActivity` | Activity sin lógica, solo infla binding |
 | `DashboardFragment` + `DashboardViewModel` | Template muerto de Android Studio |
 | `HomeViewModel` | No usado por `HomeFragment` |
@@ -249,6 +253,14 @@ FriendlyPOS/
 | `SalePendingQueue` | Diseño con estados PENDING/SENDING/FAILED/SYNCED | 0% |
 | `ConnectivityObserver` | Plan con ping a `/health` + debounce | 0% |
 | DTE (facturación electrónica) | Flujo async completo con polling y backoff | 0% |
+| Eliminación SDK ZCS | Remover JARs, imports, assets EMV, `CardReaderManager`, refactor `PrinterManager` y `ScannerActivity` | **Urgente** (bloquea compilación en terminal destino) |
+| Pago vía WEB (POS azul) | Pago con tarjeta delegado a terminal externo vía backend | 0% |
+| Split payment | División de pago entre efectivo + tarjeta + transferencia | 0% |
+| Pago por transferencia | Débito/crédito vía transferencia bancaria | 0% |
+| Switch cajeros con PIN | Login rápido con PIN 4 dígitos para cambio de cajero | 0% |
+| Impresión tickets estándar | Apertura/cierre de caja, ticket venta, re-impresión con protocolo estándar | 0% (PrinterManager a refactorizar) |
+| Generación boletas/facturas | Conversión venta → boleta/factura imprimible (sin DTE) | 0% |
+| Seguridad por roles | Restricción de funcionalidades según rol del usuario | 0% |
 | Room database | Explícitamente fuera de scope para MVP | 0% |
 | DI (Hilt/Koin) | No planeado | 0% |
 
@@ -279,6 +291,92 @@ FriendlyPOS/
 
 4. **El plan de integración API está muy bien definido** (endpoints, estructura, flujos, manejo de errores). La implementación es directa siguiendo ese plan.
 
-5. **Los assets EMV (`AidRec.data`, `CapkRec.data`) y permisos NFC/BT sugieren** que el target son terminales POS Android con hardware físico (lector chip, impresora térmica).
+5. **SDK ZCS se elimina por completo**: 3 JARs (`core-3.2.1.jar`, `emv_2.0.0_R240607.jar`, `SmartPos_1.9.3_R241021.jar`), assets EMV (`AidRec.data`, `CapkRec.data`), y todo el código asociado (imports, `DriverManager`, `CardReaderManager`). La terminal destino usa otro fabricante. El escáner de código de barras se reemplazará por cámara (ML Kit). La impresión usará protocolos estándar USB/Bluetooth térmica.
 
 6. **Sin DI ni testing**, la mantenibilidad a largo plazo está comprometida. Cada ViewModel crea sus propias dependencias, lo que hace difícil mockear en tests.
+
+7. **`PaymentActivity` solo soporta pago en efectivo**. No hay UI ni flujo para pago con tarjeta, transferencia o split payment. El flujo de pago web con POS azul debe agregarse como nuevo método de pago.
+
+---
+
+## 7. FALTANTES para completar app ANDROID
+
+| # | Feature | Prioridad | Estado actual |
+|---|---|---|---|
+| 0 | **Eliminación SDK ZCS** — remover JARs (`core-3.2.1.jar`, `emv_2.0.0_R240607.jar`, `SmartPos_1.9.3_R241021.jar`), assets EMV, imports propietarios, `CardReaderManager`; refactor `PrinterManager` a estándar, reemplazar escáner ZCS por ML Kit | **Bloqueante** | SDK activo en `ScannerActivity.kt`, comentado en `MainActivity.kt`, stubs en managers |
+| 1 | **Switch entre "cajeros" con PIN 4 dígitos** — acceso rápido con PIN tras login inicial con email/password | Crítico | No implementado |
+| 2 | **Impresión tickets apertura y cierre de caja** — reporte de fondo inicial, ventas, retiros, fondo final | Requerido | `PrinterManager` stub, sin lógica |
+| 3 | **Pago por transferencia** — generar datos de transferencia o link de pago bancario | Requerido? | No implementado |
+| 4 | **Pago con tarjeta vía WEB (POS azul)** — iniciar pago, mostrar QR/link, esperar confirmación del POS externo | Requerido | No implementado |
+| 5 | **Split payment** — dividir una venta entre efectivo + tarjeta + transferencia | Importante | No implementado |
+| 6 | **Impresión ticket de venta** — ticket con detalle de items, total, método pago, fecha, cajero | Requerido | `PrinterManager` stub |
+| 7 | **Registro de la venta** — `POST /api/sales` al backend tras confirmación del pago | Requerido | Dummy (solo limpia carrito local) |
+| 8 | **Re-impresión de tickets** — buscar venta por ticket number y re-imprimir | Crítico | No implementado |
+| 9 | **Generar boletas/facturas sin DTE** — convertir venta en boleta/factura imprimible (PDF/ticket) | Crítico | No implementado |
+| 10 | **Seguridad: restricción por roles** — filtrar UI y acciones según `role` del JWT (admin, cajero, supervisor) | Muy importante | No implementado |
+| 11 | **Seguridad: registro de terminal** — procedimiento para registrar esta terminal en el Dashboard NodeJS backend | Opcional | No implementado |
+
+---
+
+## 8. Arquitectura de Pago vía WEB (POS azul)
+
+La app FriendlyPOS **no procesa tarjetas localmente**. La captura de datos de tarjeta (chip, NFC, banda) se delega a un terminal POS Android externo ("POS azul") que se comunica con el mismo backend NodeJS.
+
+> **Aclaración**: El POS azul es un terminal Android que **ya se utiliza como POS WEB** para pagos. No está vinculado al SDK ZCS actual. Usa su propio mecanismo de lectura de tarjetas (API estándar, no librería propietaria). FriendlyPOS se comunica con él exclusivamente a través del backend NodeJS vía API REST. La impresión de tickets en FriendlyPOS usará protocolos **estándar** (USB/Bluetooth térmica ESC/POS), no el SDK ZCS.
+
+### Flujo propuesto
+
+```
+FriendlyPOS                     Backend NodeJS                    POS azul (otro terminal)
+     │                               │                                  │
+     │  1. POST /api/payment/init    │                                  │
+     │     { amount, sale_id }       │                                  │
+     │◄──── { payment_id, qr/token } │                                  │
+     │                               │                                  │
+     │  2. Muestra QR / código       │                                  │
+     │     en pantalla               │                                  │
+     │                               │  3. GET /api/payment/pending     │
+     │                               │◄──── POS solicita pendientes ────┤
+     │                               │── { payment_id, amount } ──────►│
+     │                               │                                  │
+     │                               │         4. POS lee tarjeta       │
+     │                               │            (chip / NFC / banda)  │
+     │                               │                                  │
+     │                               │  5. POST /api/payment/confirm    │
+     │                               │◄──── { payment_id, result } ─────┤
+     │                               │                                  │
+     │  6. Polling o WebSocket       │                                  │
+     │◄──── { status: "approved" } ──┤                                  │
+     │                               │                                  │
+     │  7. POST /api/sales           │                                  │
+     │     (registra venta)          │                                  │
+     │◄──── { sale_id, ticket_url } ─┤                                  │
+     │                               │                                  │
+     │  8. PrinterManager            │                                  │
+     │     imprime ticket            │                                  │
+```
+
+### Decisiones de arquitectura
+
+| Decisión | Valor |
+|---|---|
+| Comunicación POS ↔ Backend | API REST (polling o WebSocket) |
+| FriendlyPOS espera pago | Polling a `GET /api/payment/status/:id` con backoff |
+| Identificador de pago | UUID generado por backend en paso 1 |
+| Timeout de pago | 5 minutos desde creación, configurable |
+| Offline | No aplica para pago con tarjeta (requiere conexión) |
+| Seguridad | POS azul debe autenticarse contra backend con su propio API key |
+| Split payment | Se crea un `payment_id` por cada método; la venta se registra solo cuando todos están aprobados |
+
+### Implicancias en el código existente
+
+1. **`CardReaderManager`**: Eliminar por completo — reemplazado por API de pago vía WEB.
+2. **SDK ZCS**: Eliminar 3 JARs de `app/libs/`, remover imports `com.zcs.sdk.*` de `ScannerActivity.kt` y código comentado en `MainActivity.kt`.
+3. **Assets EMV**: Eliminar `assets/emv/AidRec.data` y `CapkRec.data`.
+4. **`ScannerActivity`**: Refactorizar para usar ML Kit (cámara) en vez del barcode SDK de ZCS.
+5. **`PrinterManager`**: Refactorizar a protocolo estándar ESC/POS (USB/Bluetooth térmica) — sin dependencia ZCS.
+6. **`PaymentActivity`**: Agregar opciones "Tarjeta", "Transferencia" y "Split" como nuevas `CardView`.
+7. **Nuevo `WebPaymentViewModel`**: Maneja el ciclo de vida del pago web (init, polling, timeout, cancelación).
+8. **Nuevo `WebPaymentFragment`/`Screen`**: Muestra QR o código de pago, estado del polling, botón cancelar.
+9. **API nuevos endpoints**: `POST /api/payment/init`, `GET /api/payment/status/:id` y `POST /api/sales` deben existir en el backend NodeJS.
+10. **`build.gradle.kts`**: Remover `implementation(fileTree(mapOf("dir" to "libs", "include" to listOf("*.jar"))))` (líneas 100-101 y 160-161) y dependencias de constraintlayout legacy (línea 104).
