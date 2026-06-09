@@ -34,11 +34,7 @@ URL Base de la API REST se leera de `ApiConfig.kt`. Valor que por ejemplo conten
 
 La base de datos vive en el backend en NodeJS y es PGSQL ('supabase').
 
-Las distintas entidades (tablas) del backend en NodeJS estan listadas en el proyecto en NodeJS:
-
-```
-D:\nodejs\friendlypos_nodejs\config\databases.config.js
-```
+Las distintas entidades (tablas) del backend en NodeJS estan listadas en el proyecto en NodeJS.
 
 ---
 
@@ -67,11 +63,11 @@ Se debe integrar con servicio de **Facturación Electrónica (SII de Chile):** O
 
 ## Authentication
 
-Para habilitar nuevos métodos de autenticación debe visitarse `https://console.firebase.google.com/project/{project-id}/authentication/providers` donde project-id sería "friendlypos-a53bd", "{this-app}-66e25", etc
+Para habilitar nuevos métodos de autenticación debe visitarse `https://console.firebase.google.com/project/{project-id}/authentication/providers` donde project-id sería "friendlypos-a53bd", "{this-app}", etc
 
 Ej:
 ```
-https://console.firebase.google.com/project/{this-app}-66e25/authentication/providers
+https://console.firebase.google.com/project/{this-app}/authentication/providers
 ```
 
 ## Crear usuario Admin
@@ -108,11 +104,11 @@ El proyecto utiliza los servicios de Firebase:
 
 ## Firestore
 
-Se administra desde Firebase Console yendo a `https://console.firebase.google.com/project/{project-id}/firestore/databases/-default-/data` donde project-id sería "friendlypos-a53bd", "{this-app}-66e25", etc
+Se administra desde Firebase Console yendo a `https://console.firebase.google.com/project/{project-id}/firestore/databases/-default-/data` donde project-id sería "friendlypos-a53bd", "{this-app}", etc
 
 Ej:
 ```
-https://console.firebase.google.com/project/{this-app}-66e25/firestore/databases/-default-/data
+https://console.firebase.google.com/project/{this-app}/firestore/databases/-default-/data
 ```
 
 ## Firebase Storage
@@ -121,7 +117,7 @@ https://console.firebase.google.com/project/{project-id}/storage/{project-id}.fi
 
 Ej:
 
-https://console.firebase.google.com/project/{this-app}-66e25/storage/{this-app}-66e25.firebasestorage.app
+https://console.firebase.google.com/project/{this-app}/storage/{this-app}.firebasestorage.app
 
 Las reglas se ajustan desde:
 
@@ -147,5 +143,3 @@ Para conocer la URL base de la API REST del SDK de OpenFactura leer debera leers
 ## Documentación
 
 - Doc propia de la app Android en `docs\`
-- Doc del backend en NodeJS en `D:\nodejs\friendlypos_nodejs\docs\`
-- Doc del SDK en PHP en `D:\laragon\www\sr-haulmer\docs\` y dentro de los packages correspondientes.
