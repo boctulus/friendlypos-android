@@ -9,12 +9,17 @@ import androidx.work.NetworkType
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
 import cl.friendlypos.mypos.SessionManager
+import cl.friendlypos.mypos.api.HttpApiException
 import cl.friendlypos.mypos.api.dto.CashboxAvailabilityItemDto
 import cl.friendlypos.mypos.api.dto.CashboxSessionItemDto
 import cl.friendlypos.mypos.api.dto.MovementTypeDto
 import cl.friendlypos.mypos.db.AppDatabase
 import cl.friendlypos.mypos.db.entity.PendingCashboxOperation
+import cl.friendlypos.mypos.hardware.ScreenTicketOutput
+import cl.friendlypos.mypos.model.Ticket
 import cl.friendlypos.mypos.repository.CashboxRepository
+import cl.friendlypos.mypos.tickets.TicketBuilders
+import cl.friendlypos.mypos.tickets.TicketHtmlRenderer
 import cl.friendlypos.mypos.utils.DeviceIdProvider
 import cl.friendlypos.mypos.work.PendingClosureWorker
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -27,6 +32,20 @@ import java.util.concurrent.TimeUnit
 class CashboxViewModel(application: Application) : AndroidViewModel(application) {
 
     private val repo = CashboxRepository()
+
+    private val ticketOutput = ScreenTicketOutput()
+    val ticketToShow: StateFlow<Ticket?> = ticketOutput.ticket
+
+    private val _ticketHtml = MutableStateFlow<String?>(null)
+    val ticketHtml: StateFlow<String?> = _ticketHtml.asStateFlow()
+
+    private fun storeName(): String =
+        SessionManager.get(getApplication())?.storeId?.takeIf { it.isNotBlank() } ?: "FriendlyPOS"
+
+    fun clearTicket() {
+        ticketOutput.clear()
+        _ticketHtml.value = null
+    }
 
     // Device scope
     private val _currentSession = MutableStateFlow<CashboxSessionItemDto?>(null)
@@ -94,6 +113,12 @@ class CashboxViewModel(application: Application) : AndroidViewModel(application)
                 .onSuccess { session ->
                     _currentSession.value = session
                     _successMessage.value = "Caja abierta exitosamente"
+                    val ticketData = repo.getOpeningTicketData(session.id).getOrNull()
+                    if (ticketData != null) {
+                        _ticketHtml.value = TicketHtmlRenderer.renderCashboxOpening(getApplication(), ticketData)
+                    } else {
+                        ticketOutput.present(TicketBuilders.cashboxOpen(session, storeName()))
+                    }
                 }
                 .onFailure { error ->
                     _errorMessage.value = error.message
@@ -128,10 +153,18 @@ class CashboxViewModel(application: Application) : AndroidViewModel(application)
                         else item
                     }
                     _successMessage.value = "Caja cerrada exitosamente"
+                    val ticketData = repo.getCloseTicketData(sessionId).getOrNull()
+                    if (ticketData != null) {
+                        _ticketHtml.value = TicketHtmlRenderer.renderCashboxClose(getApplication(), ticketData)
+                    } else {
+                        ticketOutput.present(TicketBuilders.cashboxClose(session, finalAmount, notes, storeName()))
+                    }
                 }
                 .onFailure { error ->
                     _errorMessage.value = error.message
-                    savePendingClosure(sessionId, operationId, deviceId, finalAmount, notes)
+                    if (error !is HttpApiException) {
+                        savePendingClosure(sessionId, operationId, deviceId, finalAmount, notes)
+                    }
                 }
             _isLoading.value = false
         }

@@ -33,6 +33,21 @@ class ProductRepository {
             }
         }
 
+    /**
+     * Resuelve un EAN13 a un producto vía `GET /api/price-verifier/lookup`.
+     * - `found = false` → `Result.success(null)` (no es un error: simplemente no existe).
+     * - error de red/parseo → `Result.failure`.
+     */
+    suspend fun lookupByEan(ean: String, storeId: String): Result<Product?> =
+        withContext(Dispatchers.IO) {
+            try {
+                val response = ApiClient.service.lookupProductByEan(ean = ean, storeId = storeId)
+                Result.success(response.product?.takeIf { response.found }?.toProduct())
+            } catch (e: Exception) {
+                Result.failure(e)
+            }
+        }
+
     suspend fun searchQuick(query: String): Result<List<Product>> = withContext(Dispatchers.IO) {
         try {
             val response = ApiClient.service.searchProductsQuick(query)

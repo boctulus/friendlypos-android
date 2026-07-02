@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<!-- Comprobante de apertura de caja — 58 mm thermal
+     Variables de diseño: {{VAR}} simple, {{SECTION}} HTML generado por TicketHtmlRenderer
+     Fuente: receipt-engine/templates/cashbox-opening.html (backend FriendlyPOS) -->
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Apertura de Caja</title>
+<style>
+@page { size: 58mm auto; margin: 2mm; }
+body { width: 54mm; }
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 12px;
+  color: #000;
+  background: #fff;
+}
+.ticket { padding: 4px; }
+.center { text-align: center; }
+.right { text-align: right; }
+.bold { font-weight: bold; }
+.logo-container { text-align: center; margin-bottom: 4px; }
+.logo-container img {
+  max-width: 120px; max-height: 60px;
+  display: block; margin: 0 auto;
+  filter: grayscale(100%);
+}
+.store-header {
+  text-align: center; margin-bottom: 6px;
+  border-bottom: 1px dashed #000; padding-bottom: 4px;
+}
+.store-name { font-size: 1.1em; font-weight: bold; }
+.store-info { font-size: 0.85em; }
+.doc-type {
+  text-align: center; font-weight: bold; font-size: 1.05em;
+  margin: 4px 0; border-top: 1px solid #000;
+  border-bottom: 1px solid #000; padding: 3px 0;
+}
+.section { margin: 4px 0; font-size: 0.9em; }
+.row { display: flex; justify-content: space-between; margin: 2px 0; }
+.row .label { color: #333; }
+.row .value { font-weight: bold; text-align: right; }
+.divider { border-top: 1px dashed #000; margin: 5px 0; }
+.amount-box {
+  border: 1px solid #000; padding: 4px; margin: 5px 0; text-align: center;
+}
+.amount-label { font-size: 0.85em; text-transform: uppercase; }
+.amount-value { font-size: 1.3em; font-weight: bold; margin-top: 2px; }
+.status-badge {
+  text-align: center; font-weight: bold; font-size: 0.9em;
+  border: 1px solid #000; padding: 3px; margin: 4px 0; letter-spacing: 1px;
+}
+.signature-area { margin-top: 8px; font-size: 0.85em; }
+.signature-line {
+  border-top: 1px solid #000; margin-top: 16px;
+  padding-top: 2px; text-align: center;
+  font-size: 0.8em; color: #555;
+}
+.tech-info {
+  margin-top: 6px; font-size: 0.75em; color: #666;
+  border-top: 1px dashed #000; padding-top: 3px;
+}
+.footer { text-align: center; margin-top: 6px; font-size: 0.85em; }
+</style>
+</head>
+<body>
+<div class="ticket">
+
+{{LOGO_SECTION}}
+
+<div class="store-header">
+  <div class="store-name">{{STORE_NAME}}</div>
+  {{STORE_ADDRESS}}
+  {{STORE_PHONE}}
+  {{STORE_TAX_ID}}
+</div>
+
+<div class="doc-type">APERTURA DE CAJA</div>
+
+<div class="section">
+  <div class="row"><span class="label">Cajero:</span><span class="value">{{CASHIER_NAME}}</span></div>
+  <div class="row"><span class="label">Caja #:</span><span class="value">{{CASHBOX_NUMBER}}</span></div>
+  {{POS_SERIAL_ROW}}
+  <div class="row"><span class="label">Apertura:</span><span class="value">{{OPENED_AT}}</span></div>
+</div>
+
+<div class="divider"></div>
+
+<div class="amount-box">
+  <div class="amount-label">Saldo Inicial</div>
+  <div class="amount-value">{{INITIAL_AMOUNT}}</div>
+</div>
+
+<div class="status-badge">CAJA ABIERTA ✓</div>
+
+{{NOTES_SECTION}}
+
+<div class="divider"></div>
+
+<div class="signature-area">
+  <div class="signature-line">Firma del cajero</div>
+  <div style="text-align:center; font-size:0.8em; margin-top:2px; color:#555;">
+    El cajero confirma el monto inicial declarado
+  </div>
+</div>
+
+<div class="tech-info">
+  <div>Session: {{SESSION_ID}}</div>
+  <div>Generado: {{GENERATED_AT}}</div>
+</div>
+
+{{FOOTER_SECTION}}
+
+</div>
+</body>
+</html>

@@ -97,12 +97,6 @@ android {
 }
 
 dependencies {
-    // Critico: sino importar los .jar no podria acceder al hardware
-    implementation(fileTree(mapOf("dir" to "libs", "include" to listOf("*.jar"))))
-
-    // Usado en las vistas del SDK
-    implementation("androidx.constraintlayout:constraintlayout:1.1.3")
-
     // Critico: Compose BOM debe ser la primera dependencia de Compose
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.work.runtime.ktx)
@@ -149,6 +143,9 @@ dependencies {
     // Coroutines para operaciones async
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3")
 
+    // Coil para carga asíncrona de imágenes (logo en tickets)
+    implementation("io.coil-kt:coil-compose:2.6.0")
+
     // Room
     implementation(libs.androidx.room.runtime)
     implementation(libs.androidx.room.ktx)
@@ -157,8 +154,12 @@ dependencies {
     // WorkManager
     implementation(libs.androidx.work.runtime.ktx)
 
-    // Librerías legacy POS (soporte para .jar antiguos de Java 6/7)
-    implementation(fileTree(mapOf("dir" to "libs", "include" to listOf("*.jar"))))
+    // CameraX + ML Kit (lector EAN13 por cámara)
+    implementation(libs.androidx.camera.core)
+    implementation(libs.androidx.camera.camera2)
+    implementation(libs.androidx.camera.lifecycle)
+    implementation(libs.androidx.camera.view)
+    implementation(libs.mlkit.barcode.scanning)
 
     // Testing
     testImplementation(libs.junit)

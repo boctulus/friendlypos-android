@@ -1,1 +1,1 @@
-cd C:\Users\jayso\AndroidStudioProjects\FriendlyPOS\app\src\main\res
+cd app\src\main\res

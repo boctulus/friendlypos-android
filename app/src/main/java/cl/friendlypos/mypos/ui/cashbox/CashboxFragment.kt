@@ -18,6 +18,8 @@ import cl.friendlypos.mypos.LoginActivity
 import cl.friendlypos.mypos.R
 import cl.friendlypos.mypos.SessionManager
 import cl.friendlypos.mypos.compose.screen.CashboxScreen
+import cl.friendlypos.mypos.compose.screen.TicketPreviewScreen
+import cl.friendlypos.mypos.compose.screen.TicketWebScreen
 import cl.friendlypos.mypos.compose.viewmodel.CashboxViewModel
 
 class CashboxFragment : Fragment() {
@@ -40,6 +42,8 @@ class CashboxFragment : Fragment() {
                 val movementTypes by cashboxViewModel.movementTypes.collectAsState()
                 val errorMessage by cashboxViewModel.errorMessage.collectAsState()
                 val successMessage by cashboxViewModel.successMessage.collectAsState()
+                val ticketToShow by cashboxViewModel.ticketToShow.collectAsState()
+                val ticketHtml by cashboxViewModel.ticketHtml.collectAsState()
 
                 val storeId = SessionManager.get(requireContext())?.storeId ?: ""
                 val role = SessionManager.getRole(requireContext())
@@ -64,7 +68,13 @@ class CashboxFragment : Fragment() {
                     }
                 }
 
-                CashboxScreen(
+                val html = ticketHtml
+                val ticket = ticketToShow
+                if (html != null) {
+                    TicketWebScreen(html = html, onClose = { cashboxViewModel.clearTicket() })
+                } else if (ticket != null) {
+                    TicketPreviewScreen(ticket = ticket, onClose = { cashboxViewModel.clearTicket() })
+                } else CashboxScreen(
                     role = role,
                     initialScreen = initialScreen,
                     currentSession = currentSession,

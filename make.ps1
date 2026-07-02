@@ -1,9 +1,15 @@
 # Script PowerShell para generar APK y mostrar la ruta de salida
 
-param(
-    [string]$buildType = "",
-    [string]$flavor = "emulator"
-)
+$buildType = ""
+$flavor = "emulator"
+
+foreach ($arg in $args) {
+    if ($arg -match "^--flavor=(.+)$") {
+        $flavor = $Matches[1]
+    } elseif ($arg -eq "--debug" -or $arg -eq "--release") {
+        $buildType = $arg
+    }
+}
 
 # Ruta base del proyecto
 $basePath = "app\build\outputs\apk\"

@@ -78,6 +78,12 @@
         <activity
             android:name=".CashPaymentActivity"
             android:exported="false" />
+        <activity
+            android:name=".MockPaymentActivity"
+            android:exported="false" />
+        <activity
+            android:name=".FacturaReceptorActivity"
+            android:exported="false" />
 
         <!-- Actividad para el escáner -->
         <activity

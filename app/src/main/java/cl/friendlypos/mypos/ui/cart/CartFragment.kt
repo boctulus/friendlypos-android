@@ -39,6 +39,8 @@ class CartFragment : Fragment() {
                         requireActivity().onBackPressed()
                     },
                     onProceedToPayment = { totalAmount ->
+                        cl.friendlypos.mypos.checkout.CheckoutHolder
+                            .setFromCart(viewModel.saleItems.value ?: emptyList())
                         val intent = Intent(requireContext(), PaymentActivity::class.java)
                         intent.putExtra("totalAmount", totalAmount)
                         @Suppress("DEPRECATION")

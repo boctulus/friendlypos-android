@@ -33,6 +33,7 @@ private val POS_BLUE = Color(0xFF2196F3)
 fun SalesCalculatorScreen(
     viewModel: SalesCalculatorViewModel,
     onNavigateToCart: () -> Unit,
+    onNavigateToScanCart: () -> Unit,
     onNavigateToPay: (totalAmount: Double) -> Unit,
     onPendingOperationError: () -> Unit
 ) {
@@ -73,20 +74,31 @@ fun SalesCalculatorScreen(
     ) {
         Spacer(modifier = Modifier.height(8.dp))
 
-        // Barcode button — top right, alone
+        // Top-right actions: lupa (búsqueda de texto) + barras (escaneo al carrito)
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.End
         ) {
             IconButton(
                 onClick = { showSearchModal = true },
+                modifier = Modifier.size(48.dp)
+            ) {
+                Icon(
+                    imageVector = Icons.Default.Search,
+                    contentDescription = "Buscar producto",
+                    tint = POS_BLUE,
+                    modifier = Modifier.size(28.dp)
+                )
+            }
+            IconButton(
+                onClick = onNavigateToScanCart,
                 modifier = Modifier
                     .padding(end = 8.dp)
                     .size(48.dp)
             ) {
                 Icon(
                     painter = painterResource(R.drawable.ic_barcode_scanner),
-                    contentDescription = "Buscar producto",
+                    contentDescription = "Escanear al carrito",
                     tint = POS_BLUE,
                     modifier = Modifier.size(28.dp)
                 )
@@ -142,10 +154,6 @@ fun SalesCalculatorScreen(
                 .fillMaxWidth()
                 .padding(horizontal = 4.dp, vertical = 4.dp),
             onDigit = { viewModel.appendDigit(it) },
-            onDoubleZero = {
-                viewModel.appendDigit("0")
-                viewModel.appendDigit("0")
-            },
             onDecimal = { viewModel.appendDecimal(",") },
             onClear = { viewModel.clearEntry() },
             onDelete = { viewModel.deleteLastDigit() },

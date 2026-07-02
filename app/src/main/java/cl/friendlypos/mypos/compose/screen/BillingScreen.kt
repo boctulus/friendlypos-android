@@ -11,20 +11,13 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-
-private val DOCUMENT_TYPES = listOf(
-    "Documento afecto",
-    "Documento exento",
-    "Factura afecta",
-    "Factura exenta",
-    "Sin documento"
-)
+import cl.friendlypos.mypos.checkout.DocumentType
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun BillingScreen(
-    initialDocumentType: String = "Documento afecto",
-    onConfirm: (String) -> Unit
+    initialDocumentType: DocumentType = DocumentType.DEFAULT,
+    onConfirm: (DocumentType) -> Unit
 ) {
     var selected by remember { mutableStateOf(initialDocumentType) }
 
@@ -49,38 +42,21 @@ fun BillingScreen(
                 .padding(padding)
         ) {
             Text(
-                text = "Modelo de emisión configurado para: Comprobante válido como boleta y emitir boleta electrónica solo para efectivo.",
+                text = "Modelo de emisión configurado para: Comprobante válido como boleta y emitir boleta electrónica.",
                 fontSize = 14.sp,
                 color = Color(0xFF2E2E33),
                 modifier = Modifier.padding(horizontal = 30.dp, vertical = 12.dp)
             )
 
-            Box(modifier = Modifier.fillMaxWidth()) {
-                Column(modifier = Modifier.fillMaxWidth()) {
-                    DOCUMENT_TYPES.forEach { type ->
-                        DocumentTypeRow(
-                            label = type,
-                            selected = selected == type,
-                            onSelect = { selected = type }
-                        )
-                        HorizontalDivider(color = Color(0xFFE0E0E0))
-                    }
-                }
-
-                Surface(
-                    modifier = Modifier
-                        .align(Alignment.TopEnd)
-                        .padding(end = 16.dp, top = 4.dp),
-                    shape = MaterialTheme.shapes.extraSmall,
-                    color = MaterialTheme.colorScheme.surface,
-                    tonalElevation = 0.dp
-                ) {
-                    Text(
-                        text = "Predeterminado",
-                        fontSize = 12.sp,
-                        modifier = Modifier.padding(6.dp),
-                        color = MaterialTheme.colorScheme.primary
+            Column(modifier = Modifier.fillMaxWidth()) {
+                DocumentType.entries.forEach { type ->
+                    DocumentTypeRow(
+                        label = type.label,
+                        selected = selected == type,
+                        isDefault = type == DocumentType.DEFAULT,
+                        onSelect = { selected = type }
                     )
+                    HorizontalDivider(color = Color(0xFFE0E0E0))
                 }
             }
 
@@ -102,6 +78,7 @@ fun BillingScreen(
 private fun DocumentTypeRow(
     label: String,
     selected: Boolean,
+    isDefault: Boolean,
     onSelect: () -> Unit
 ) {
     Row(
@@ -122,5 +99,12 @@ private fun DocumentTypeRow(
             color = Color.Black,
             modifier = Modifier.weight(1f)
         )
+        if (isDefault) {
+            Text(
+                text = "Predeterminado",
+                fontSize = 12.sp,
+                color = MaterialTheme.colorScheme.primary
+            )
+        }
     }
 }

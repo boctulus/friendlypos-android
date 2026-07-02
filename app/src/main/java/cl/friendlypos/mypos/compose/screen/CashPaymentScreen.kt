@@ -114,13 +114,6 @@ fun CashPaymentScreen(
                         amountEntered = amountEntered * 10 + digit
                     }
                 },
-                onDoubleZero = {
-                    repeat(2) {
-                        if (amountEntered <= Int.MAX_VALUE / 10) {
-                            amountEntered = amountEntered * 10
-                        }
-                    }
-                },
                 onDelete = {
                     if (amountEntered > 0) amountEntered /= 10
                 }
@@ -141,6 +134,7 @@ fun CashPaymentScreen(
                 }
                 Button(
                     onClick = { onConfirm(amountEntered) },
+                    enabled = amountEntered == 0 || hasEnoughAmount,
                     modifier = Modifier.weight(1f)
                 ) {
                     Text(

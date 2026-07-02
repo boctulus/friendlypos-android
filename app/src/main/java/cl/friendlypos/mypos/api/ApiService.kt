@@ -1,14 +1,22 @@
 package cl.friendlypos.mypos.api
 
 import cl.friendlypos.mypos.api.dto.CashboxAvailabilityResponseDto
+import cl.friendlypos.mypos.api.dto.EmitDteRequestDto
+import cl.friendlypos.mypos.api.dto.EmitDteResponseDto
+import cl.friendlypos.mypos.api.dto.LogoResponseDto
+import cl.friendlypos.mypos.api.dto.TaxpayerResponseDto
 import cl.friendlypos.mypos.api.dto.CustomerListResponseDto
 import cl.friendlypos.mypos.api.dto.LoginRequestDto
 import cl.friendlypos.mypos.api.dto.LoginResponseDto
 import cl.friendlypos.mypos.api.dto.MovementTypesResponseDto
+import cl.friendlypos.mypos.api.dto.PriceLookupResponseDto
 import cl.friendlypos.mypos.api.dto.ProductSearchResponseDto
 import cl.friendlypos.mypos.api.dto.RegisterMovementRequestDto
 import cl.friendlypos.mypos.api.dto.RegisterMovementResponseDto
+import cl.friendlypos.mypos.api.dto.SaleCreateRequestDto
+import cl.friendlypos.mypos.api.dto.SaleCreateResponseDto
 import cl.friendlypos.mypos.api.dto.SaleListResponseDto
+import cl.friendlypos.mypos.api.dto.TicketDataResponseDto
 import cl.friendlypos.mypos.api.dto.CloseSessionRequestDto
 import cl.friendlypos.mypos.api.dto.CurrentSessionResponseDto
 import cl.friendlypos.mypos.api.dto.KeepAliveResponseDto
@@ -72,6 +80,12 @@ interface ApiService {
         @Query("limit") limit: Int = 50
     ): ProductSearchResponseDto
 
+    @GET("api/price-verifier/lookup")
+    suspend fun lookupProductByEan(
+        @Query("ean") ean: String,
+        @Query("store_id") storeId: String
+    ): PriceLookupResponseDto
+
     @GET("api/supabase/customers")
     suspend fun getCustomers(
         @Query("startAfterDocId") startAfterDocId: String? = null,
@@ -92,4 +106,28 @@ interface ApiService {
         @Query("fecha_hasta") fechaHasta: String? = null,
         @Query("limit") limit: Int = 100
     ): SaleListResponseDto
+
+    @POST("api/firestore/sales")
+    suspend fun createSale(@Body request: SaleCreateRequestDto): SaleCreateResponseDto
+
+    @GET("api/printer/ticket-data/cashbox-opening/{sessionId}")
+    suspend fun getCashboxOpeningTicketData(@Path("sessionId") sessionId: String): TicketDataResponseDto
+
+    @GET("api/printer/ticket-data/cashbox-close/{sessionId}")
+    suspend fun getCashboxCloseTicketData(@Path("sessionId") sessionId: String): TicketDataResponseDto
+
+    @GET("api/printer/ticket-data/sale/{saleId}")
+    suspend fun getSaleTicketData(@Path("saleId") saleId: String): TicketDataResponseDto
+
+    @GET("api/printer/logo/{storeId}")
+    suspend fun getStoreLogo(@Path("storeId") storeId: String): LogoResponseDto
+
+    @POST("api/sales/{saleId}/emitir-dte")
+    suspend fun emitDte(
+        @Path("saleId") saleId: String,
+        @Body request: EmitDteRequestDto
+    ): EmitDteResponseDto
+
+    @GET("api/sales/taxpayer/{rut}")
+    suspend fun getTaxpayer(@Path("rut") rut: String): TaxpayerResponseDto
 }

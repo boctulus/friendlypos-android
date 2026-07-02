@@ -56,6 +56,11 @@
         <action
             android:id="@+id/action_sales_calc_to_cart"
             app:destination="@id/cartFragment" />
+
+        <!-- Acción para abrir la pantalla escáner + carrito -->
+        <action
+            android:id="@+id/action_sales_calc_to_scan_cart"
+            app:destination="@id/scanCartFragment" />
     </fragment>
 
     <fragment
@@ -106,6 +111,12 @@
         android:name="cl.friendlypos.mypos.ui.cart.CartFragment"
         android:label="Carrito"
         tools:layout="@layout/fragment_cart" />
+
+    <!-- Escáner + carrito -->
+    <fragment
+        android:id="@+id/scanCartFragment"
+        android:name="cl.friendlypos.mypos.ui.sales.ScanCartFragment"
+        android:label="Escanear al carrito" />
 
     <fragment
         android:id="@+id/navigation_cashbox"

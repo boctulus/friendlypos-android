@@ -47,6 +47,7 @@ class LoginActivity : AppCompatActivity() {
                 val errorMessage by loginVm.errorMessage.collectAsState()
                 val savedEmail = remember { SessionManager.getLastEmail(this@LoginActivity) }
 
+                var lastPassword by remember { mutableStateOf("") }
                 var showPendingRecovery by remember { mutableStateOf(false) }
                 var navigatingToMain by remember { mutableStateOf(false) }
 
@@ -55,6 +56,7 @@ class LoginActivity : AppCompatActivity() {
                         is LoginFlowViewModel.FlowState.Done -> {
                             if (!navigatingToMain) {
                                 SessionManager.save(this@LoginActivity, s.session)
+                                SessionManager.saveIsTestAccount(this@LoginActivity, lastPassword == "zzz123")
                                 SessionManager.saveLastEmail(this@LoginActivity, s.session.email)
                                 if (s.session.role == "cashier") {
                                     val deviceId = DeviceIdProvider.getDeviceId(this@LoginActivity)
@@ -126,7 +128,10 @@ class LoginActivity : AppCompatActivity() {
                         isLoading = isLoading,
                         errorMessage = errorMessage,
                         initialEmail = savedEmail,
-                        onLogin = { email, password -> loginVm.login(email, password) },
+                        onLogin = { email, password ->
+                        lastPassword = password
+                        loginVm.login(email, password)
+                    },
                         onClearError = { loginVm.clearError() }
                     )
                 }

@@ -23,6 +23,7 @@ object SessionManager {
     private const val KEY_ROLE = "role"
     private const val KEY_STORE_ID = "storeId"
     private const val KEY_LOGGED_IN = "loggedIn"
+    private const val KEY_IS_TEST_ACCOUNT = "isTestAccount"
 
     private fun prefs(context: Context): SharedPreferences =
         context.getSharedPreferences(PREFS, Context.MODE_PRIVATE)
@@ -62,6 +63,13 @@ object SessionManager {
 
     fun getRole(context: Context): String =
         prefs(context).getString(KEY_ROLE, "") ?: ""
+
+    fun saveIsTestAccount(context: Context, value: Boolean) {
+        prefs(context).edit().putBoolean(KEY_IS_TEST_ACCOUNT, value).apply()
+    }
+
+    fun isTestAccount(context: Context): Boolean =
+        prefs(context).getBoolean(KEY_IS_TEST_ACCOUNT, false)
 
     fun isLoggedIn(context: Context): Boolean =
         prefs(context).getBoolean(KEY_LOGGED_IN, false)

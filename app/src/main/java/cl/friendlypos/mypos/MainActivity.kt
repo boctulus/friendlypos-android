@@ -125,7 +125,8 @@ class MainActivity : AppCompatActivity()
         val role = SessionManager.getRole(this)
         val sessionOpen = cashboxViewModel.currentSession.value?.status == "open"
 
-        menu.findItem(R.id.action_scanner_testing)?.isVisible = role == "admin"
+        val isTestAccount = SessionManager.isTestAccount(this)
+        menu.findItem(R.id.action_scanner_testing)?.isVisible = role == "admin" || isTestAccount
         menu.findItem(R.id.action_logout)?.apply {
             isVisible = role.isNotEmpty()
             title = "Cerrar sesión"

@@ -4,6 +4,7 @@
 *.temp
 *.swp
 .DS_Store
+*.ps1
 
 # --- Archives ---
 *.zip
@@ -48,14 +49,4 @@ captures/
 Thumbs.db
 
 # --- Misc ---
-.config/
-app-production-debug.apk
-__releases
-.agents
-.claude
-.codex
-.gemini
-.opencode
-.qwen
-.remember
 

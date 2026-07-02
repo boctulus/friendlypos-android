@@ -4,11 +4,13 @@ import cl.friendlypos.mypos.api.ApiClient
 import cl.friendlypos.mypos.api.dto.CashboxAvailabilityItemDto
 import cl.friendlypos.mypos.api.dto.CashboxSessionItemDto
 import cl.friendlypos.mypos.api.dto.CloseSessionRequestDto
+import cl.friendlypos.mypos.api.HttpApiException
 import cl.friendlypos.mypos.api.dto.MovementItemDto
 import cl.friendlypos.mypos.api.dto.MovementTypeDto
 import cl.friendlypos.mypos.api.dto.OpenSessionRequestDto
 import cl.friendlypos.mypos.api.dto.RegisterMovementRequestDto
 import cl.friendlypos.mypos.api.dto.StoreDto
+import cl.friendlypos.mypos.api.dto.TicketDataResponseDto
 import com.google.gson.Gson
 import com.google.gson.JsonObject
 import kotlinx.coroutines.Dispatchers
@@ -158,8 +160,29 @@ class CashboxRepository {
             } else {
                 Result.failure(Exception(response.error ?: "Error al cerrar la caja"))
             }
+        } catch (e: HttpException) {
+            val msg = parseHttpErrorBody(e) ?: "Error al cerrar la caja (HTTP ${e.code()})"
+            Result.failure(HttpApiException(msg, e.code()))
         } catch (e: Exception) {
             Result.failure(e)
         }
     }
+
+    suspend fun getOpeningTicketData(sessionId: String): Result<TicketDataResponseDto> =
+        withContext(Dispatchers.IO) {
+            runCatching {
+                val response = ApiClient.service.getCashboxOpeningTicketData(sessionId)
+                if (response.data == null) throw Exception("No ticket data")
+                response
+            }
+        }
+
+    suspend fun getCloseTicketData(sessionId: String): Result<TicketDataResponseDto> =
+        withContext(Dispatchers.IO) {
+            runCatching {
+                val response = ApiClient.service.getCashboxCloseTicketData(sessionId)
+                if (response.data == null) throw Exception("No ticket data")
+                response
+            }
+        }
 }

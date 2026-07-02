@@ -36,6 +36,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import cl.friendlypos.mypos.compose.viewmodel.BarcodeScannerViewModel
+import cl.friendlypos.mypos.scanner.CameraPreview
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -46,7 +47,11 @@ fun BarcodeScannerDemoScreen (
     val context = LocalContext.current
     val scannedBarcodes by viewModel.scannedBarcodes.collectAsState()
     val isScanning by viewModel.isScanning.collectAsState()
-    
+
+    // Anti-rebote: evita registrar el mismo código repetidamente en lecturas consecutivas.
+    var lastScanned by remember { mutableStateOf("") }
+    var lastScanTime by remember { mutableStateOf(0L) }
+
     Scaffold(
         topBar = {
             TopAppBar(
@@ -80,7 +85,7 @@ fun BarcodeScannerDemoScreen (
                 .fillMaxSize()
                 .padding(paddingValues)
         ) {
-            // Zona del escáner (simula la cámara)
+            // Zona del escáner (cámara real con CameraX + ML Kit)
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -88,23 +93,31 @@ fun BarcodeScannerDemoScreen (
                     .background(Color.Black),
                 contentAlignment = Alignment.Center
             ) {
-                // Simular vista de cámara con un color de fondo
-                Box(
+                CameraPreview(
                     modifier = Modifier.fillMaxSize(),
-                    contentAlignment = Alignment.Center
-                ) {
-                    // Marco de escaneo
-                    Box(
-                        modifier = Modifier
-                            .size(width = 250.dp, height = 150.dp)
-                            .border(
-                                width = 2.dp,
-                                color = if (isScanning) Color.Green else Color.Red,
-                                shape = RoundedCornerShape(8.dp)
-                            )
-                    )
-                }
-                
+                    enabled = isScanning,
+                    onBarcodeDetected = { code ->
+                        val now = System.currentTimeMillis()
+                        if (code != lastScanned || now - lastScanTime > 2000) {
+                            lastScanned = code
+                            lastScanTime = now
+                            viewModel.addBarcode(code)
+                            vibrateDevice(context)
+                        }
+                    }
+                )
+
+                // Marco de escaneo
+                Box(
+                    modifier = Modifier
+                        .size(width = 250.dp, height = 150.dp)
+                        .border(
+                            width = 2.dp,
+                            color = if (isScanning) Color.Green else Color.Red,
+                            shape = RoundedCornerShape(8.dp)
+                        )
+                )
+
                 // Indicador de estado
                 Box(
                     modifier = Modifier

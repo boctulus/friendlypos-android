@@ -40,7 +40,12 @@ class SalesCalculatorFragment : Fragment() {
                     onNavigateToCart = {
                         findNavController().navigate(R.id.action_sales_calc_to_cart)
                     },
+                    onNavigateToScanCart = {
+                        findNavController().navigate(R.id.action_sales_calc_to_scan_cart)
+                    },
                     onNavigateToPay = { totalAmount ->
+                        cl.friendlypos.mypos.checkout.CheckoutHolder
+                            .setFromCart(viewModel.saleItems.value ?: emptyList())
                         val intent = Intent(requireContext(), PaymentActivity::class.java)
                         intent.putExtra("totalAmount", totalAmount)
                         @Suppress("DEPRECATION")

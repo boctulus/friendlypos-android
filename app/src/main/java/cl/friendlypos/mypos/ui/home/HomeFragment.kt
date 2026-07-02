@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.ComposeView
@@ -43,7 +44,20 @@ class HomeFragment : Fragment() {
                     role = role,
                     isSessionOpen = isSessionOpen,
                     onNavigateToNewSale = {
-                        findNavController().navigate(R.id.action_home_to_sales_calc)
+                        // Gate: no se puede vender sin una sesión de caja abierta.
+                        if (currentSession?.status == "open") {
+                            findNavController().navigate(R.id.action_home_to_sales_calc)
+                        } else {
+                            Toast.makeText(
+                                requireContext(),
+                                "Debes abrir una sesión de caja antes de vender",
+                                Toast.LENGTH_LONG
+                            ).show()
+                            findNavController().navigate(
+                                R.id.action_home_to_cashbox,
+                                bundleOf("initialScreen" to "OPEN")
+                            )
+                        }
                     },
                     onNavigateToInventory = {
                         findNavController().navigate(R.id.action_home_to_inventory)

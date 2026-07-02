@@ -34,7 +34,11 @@ URL Base de la API REST se leera de `ApiConfig.kt`. Valor que por ejemplo conten
 
 La base de datos vive en el backend en NodeJS y es PGSQL ('supabase').
 
-Las distintas entidades (tablas) del backend en NodeJS estan listadas en el proyecto en NodeJS.
+Las distintas entidades (tablas) del backend en NodeJS estan listadas en el proyecto en NodeJS:
+
+```
+D:\nodejs\friendlypos_nodejs-base\config\databases.config.js
+```
 
 ---
 
@@ -56,7 +60,6 @@ Se debe integrar con servicio de **Facturación Electrónica (SII de Chile):** O
 
 ## Requisitos previos
 
-- Node.js (v14 o superior)
 - Cuenta en Firebase con Firestore y Authentication habilitados
 
 # Notas
@@ -123,6 +126,7 @@ Las reglas se ajustan desde:
 
 https://console.firebase.google.com/project/{project-id}/storage/{project-id}.firebasestorage.app/rules
 
+
 ## API Endpoints
 
 Todos los endpoints están disponibles desde una API REST de un SDK en PHP:
@@ -140,6 +144,42 @@ Para conocer la URL base de la API REST del SDK de OpenFactura leer debera leers
 
 ---
 
+## Login credentials
+
+Credentials are usually in `docs\login-credentials.md` in the backend directory.
+
+Given the fact the backend is located in `D:\nodejs\friendlypos_nodejs-base\`, then
+
+```
+D:\nodejs\friendlypos_nodejs-base\docs\login-credentials.md
+```
+
+You can use `node com users list-users` to retrieve all users and you can ask permission to create new user accounts but the password to choose must always be "zzz123".
+
+User accounts are handled using "node com users" CLI commands.
+
+Other related CLI commands are from the group "stores".
+
+E.g.
+
+```
+node com stores list-stores
+```
+
+---
+
+## Hardware
+
+El primer dispositivo con el que matener compatibilidad de hardware es `Android P8 Neo`.
+
+The Android P8 Neo is a mobile Point of Sale (POS) terminal manufactured by Kozen/Xiangcheng. When paired with TUU, the payment and invoicing software by Haulmer, it serves as an all-in-one wireless machine used by merchants to process credit/debit cards, scan barcodes, and print digital receipts
+
+Se aspira a poder usar la camara e imprimir en la mayor tickets en la mayor cantidad de dispositivos posibles (compatibilidad amplia).
+
+---
+
 ## Documentación
 
 - Doc propia de la app Android en `docs\`
+- Doc del backend en NodeJS en `D:\nodejs\friendlypos_nodejs-base\docs\`
+- Doc del SDK en PHP en `D:\laragon\www\sr-haulmer\docs\` y dentro de los packages correspondientes.# friendlypos-android-base

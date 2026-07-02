@@ -9,6 +9,9 @@ import cl.friendlypos.mypos.model.Product
 import cl.friendlypos.mypos.repository.ProductRepository
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
 
 class SalesCalculatorViewModel : ViewModel() {
@@ -128,10 +131,10 @@ class SalesCalculatorViewModel : ViewModel() {
             if (entry.contains("x", ignoreCase = true)) {
                 val parts = entry.split("x", ignoreCase = true)
                 if (parts.size == 2) {
-                    quantity = parts[0].trim().toIntOrNull() ?: 1
-                    val priceStr = parts[1].trim().replace(",", "")
+                    val priceStr = parts[0].trim().replace(",", "")
                     unitPrice = priceStr.toIntOrNull() ?: 0
-                    Log.d("Calc", "Parsed multiplication: $quantity x $unitPrice")
+                    quantity = parts[1].trim().toIntOrNull() ?: 1
+                    Log.d("Calc", "Parsed multiplication: $unitPrice x $quantity")
                 }
             } else {
                 unitPrice = entry.replace(",", "").toIntOrNull() ?: 0
@@ -227,5 +230,80 @@ class SalesCalculatorViewModel : ViewModel() {
         _saleItems.value = currentItems
         _totalAmount.value = currentItems.sumOf { it.unitPrice * it.quantity }.toString()
         _cartItemCount.value = currentItems.sumOf { it.quantity }
+    }
+
+    // ── Escaneo de productos al carrito ───────────────────────────────────────
+
+    /** Feedback transitorio emitido al escanear (la UI muestra snackbar + vibración). */
+    sealed interface ScanFeedback {
+        data class Added(val name: String) : ScanFeedback
+        data class NotFound(val code: String) : ScanFeedback
+        data class Error(val message: String) : ScanFeedback
+    }
+
+    private val _scanFeedback = MutableSharedFlow<ScanFeedback>(extraBufferCapacity = 4)
+    val scanFeedback: SharedFlow<ScanFeedback> = _scanFeedback.asSharedFlow()
+
+    // Guard contra dobles lecturas: ignora escaneos mientras hay un lookup en curso.
+    @Volatile
+    private var isLookupInProgress: Boolean = false
+
+    /**
+     * Agrega un producto del catálogo al carrito. Si ya existe una línea del mismo
+     * producto (mismo [Product.id]) incrementa su cantidad +1 EN SU POSICIÓN (no
+     * reordena la lista). Si no existe, agrega una línea nueva al final.
+     */
+    fun addProductToCart(product: Product) {
+        val currentItems = _saleItems.value?.toMutableList() ?: mutableListOf()
+        val index = currentItems.indexOfFirst { it.productId == product.id }
+        if (index >= 0) {
+            val existing = currentItems[index]
+            currentItems[index] = existing.copy(quantity = existing.quantity + 1)
+        } else {
+            currentItems.add(
+                SaleItem(
+                    productId = product.id,
+                    name = product.name,
+                    unitPrice = product.price.toInt(),
+                    quantity = 1
+                )
+            )
+        }
+        _saleItems.value = currentItems
+        _totalAmount.value = currentItems.sumOf { it.unitPrice * it.quantity }.toString()
+        _cartItemCount.value = currentItems.sumOf { it.quantity }
+    }
+
+    /**
+     * Resuelve un EAN13 escaneado a un producto y lo agrega al carrito.
+     * Emite [ScanFeedback] para que la UI muestre el resultado.
+     */
+    fun scanBarcode(code: String, storeId: String) {
+        if (isLookupInProgress) return
+        if (!code.matches(Regex("\\d{13}"))) {
+            _scanFeedback.tryEmit(ScanFeedback.NotFound(code))
+            return
+        }
+        isLookupInProgress = true
+        viewModelScope.launch {
+            try {
+                productRepo.lookupByEan(code, storeId).fold(
+                    onSuccess = { product ->
+                        if (product != null) {
+                            addProductToCart(product)
+                            _scanFeedback.tryEmit(ScanFeedback.Added(product.name))
+                        } else {
+                            _scanFeedback.tryEmit(ScanFeedback.NotFound(code))
+                        }
+                    },
+                    onFailure = { e ->
+                        Log.e("SalesCalcVM", "Error en lookup EAN $code: ${e.message}", e)
+                        _scanFeedback.tryEmit(ScanFeedback.Error(e.message ?: "Error de red"))
+                    }
+                )
+            } finally {
+                isLookupInProgress = false
+            }
+        }
     }
 }
