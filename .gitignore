@@ -49,4 +49,17 @@ captures/
 Thumbs.db
 
 # --- Misc ---
+.config
+.agents
+.codegpt
+.opencode
+.claude
+.gemini
+.codex
+.qwen
+.env
+.env.production
+prompts
+screenshots
+
 
