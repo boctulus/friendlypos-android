@@ -50,9 +50,12 @@ Thumbs.db
 # --- Misc ---
 .config/
 app-production-debug.apk
-.claude/
-.qwen/
-.opencode/
-.agent/
-.agents/
+__releases
+.agents
+.claude
+.codex
+.gemini
+.opencode
+.qwen
+.remember
 
