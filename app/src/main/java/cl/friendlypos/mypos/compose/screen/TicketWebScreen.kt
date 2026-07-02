@@ -2,6 +2,7 @@ package cl.friendlypos.mypos.compose.screen
 
 import android.webkit.WebView
 import android.webkit.WebViewClient
+import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -12,18 +13,31 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
+import cl.friendlypos.mypos.hardware.PrinterManager
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 @Composable
 fun TicketWebScreen(
     html: String,
     onClose: () -> Unit
 ) {
+    val context = LocalContext.current
+    val scope = rememberCoroutineScope()
+    var isPrinting by remember { mutableStateOf(false) }
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -67,11 +81,25 @@ fun TicketWebScreen(
             horizontalArrangement = Arrangement.spacedBy(12.dp)
         ) {
             OutlinedButton(
-                onClick = {},
-                enabled = false,
+                onClick = {
+                    if (isPrinting) return@OutlinedButton
+                    isPrinting = true
+                    scope.launch {
+                        val result = withContext(Dispatchers.IO) {
+                            PrinterManager(context).printHtml(html)
+                        }
+                        isPrinting = false
+                        val message = result.fold(
+                            onSuccess = { "Ticket enviado a impresora" },
+                            onFailure = { it.message ?: "No se pudo imprimir" }
+                        )
+                        Toast.makeText(context, message, Toast.LENGTH_LONG).show()
+                    }
+                },
+                enabled = !isPrinting,
                 modifier = Modifier.weight(1f)
             ) {
-                Text("Imprimir (próximamente)", fontSize = 13.sp)
+                Text(if (isPrinting) "Imprimiendo..." else "Imprimir", fontSize = 13.sp)
             }
             Button(
                 onClick = onClose,

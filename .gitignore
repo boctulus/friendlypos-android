@@ -4,7 +4,6 @@
 *.temp
 *.swp
 .DS_Store
-*.ps1
 
 # --- Archives ---
 *.zip
@@ -19,7 +18,7 @@
 # --- Gradle ---
 .gradle/
 build/
-**/build/
+*/build/
 
 # --- Kotlin ---
 .kotlin/
@@ -47,18 +46,5 @@ captures/
 
 # --- OS ---
 Thumbs.db
-
-# --- Misc ---
-.agents/
-.codegpt/
-.opencode/
-.claude/
-.gemini/
-.codex/
-.qwen/
-.env
-.env.production
-prompts/
-screenshots/
 
 

@@ -97,6 +97,8 @@ android {
 }
 
 dependencies {
+    implementation(files("libs/com.pos.sdk-print.jar"))
+
     // Critico: Compose BOM debe ser la primera dependencia de Compose
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.work.runtime.ktx)

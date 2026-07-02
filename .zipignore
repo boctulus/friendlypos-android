@@ -6,7 +6,7 @@
 .github/
 .gradle
 .kotlin
-.agent/
+.agents/
 .claude/
 .qwen/
 .opencode/

@@ -172,7 +172,7 @@ node com stores list-stores
 
 El primer dispositivo con el que matener compatibilidad de hardware es `Android P8 Neo`.
 
-The Android P8 Neo is a mobile Point of Sale (POS) terminal manufactured by Kozen/Xiangcheng. When paired with TUU, the payment and invoicing software by Haulmer, it serves as an all-in-one wireless machine used by merchants to process credit/debit cards, scan barcodes, and print digital receipts
+The 'Android P8 Neo' is a mobile Point of Sale (POS) terminal manufactured by Kozen/Xiangcheng. When paired with TUU, the payment and invoicing software by Haulmer, it serves as an all-in-one wireless machine used by merchants to process credit/debit cards, scan barcodes, and print digital receipts
 
 Se aspira a poder usar la camara e imprimir en la mayor tickets en la mayor cantidad de dispositivos posibles (compatibilidad amplia).
 

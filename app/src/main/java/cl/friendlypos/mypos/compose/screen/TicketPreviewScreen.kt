@@ -1,34 +1,43 @@
 package cl.friendlypos.mypos.compose.screen
 
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
+import cl.friendlypos.mypos.hardware.PrinterManager
 import cl.friendlypos.mypos.model.Ticket
 import cl.friendlypos.mypos.model.TicketLine
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 /**
- * Previsualización en pantalla de un [Ticket] (etapa 1, sin impresión física).
- * Simula un comprobante térmico: tipografía monoespaciada y ancho acotado.
+ * Previsualizacion en pantalla de un [Ticket] e impresion en terminales compatibles.
  */
 @Composable
 fun TicketPreviewScreen(
     ticket: Ticket,
     onClose: () -> Unit
 ) {
+    val context = LocalContext.current
+    val scope = rememberCoroutineScope()
+    var isPrinting by remember { mutableStateOf(false) }
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -101,11 +110,25 @@ fun TicketPreviewScreen(
             horizontalArrangement = Arrangement.spacedBy(12.dp)
         ) {
             OutlinedButton(
-                onClick = {},
-                enabled = false,
+                onClick = {
+                    if (isPrinting) return@OutlinedButton
+                    isPrinting = true
+                    scope.launch {
+                        val result = withContext(Dispatchers.IO) {
+                            PrinterManager(context).printTicket(ticket)
+                        }
+                        isPrinting = false
+                        val message = result.fold(
+                            onSuccess = { "Ticket enviado a impresora" },
+                            onFailure = { it.message ?: "No se pudo imprimir" }
+                        )
+                        Toast.makeText(context, message, Toast.LENGTH_LONG).show()
+                    }
+                },
+                enabled = !isPrinting,
                 modifier = Modifier.weight(1f)
             ) {
-                Text("Imprimir (próximamente)", fontSize = 13.sp)
+                Text(if (isPrinting) "Imprimiendo..." else "Imprimir", fontSize = 13.sp)
             }
             Button(
                 onClick = onClose,
