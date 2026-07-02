@@ -49,7 +49,6 @@ captures/
 Thumbs.db
 
 # --- Misc ---
-.config
 .agents/
 .codegpt/
 .opencode/
