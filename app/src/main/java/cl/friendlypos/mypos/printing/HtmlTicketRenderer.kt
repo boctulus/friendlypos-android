@@ -327,7 +327,7 @@ class HtmlTicketRenderer(private val context: Context) {
 
     private companion object {
         private const val PRINT_WIDTH_PX = 384
-        private const val BOTTOM_SAFETY_PX = 64
+        private const val BOTTOM_SAFETY_PX = 120
         private const val ATTACHED_RENDER_HEIGHT_PX = 1
         private const val MAX_RENDER_HEIGHT_PX = 16_000
         private const val RENDER_TIMEOUT_MILLIS = 15_000L

@@ -34,7 +34,9 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-private const val SCROLL_STEP_MILLIS = 45L
+private const val SCROLL_STEP_MILLIS = 40L
+private const val SCROLL_STEP_PX = 10
+private const val SCROLL_START_DELAY_MILLIS = 250L
 
 @Composable
 fun TicketWebScreen(
@@ -57,11 +59,11 @@ fun TicketWebScreen(
             return@LaunchedEffect
         }
         webView.scrollTo(0, 0)
-        val target = ((webView.contentHeight * webView.scale).toInt() - webView.height)
-            .coerceAtLeast(0)
-        val steps = 80
-        for (i in 1..steps) {
-            webView.scrollTo(0, target * i / steps)
+        delay(SCROLL_START_DELAY_MILLIS)
+        // Se avanza con scrollBy hasta que ya no se pueda bajar (canScrollVertically),
+        // en vez de calcular el alto con webView.scale (deprecado, poco fiable).
+        while (webView.canScrollVertically(1)) {
+            webView.scrollBy(0, SCROLL_STEP_PX)
             delay(SCROLL_STEP_MILLIS)
         }
     }
