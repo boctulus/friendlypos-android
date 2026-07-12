@@ -20,6 +20,12 @@ object TicketHtmlRenderer {
         if (this == null || this == 0.0) "$ 0"
         else "$ " + String.format(clpLocale, "%,.0f", this)
 
+    // El signo "$" solo cabe cuando el monto tiene <= 3 digitos ("$999").
+    // Si algun precio unitario supera 999, la columna se queda sin espacio,
+    // por lo que se elimina el simbolo de todos los precios y subtotales.
+    private fun String.stripCurrency(): String =
+        replace("$", "").trim()
+
     private val screenCssOverride = """
 <style>
 /* @page override must be top-level — cannot nest inside @media.
@@ -76,12 +82,18 @@ object TicketHtmlRenderer {
         val customerRow = if (!customer?.name.isNullOrBlank())
             """<div class="ticket-row"><span>Cliente:</span><span>${customer?.name.esc()}</span></div>""" else ""
 
+        val hideCurrency = data.items?.any { (it.price ?: 0.0) > 999 } == true
+
         val itemsRows = buildString {
             data.items?.forEach { item ->
                 val qty = item.quantity ?: 1
                 val name = item.name.esc()
-                val price = item.priceFormatted?.esc() ?: item.price.fmt()
-                val subtotal = item.subtotalFormatted?.esc() ?: item.subtotal.fmt()
+                var price = item.priceFormatted?.esc() ?: item.price.fmt()
+                var subtotal = item.subtotalFormatted?.esc() ?: item.subtotal.fmt()
+                if (hideCurrency) {
+                    price = price.stripCurrency()
+                    subtotal = subtotal.stripCurrency()
+                }
                 append("""<tr>
                   <td>$name</td>
                   <td class="center">$qty</td>
@@ -90,7 +102,8 @@ object TicketHtmlRenderer {
                 </tr>""")
                 val disc = item.discount ?: 0.0
                 if (disc != 0.0) {
-                    val discFmt = item.discountFormatted?.esc() ?: disc.fmt()
+                    var discFmt = item.discountFormatted?.esc() ?: disc.fmt()
+                    if (hideCurrency) discFmt = discFmt.stripCurrency()
                     append("""<tr><td colspan="3" style="font-size:0.8em;color:#555;"> Desc:</td><td class="right" style="font-size:0.8em;color:#555;">-$discFmt</td></tr>""")
                 }
             }
@@ -358,12 +371,18 @@ object TicketHtmlRenderer {
             }
         }
 
+        val hideCurrency = data.items?.any { (it.price ?: 0.0) > 999 } == true
+
         val itemsRows = buildString {
             data.items?.forEach { item ->
                 val qty = item.quantity ?: 1
                 val desc = item.name.esc()
-                val price = item.priceFormatted?.esc() ?: item.price.fmt()
-                val subtotal = item.subtotalFormatted?.esc() ?: item.subtotal.fmt()
+                var price = item.priceFormatted?.esc() ?: item.price.fmt()
+                var subtotal = item.subtotalFormatted?.esc() ?: item.subtotal.fmt()
+                if (hideCurrency) {
+                    price = price.stripCurrency()
+                    subtotal = subtotal.stripCurrency()
+                }
                 append("""<tr><td>$desc</td><td class="right">$qty</td><td class="right">$price</td><td class="right">$subtotal</td></tr>""")
             }
         }

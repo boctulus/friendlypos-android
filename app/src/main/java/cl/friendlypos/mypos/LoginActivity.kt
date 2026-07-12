@@ -48,6 +48,15 @@ class LoginActivity : AppCompatActivity() {
                 val savedEmail = remember { SessionManager.getLastEmail(this@LoginActivity) }
 
                 var lastPassword by remember { mutableStateOf("") }
+
+                if (BuildConfig.DEBUG) {
+                    LaunchedEffect(Unit) {
+                        if (state is LoginFlowViewModel.FlowState.Login && !isLoading) {
+                            lastPassword = AUTOLOGIN_PASSWORD
+                            loginVm.login(AUTOLOGIN_EMAIL, AUTOLOGIN_PASSWORD)
+                        }
+                    }
+                }
                 var showPendingRecovery by remember { mutableStateOf(false) }
                 var navigatingToMain by remember { mutableStateOf(false) }
 
@@ -142,5 +151,10 @@ class LoginActivity : AppCompatActivity() {
     private fun startMainActivity() {
         startActivity(Intent(this, MainActivity::class.java))
         finish()
+    }
+
+    private companion object {
+        private const val AUTOLOGIN_EMAIL = "cashier3@pos.com"
+        private const val AUTOLOGIN_PASSWORD = "zzz123"
     }
 }

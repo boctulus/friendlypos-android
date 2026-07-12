@@ -1,6 +1,6 @@
 {
   "name": "friendlypos-kotlin",
-  "version": "1.5.46",
+  "version": "1.5.50",
   "type": "module",
   "private": true,
   "scripts": {
